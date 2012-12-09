@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- License GPL 3 -->
+<menus>
+	<menu id="1">
+		<label>List Contacts (Backend)</label>
+		<description>Display contacts</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>contact</module>
+		<controller>contact</controller>
+		<action>listregistered</action>
+		<version>1.0</version>
+		<menu_type>contacts-list-registered</menu_type>
+	</menu>
+	<menu id="2">
+		<label>Add Contact</label>
+		<description>Display form for add new contact</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>contact</module>
+		<controller>contact</controller>
+		<action>add</action>
+		<version>1.0</version>
+		<menu_type>contact-add</menu_type>
+	</menu>
+	<menu id="3">
+		<label>List Contact Categories(Backend)</label>
+		<description>Display contact categories registered</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>contact</module>
+		<controller>category</controller>
+		<action>listregistered</action>
+		<version>1.0</version>
+		<menu_type>category-list-registered</menu_type>
+	</menu>
+	<menu id="4">
+		<label>Add Contact Category</label>
+		<description>Display form for add new contact category</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>contact</module>
+		<controller>category</controller>
+		<action>add</action>
+		<version>1.0</version>
+		<menu_type>category-add</menu_type>
+	</menu>
+	<menu id="5">
+		<label>Display Contact Form</label>
+		<description>Standard Contact Layout</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>contact</module>
+		<controller>contact</controller>
+		<action>view</action>
+		<version>1.0</version>
+		<menu_type>contact-layout</menu_type>
+	</menu>
+	<menu id="6">
+		<label>Display Category Contact Form</label>
+		<description>Standard Category Contact Layout</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>contact</module>
+		<controller>category</controller>
+		<action>view</action>
+		<version>1.0</version>
+		<menu_type>category-layout</menu_type>
+	</menu>
+</menus>

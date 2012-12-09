@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hooks>
+	<hook>menu_top</hook>
+	<hook>left</hook>
+	<hook>breadcrumb</hook>
+	<hook>nav_mainmenu</hook>
+	<hook>pos_admin_mainmenu</hook>
+	<hook>pos_admin_top_right</hook>
+</hooks>

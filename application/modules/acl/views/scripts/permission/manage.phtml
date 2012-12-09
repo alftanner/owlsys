@@ -1,0 +1,85 @@
+<?php 
+/**
+ * Copyright 2012 Roger Castañeda
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+?>
+<article>
+
+    <div class="page-header">
+    	<h2><?php echo $this->translate("ACL_MANAGE_PERMISSIONS") ?> 
+    	<small><?php echo $this->translate("ACL_ROLE").': '.$this->role->name ?></small>
+    	</h2>
+    </div>
+	
+	<div>
+	<?php #echo $this->formResources ?>
+	<form method="<?=$this->formResources->getMethod()?>" 
+		action="<?=$this->formResources->getAction()?>"
+		enctype="<?=$this->formResources->getEnctype()?>">
+		
+		<div id="accordion" class="permissions-manager accordion">
+		<?php 
+		$ind = 1;
+		foreach ( $this->modules as $module )
+		{
+		?>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $ind ?>">
+					<?php echo ucfirst($module->module) ?>
+					</a>
+				</div>
+				<div id="collapse<?php echo $ind ?>" class="accordion-body collapse">
+					<div class="accordion-inner">
+					<?php foreach ( $this->zfelements[ strtolower($module->module) ] as $zfe ) : ?>
+						<div class="span3">
+						<?php echo $this->formResources->getElement( $zfe ); ?>
+						</div>
+					<?php endforeach; ?>
+					</div>
+				</div>
+		<?php /*
+			echo "<h3><a>".ucfirst($module->module)."</a></h3>";
+			echo "<div>";
+			#Zend_Debug::dump( $this->zfelements[ strtolower($module->module) ] );
+			foreach ( $this->zfelements[ strtolower($module->module) ] as $zfe ) 
+			{
+			    #Zend_Debug::dump($zfe);
+			    echo $this->formResources->getElement( $zfe );
+			}
+			echo "</div>";
+			echo ($ind%5==0) ? '<div style="clear:left;"></div>' : '';*/
+			/*foreach ( $this->zfelements[ strtolower($module->module) ] as $zfElement ) {
+			    echo "<div>".$zfElement->getValue()."</div>";
+			}*/
+		?>
+			</div>
+		<?php 
+		$ind++;
+		}
+		#Zend_Debug::dump($this->zfelements['acl']);
+		?>
+		</div>
+		
+		<div style="display: none;">
+		<?php echo $this->formResources->getElement('hrs')?>
+		<?php echo $this->formResources->getElement('id')?>
+		<?php echo $this->formResources->getElement('csrf_token')?>
+		</div>
+		<?php echo $this->formResources->getElement('submit')?>
+		
+		</form>
+		
+	</div>
+		
+<script>
+$(function() {
+
+});
+</script>
+
+</article>

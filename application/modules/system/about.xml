@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- License GPL 3 -->
+<module>
+    <about>
+        <title>System</title>
+	    <description>System Core Module</description>
+	    <author>Roger Castañeda</author>
+	    <version>1.0</version>
+	    <license>GPL 3</license>
+    </about>
+</module>

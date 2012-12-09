@@ -1,0 +1,35 @@
+<?php 
+/**
+ * Copyright 2012 Roger Castañeda
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+?>
+<tr>
+	<td class="field"><?php echo $this->name ?></td>
+	<td class="center">
+		<?php if ( $this->published ): ?>
+			<a href='<?=$this->baseUrl()?>/menu/menu/publish/id/<?php echo $this->id;?>' class="badge badge-success">
+				<?php echo $this->translate("LBL_PUBLISHED") ?>
+			</a>
+		<?php else: ?>
+			<a href='<?=$this->baseUrl()?>/menu/menu/publish/id/<?php echo $this->id;?>' class="badge badge-important">
+				<?php echo $this->translate("LBL_UNPUBLISHED") ?>
+			</a>
+		<?php endif; ?>
+	</td>
+	<td class="center">
+		<a href='<?=$this->baseUrl()?>/menu/item/list/menu/<?php echo $this->id;?>'><?php echo $this->translate("MENU_MANAGE_MENU_ITEMS") ?></a>
+	</td>
+	<td class="center">
+		<i class="icon-edit"></i>
+		<a href='<?=$this->baseUrl()?>/menu/menu/update/id/<?php echo $this->id;?>'><?php echo $this->translate("LBL_UPDATE") ?></a>
+	</td>
+	<td class="center">
+		<i class="icon-trash"></i>
+		<a href='<?=$this->baseUrl()?>/menu/menu/delete/id/<?php echo $this->id;?>'><?php echo $this->translate("LBL_DELETE") ?></a>
+	</td>
+	<td class="center"><?php echo $this->id ?></td>
+</tr>

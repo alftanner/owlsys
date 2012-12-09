@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- License GPL 3 -->
+<menus>
+	<menu id="1">
+		<label>List Content Articles (Backend)</label>
+		<description>Display articles registered</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>content</module>
+		<controller>article</controller>
+		<action>listregistered</action>
+		<version>1.0</version>
+		<menu_type>articles-list-registered</menu_type>
+	</menu>
+	<menu id="2">
+		<label>Add Article</label>
+		<description>Display form for add new article</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>content</module>
+		<controller>article</controller>
+		<action>add</action>
+		<version>1.0</version>
+		<menu_type>article-add</menu_type>
+	</menu>
+	<menu id="3">
+		<label>List Content Categories(Backend)</label>
+		<description>Display categories registered</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>content</module>
+		<controller>category</controller>
+		<action>listregistered</action>
+		<version>1.0</version>
+		<menu_type>category-list-registered</menu_type>
+	</menu>
+	<menu id="4">
+		<label>Add Article Category</label>
+		<description>Display form for add new category</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>content</module>
+		<controller>category</controller>
+		<action>add</action>
+		<version>1.0</version>
+		<menu_type>category-add</menu_type>
+	</menu>
+	<menu id="5">
+		<label>Simple article Layout</label>
+		<description>Display article in some layout mode</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>content</module>
+		<controller>article</controller>
+		<action>view</action>
+		<version>1.0</version>
+		<menu_type>article-simple-layout</menu_type>
+	</menu>
+	<menu id="6">
+		<label>Category Blog Layout</label>
+		<description>Display article in some layout mode</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>content</module>
+		<controller>category</controller>
+		<action>viewbloglayout</action>
+		<version>1.0</version>
+		<menu_type>category-blog-layout</menu_type>
+	</menu>
+</menus>
