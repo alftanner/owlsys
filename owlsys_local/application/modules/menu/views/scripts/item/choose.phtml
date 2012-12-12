@@ -1,0 +1,56 @@
+<?php 
+/**
+ * Copyright 2012 Roger Castañeda
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+?>
+<?php
+$modules = array(); 
+foreach( $this->menuItemTypes as $menuItemType ) :
+	$module = strval($menuItemType->module);
+	if ( ! in_array($module, $modules) ) $modules[] = $module;
+endforeach; 
+?>
+
+	<div class="page-header">
+		<h2>
+		<?php echo $this->translate('MENU_CHOOSE_ITEM_TYPE') ?>
+		<small><?php echo $this->translate("MENU_CURRENT_MENU"). ': ' . $this->menu->name; ?></small>
+		</h2> 
+	</div>
+	
+	<div id="accordion" class="accordion">
+	<?php $ind=1; ?>
+	<?php foreach ( $modules as $module ): ?>
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $ind ?>">
+			<?php echo $this->translate('ACL_MODULE').': '.ucfirst( strtolower($module) ) ?>
+			</a>
+		</div>
+		<div id="collapse<?php echo $ind ?>" class="accordion-body collapse">
+			<div class="accordion-inner">
+			
+			<?php foreach( $this->menuItemTypes as $menuItemType ) : ?>
+			<?php if ( $module == $menuItemType->module ): ?>
+				<p>
+					<a href="<?php echo $this->baseUrl().'/menu/item/add/mod/'.$menuItemType->module.'/mid/'.$menuItemType['id'] ?>/menu_id/<?php echo $this->menu->id ?>">
+						<?php echo $menuItemType->label ?>
+					</a>
+					<br>
+					<span class="muted"><?php echo $menuItemType->description ?></span>
+				</p>
+			<?php endif; ?>
+			<?php endforeach; ?>
+			
+			</div>
+		</div>
+	</div>
+	<?php $ind++ ?>
+	<?php endforeach; ?>
+	</div>
+	
+

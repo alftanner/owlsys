@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- License GPL 3 -->
+<menus>
+	<menu id="1">
+		<label>Default</label>
+		<description>Default Controller for Default Module</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>default</module>
+		<controller>index</controller>
+		<action>index</action>
+		<version>1.0</version>
+		<menu_type>default-index</menu_type>
+	</menu>
+</menus>

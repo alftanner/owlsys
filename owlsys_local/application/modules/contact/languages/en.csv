@@ -1,0 +1,27 @@
+; Copyright 2012 Roger Castañeda
+; This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+; Language configuration for Contact module
+; Create date:
+; Revised by:
+; Author:  Roger Castañeda
+; Language: English
+; =======================================================================
+"CONTACT_ADD";"Add Contact"
+"CONTACT_ADD_CATEGORY";"Add Contact Category"
+"CONTACT";"Contact"
+"CONTACT_MANAGE_CATEGORIES";"Manage categories"
+"CONTACT_MANAGE_ROWS";"Manage contacts"
+"CONTACT_MANAGE";"Manage contacts"
+"CONTACT_EDIT_CATEGORY";"Edit Contact Category"
+"CONTACT_EDIT";"Edit Contact"
+"CONTACT_CATEGORIES_EMPTY";"Categories empty"
+"CONTACT_SELECT";"Select contact"
+"CONTACT_EMAIL_TO";"E-mail to"
+"CONTACT_CON_POSITION";"Con. position"
+"CONTACT_CATEGORY_SELECT";"Select Category"
+"CONTACT_ROW_NOT_FOUND";"Contact not found"
+"CONTACT_DEFAULT_SUBJECT";"New contact from website"
+"CONTACT_SUCCESSFULL_CONTACT";"Your request is being processed and we will respond you as soon as possible. <br>Thank You."
+"CONTACT_NAME";"Contact name"
+"CONTACT_CATEGORIES";"Contact Categories"
+"CONTENT_FILTER_BY_ARTICLE";"Filter by article"

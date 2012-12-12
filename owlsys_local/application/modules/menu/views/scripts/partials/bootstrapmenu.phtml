@@ -1,0 +1,36 @@
+<ul class="navigationx">
+
+<?php
+
+$html = array();
+
+foreach ($this->container as $page) 
+{
+    $html[] = "<li>";
+    $html[] = $this->menu()->htmlify($page) . PHP_EOL;
+
+    if (!empty($page->pages))
+    {
+        $html[] = "<ul>";
+        foreach ($page->pages as $subpage) 
+        {
+            $html[] = "<li>";
+            if ($href = $subpage->getHref()) $html[] = "<a href=\"{$href}\">";
+            else $html[] = "<span>";
+            $html[] = "<img src=\"/ui/cms/img/icons/edit.png\" alt=\"\"/>";
+            $html[] = $subpage->getLabel();
+            if ($href) $html[] = "</a>";
+            else $html[] = "</span>";            
+            $html[] = "</li>";
+        }
+        $html[] = "</ul>";
+    }
+
+    $html[] = "</li>";
+}
+
+echo join(PHP_EOL, $html);
+
+?>
+</ul>
+11111111111111

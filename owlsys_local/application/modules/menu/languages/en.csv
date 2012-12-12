@@ -1,0 +1,43 @@
+; Copyright 2012 Roger Castañeda
+; This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+; Language configuration for Menu module
+; Create date:
+; Revised by:
+; Author:  Roger Castañeda
+; Language: English
+; =======================================================================
+"MENU_SEPARATOR";"Menu separator"
+"MENU_SET_LAST_LINK";"Set Last item as link"
+"MENU_DEPTH";"Depth"
+"MENU_RENDER_FOR";"Render for"
+"MENU_XML_ITEM_ELEMENT_NOT_FOUND";"Menu item in XML file not found"
+"MENU_XML_FILE_NOT_FOUND";"Menu XML file not found"
+"MENU_CHOOSE_ITEM_TYPE";"Choose Menu Item Type"
+"MENU_ITEM_TYPE";"Menu Item Type"
+"MENU";"Menu"
+"MENU_UPDATE_MENUITEM";"Update item"
+"MENU_CREATE_MENUITEM";"Create new item"
+"MENU_PARAMS";"Params"
+"MENU_CURRENT_MENU";"Current Menu"
+"MENU_ITEM_ID_ALIAS";"ID Alias"
+"MENU_ITEM_WINDOW_TYPE";"Window Type"
+"MENU_ITEM_PARENT";"Item Parent"
+"MENU_ACTION_PRIVILEGE";"Privilege"
+"MENU_ITEM";"Menu item"
+"MENU_ITEM_NOT_FOUND";"Menu item not found"
+"MENU_NOT_PARENT";"Not Parent"
+"MENU_ROW_NOT_FOUND";"Menu not found"
+"MENU_ITEM_DELETED_SUCCESSFULLY";"Menu item deleted successfully"
+"MENU_ITEM_UPDATED_SUCCESSFULLY";"Menu item updated successfully"
+"MENU_ITEM_ADDED_SUCCESSFULLY";"Item added successfully"
+"MENU_MENU_CREATED_SUCCESSFULLY";"Menu created successfully"
+"MENU_MENU_UPDATED_SUCCESSFULLY";"Menu updated successfully"
+"MENU_MENU_DELETED_SUCCESSFULLY";"Menu deleted successfully"
+"MENU_MENU_UNPUBLISHED_SUCCESSFULLY";"Menu unpublished successfully"
+"MENU_MENU_PUBLISHED_SUCCESSFULLY";"Menu published successfully"
+"MENU_ITEM_UNPUBLISHED_SUCCESSFULLY";"Menu item unpublished successfully"
+"MENU_ITEM_PUBLISHED_SUCCESSFULLY";"Menu item published successfully"
+"MENU_UPDATE_MENU";"Update menu"
+"MENU_ADD_MENU";"Add menu"
+"MENU_MANAGE_MENU_ITEMS";"Manage menu items"
+"MENU_ENABLE_DROPDOWN_MULTILEVEL";"Enable dropdown multilevel (for horizontal distribution only)"

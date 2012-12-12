@@ -1,0 +1,49 @@
+<?php 
+/**
+ * Copyright 2012 Roger Castañeda
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+?>
+<article>
+
+	<header>
+		<h2>
+			<?php echo $this->translate("CONTACT_MANAGE_CATEGORIES") ?>
+		</h2>
+		<p>
+			<a href='<?php echo $this->baseUrl() ?>/contact/category/add/' class="btn">
+				<i class="icon-plus"></i>
+				<?php echo $this->translate("LBL_ADD_NEW") ?>
+			</a>
+		</p>
+	</header>
+	
+	<div>
+	<?php 
+	if ( count($this->categories) > 0 ) :
+	?>
+	<table class="table table-bordered table-hover table-striped">
+		<thead>
+		<tr>
+			<th><?php echo $this->translate("LBL_CATEGORY") ?></th>
+			<th><?php echo $this->translate("LBL_IMAGE") ?></th>
+			<th><?php echo $this->translate("LBL_STATUS") ?></th>
+			<th>-</th>
+			<th>#</th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php echo $this->partialLoop('partials/_row_category.phtml', $this->categories); ?>
+		</tbody>
+	</table>
+	<?php else : ?>
+		<p class="muted"><?php echo $this->translate("LBL_NO_ITEMS_REGISTERED_YET") ?></p>
+	<?php endif; ?>
+	</div>
+	
+	<?php echo $this->paginationControl( $this->categories, 'Sliding', 'pagination-control.phtml' ); ?>
+	
+</article>

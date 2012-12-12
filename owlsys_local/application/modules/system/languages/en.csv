@@ -1,0 +1,24 @@
+; Copyright 2012 Roger Castañeda
+; This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+; Language configuration for ACL module
+; Create date:
+; Revised by:
+; Author:  Roger Castañeda
+; Language: English
+;=======================================================================
+"SYSTEM_WIDGET_DELETED_SUCCESSFULLY";"Widget deleted successfully"
+"SYSTEM_WIDGET_UNPUBLISHED_SUCCESSFULLY";"Widget unpublished successfully"
+"SYSTEM_WIDGET_PUBLISHED_SUCCESSFULLY";"Widget published successfully"
+"SYSTEM_UPDATE_WIDGET";"Update Widget"
+"SYSTEM_WIDGET_ADDED_SUCCESSFULLY";"Widget added successfully"
+"SYSTEM_WIDGET_UPDATED_SUCCESSFULLY";"Widget updated successfully"
+"SYSTEM_WIDGET_ELEMENT_NOT_FOUND";"Widget element not found"
+"SYSTEM_NEW_WIDGET";"New Widget"
+"SYSTEM_WIDGET_NOT_FOUND";"Widget not found"
+"SYSTEM_ADD_WIDGET";"Add Widget"
+"SYSTEM_CHOOSE_WIDGET_TYPE";"Choose Widget Type"
+"SYSTEM_MANAGE_WIDGETS";"Manage Widgets"
+"SYSTEM_SKINS";"Skins"
+"SYSTEM_SKIN";"Skin"
+"SYSTEM_SKIN_IS_SELECTED";"Is Selected"
+"SYSTEM_SKIN_NOT_FOUND";"Skin not found"

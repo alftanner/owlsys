@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- License GPL 3 -->
+<menus>
+	<menu id="1">
+		<label>List Menus</label>
+		<description>Display menus registered</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>menu</module>
+		<controller>menu</controller>
+		<action>list</action>
+		<version>1.0</version>
+		<menu_type>menu-list</menu_type>
+	</menu>
+	<menu id="2">
+		<label>Add Menu</label>
+		<description>Display form for add new menu</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>menu</module>
+		<controller>menu</controller>
+		<action>create</action>
+		<version>1.0</version>
+		<menu_type>menu-add</menu_type>
+	</menu>
+	<menu id="3">
+		<label>Simple External Link</label>
+		<description>Create a Menu Item that links to another Web site.</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>menu</module>
+		<controller>item</controller>
+		<action>weblink</action>
+		<version>1.0</version>
+		<menu_type>external-link</menu_type>
+	</menu>
+	<menu id="4">
+		<label>Sitemap</label>
+		<description>Display the website sitemap.</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>menu</module>
+		<controller>menu</controller>
+		<action>sitemap</action>
+		<version>1.0</version>
+		<menu_type>sitemap</menu_type>
+	</menu>
+	<menu id="5">
+		<label>Separator</label>
+		<description>Create a separator.</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>menu</module>
+		<controller>item</controller>
+		<action>weblink</action>
+		<version>1.0</version>
+		<menu_type>separator</menu_type>
+	</menu>
+</menus>

@@ -1,0 +1,43 @@
+; Copyright 2012 Roger Castañeda
+; This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+; Language configuration for Menu module
+; Create date:
+; Revised by:
+; Author:  Roger Castañeda
+; Language: English
+; =======================================================================
+"MENU_SEPARATOR";"Separador de menú"
+"MENU_SET_LAST_LINK";"Establecer último enlace como vínculo"
+"MENU_DEPTH";"Profundidad"
+"MENU_RENDER_FOR";"Generar para"
+"MENU_XML_ITEM_ELEMENT_NOT_FOUND";"Item de menú no encontrado en especificación XML"
+"MENU_XML_FILE_NOT_FOUND";"Especificación XML de menú no encontrado"
+"MENU_CHOOSE_ITEM_TYPE";"Escoget tipo de item de menú"
+"MENU_ITEM_TYPE";"Tipo de item de menú"
+"MENU";"Menú"
+"MENU_UPDATE_MENUITEM";"Actualizar item de menú"
+"MENU_CREATE_MENUITEM";"Crear nuevo item de menú"
+"MENU_PARAMS";"Parámetros"
+"MENU_CURRENT_MENU";"Menú actual"
+"MENU_ITEM_ID_ALIAS";"ID Alias"
+"MENU_ITEM_WINDOW_TYPE";"Window Type"
+"MENU_ITEM_PARENT";"Item de menú padre"
+"MENU_ACTION_PRIVILEGE";"Privilegio"
+"MENU_ITEM";"Item de menú"
+"MENU_ITEM_NOT_FOUND";"Item de menú no encontrado"
+"MENU_NOT_PARENT";"No item padre"
+"MENU_ROW_NOT_FOUND";"Menú no encontrado"
+"MENU_ITEM_DELETED_SUCCESSFULLY";"Item de menú eliminado con éxito"
+"MENU_ITEM_UPDATED_SUCCESSFULLY";"Item de menú actualizado con éxito"
+"MENU_ITEM_ADDED_SUCCESSFULLY";"Item de menú agregado con éxito"
+"MENU_MENU_CREATED_SUCCESSFULLY";"Menú creado con éxito"
+"MENU_MENU_UPDATED_SUCCESSFULLY";"Menú actualizado con éxito"
+"MENU_MENU_DELETED_SUCCESSFULLY";"Menú eliminado con éxito"
+"MENU_MENU_UNPUBLISHED_SUCCESSFULLY";"Menú despublicado con éxito"
+"MENU_MENU_PUBLISHED_SUCCESSFULLY";"Menú publicado con éxito"
+"MENU_ITEM_UNPUBLISHED_SUCCESSFULLY";"Item de menú despublicado con éxito"
+"MENU_ITEM_PUBLISHED_SUCCESSFULLY";"Item de menú publicado con éxito"
+"MENU_UPDATE_MENU";"Menú actualizado"
+"MENU_ADD_MENU";"Agregar menú"
+"MENU_MANAGE_MENU_ITEMS";"Gestionar items de menú"
+"MENU_ENABLE_DROPDOWN_MULTILEVEL";"Habilitar Dropdown Multilevel Plugin (Solo para distribución horizontal)"

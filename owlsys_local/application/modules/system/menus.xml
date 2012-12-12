@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- License GPL 3 -->
+<menus>
+	<menu id="1">
+		<label>List Widgets</label>
+		<description>Display widgets registered</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>system</module>
+		<controller>widget</controller>
+		<action>list</action>
+		<version>1.0</version>
+		<menu_type>widget-list</menu_type>
+	</menu>
+	<menu id="2">
+		<label>Add Widget</label>
+		<description>Display widget types for selection</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>system</module>
+		<controller>widtget</controller>
+		<action>choose</action>
+		<version>1.0</version>
+		<menu_type>widget-choose</menu_type>
+	</menu>
+	<menu id="3">
+		<label>Extensions</label>
+		<description>Display detail info from each extension available</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>system</module>
+		<controller>index</controller>
+		<action>extension</action>
+		<version>1.0</version>
+		<menu_type>system-extensions</menu_type>
+	</menu>
+	<menu id="4">
+		<label>System Info</label>
+		<description>Display the system information</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>system</module>
+		<controller>index</controller>
+		<action>index</action>
+		<version>1.0</version>
+		<menu_type>system-info</menu_type>
+	</menu>
+	<menu id="5">
+		<label>List Skins (Backend)</label>
+		<description>Display skins</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>system</module>
+		<controller>skin</controller>
+		<action>list</action>
+		<version>1.0</version>
+		<menu_type>list-skins</menu_type>
+	</menu>
+</menus>
