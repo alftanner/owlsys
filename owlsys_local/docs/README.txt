@@ -28,3 +28,12 @@ The following is a sample VHOST you might want to consider for your project.
    </Directory>
 
 </VirtualHost>
+
+Default Account
+=====================
+Username: admin@localhost.com
+Password: admin
+
+Login
+=====================
+http://localhost/owlsys/public/acl/
