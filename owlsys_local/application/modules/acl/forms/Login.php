@@ -19,9 +19,10 @@ class Acl_Form_Login extends Twitter_Bootstrap_Form_Horizontal
      */
     public function init()
     {
-    	$this->_addClassNames('well');
+    	#$this->_addClassNames('well');
     	$this->setMethod(Zend_Form::METHOD_POST);
         $this->setTranslator();
+        $this->setAttrib('id', 'frmlogin');
         
 		$txtEmail = $this->createElement('text', 'email')
         	->setLabel( "ACL_EMAIL" )
@@ -43,22 +44,26 @@ class Acl_Form_Login extends Twitter_Bootstrap_Form_Horizontal
         	->setRequired(TRUE)
         	->setAttrib('placeholder', '*******');
         	#->setAttrib('size', 40);
+        $length = new Zend_Validate_StringLength(6,50);
+        $length->setMessages(
+            array(
+                'stringLengthTooShort'=> sprintf($this->getTranslator()->translate('VALIDATE_PASSWORD_MIN'), 6) , 
+                'stringLengthTooLong'=> sprintf($this->getTranslator()->translate('VALIDATE_PASSWORD_MAX'), 50))
+            );
+        $txtPassword->addValidator($length);
         $this->addElement($txtPassword);
         
         #$token = new Zend_Form_Element_Hash('token');
         $token = $this->createElement('hash', 'csrflogintoken');
         $token->setSalt( md5( uniqid( rand(), TRUE ) ) );
-        $token->setTimeout( 60 );
+        $token->setTimeout( 300 );
         $token->setDecorators( array('ViewHelper') );
         $this->addElement($token);
         
         $submitOptions = array( 
-        	'buttonType' => Twitter_Bootstrap_Form_Element_Button::BUTTON_LINK,
+        	'buttonType' => Twitter_Bootstrap_Form_Element_Button::BUTTON_SUCCESS,
         	'type' => 'submit',
-       		'buttonType'    => 'default',
-        	'icon' => 'lock',
-        	'whiteIcon'  => false,
-        	'iconPosition' => Twitter_Bootstrap_Form_Element_Button::ICON_POSITION_RIGHT
+       		'buttonType'    => 'success',
         ); 
         $btnSubmit = new Twitter_Bootstrap_Form_Element_Button('submit', $submitOptions);
         #$btnSubmit = $this->createElement('submit', 'submit');

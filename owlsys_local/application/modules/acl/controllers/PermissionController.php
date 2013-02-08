@@ -122,7 +122,9 @@ class Acl_PermissionController extends Zend_Controller_Action
 			#$frmManageResource->getMessages()
 			
             $resourceDataIds = implode(',', $resourceDataIds);
-            $frmManageResource->getElement('hrs')->setValue( $resourceDataIds );
+            $hrs = new Zend_Session_Namespace('resourceDataIds');
+            $hrs->hrs = $resourceDataIds;
+            #$frmManageResource->getElement('hrs')->setValue( $resourceDataIds );
             $this->view->modules = $modules;
             $this->view->zfelements = $zfelements;
             
@@ -156,7 +158,11 @@ class Acl_PermissionController extends Zend_Controller_Action
 	        
 	        #Zend_Debug::dump( $this->getRequest()->getParams() );
 	        $mdlPermission = new Acl_Model_Permission();
-	        $resources = $this->getRequest()->getParam( 'hrs');
+	        #$resources = $this->getRequest()->getParam( 'hrs');
+	        $hrs = new Zend_Session_Namespace('resourceDataIds');
+	        $resources = $hrs->hrs;
+	        zend_session::namespaceUnset('resourceDataIds');
+	        
 	        $arrResources = explode(',', $resources);
 	        #$mdlPermission->deleteByRole($role);
 	        $permissions = $role->findDependentRowset('Acl_Model_Permission', 'Role');
@@ -172,6 +178,16 @@ class Acl_PermissionController extends Zend_Controller_Action
 	        	$permission->resource_id = $resourceId;
 	        	$permission->privilege = $this->getRequest()->getParam('cb_res_'.$resourceId, 'deny');
 	        	$permission->save();
+	        }
+	        
+	        /* @var $cache Zend_Cache_Backend_File */
+	        $cache = Zend_Registry::get('cacheACL');
+	        $mdlRole = new Acl_Model_Role();
+	        $roles = $mdlRole->getList();
+	        foreach( $roles as $role ) {
+	            if ( $cache->test('cacheACL_'.$role->id) ) {
+	                $cache->remove('cacheACL_'.$role->id);
+	            }
 	        }
 	        
 	        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("LBL_CHANGES_SAVED") ) );

@@ -32,11 +32,13 @@ class Menu_Form_Menu extends Twitter_Bootstrap_Form_Horizontal
         	->setRequired(TRUE)
         	->setAttrib('size', 40);
         $this->addElement($name);
-        
+
+        /* @var $rbPublished Zend_Form_Element_Radio */
         $rbPublished = $this->createElement("radio", "published")
         	->setLabel("LBL_PUBLISHED")
-        	->setValue(1)
-        	->setMultiOptions( array( "LBL_NO", "LBL_YES") );
+        	->setValue(1);
+        $rbPublished->addMultiOption(0, "LBL_NO");
+        $rbPublished->addMultiOption(1, "LBL_YES");
         $this->addElement($rbPublished);
         
         $token = new Zend_Form_Element_Hash('token');

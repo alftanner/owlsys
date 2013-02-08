@@ -7,6 +7,25 @@
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 ?>
+<div class="accordion" id="accordion_base">
+	<div class="accordion-group">
+		<!-- content header -->
+		<div class="accordion-heading">
+			<h4 class="accordion-toggle">
+    			<?php echo $this->widget->label ?>
+        		<small>
+        			<?php echo $this->widget->description ?>
+        		</small>
+			</h4>
+		</div>
+		<!-- content body -->
+		<div class="accordion-body in">
+			<div class="accordion-inner">
+				<?php echo $this->frmWidget; ?>
+			</div>
+		</div>
+	</div>
+</div>
 <script>
 $(document).ready(function(){
 	$("#menuitem").attr("disabled","disabled");
@@ -23,16 +42,3 @@ $(document).ready(function(){
 	);
  });
 </script>
-
-<div class="page-header">
-	<h2>
-		<?php echo $this->widget->label ?>
-		<small><?php echo $this->widget->description ?></small>
-	</h2>
-</div>
-
-<div>
-	<?php echo $this->frmWidget; ?>
-</div>
-
-

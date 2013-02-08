@@ -6,26 +6,10 @@
 		<js>mod_content.js</js>
 		<js>modernizr.custom.99420.js</js>
 		<js>system.js</js>
-		
 		<js>bootstrap-wysihtml5.js</js>
-		<js>bootstrap-affix.js</js>
-		<js>bootstrap-alert.js</js>
-		<js>bootstrap-button.js</js>
-		<js>bootstrap-carousel.js</js>
-		<js>bootstrap-collapse.js</js>
-		<!--
-		this makes conflict with wysithml5 plugin
-		<js>bootstrap-dropdown.js</js>
-		-->
-		<js>bootstrap-modal.js</js>
-		<js>bootstrap-popover.js</js>
-		<js>bootstrap-scrollspy.js</js>
-		<js>bootstrap-tab.js</js>
-		<js>bootstrap-tooltip.js</js>
-		<js>bootstrap-transition.js</js>
-		<js>bootstrap-typeahead.js</js>
-		
 		<js>wysihtml5-0.3.0.min.js</js>
+		<js>bootbox.min.js</js>
 		<js>bootstrap.min.js</js>
+		<js>xselect.js</js>
 	</files>
 </skin>

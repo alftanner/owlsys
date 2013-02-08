@@ -28,6 +28,7 @@
             <controllerFile controllerName="Error">
               <actionMethod actionName="error"/>
               <actionMethod actionName="noauth"/>
+              <actionMethod actionName="ids"/>
             </controllerFile>
           </controllersDirectory>
           <formsDirectory>
@@ -48,6 +49,7 @@
               <actionMethod actionName="list"/>
               <actionMethod actionName="delete"/>
               <actionMethod actionName="block"/>
+              <actionMethod actionName="resetpassword"/>
             </controllerFile>
             <controllerFile controllerName="Resource">
               <actionMethod actionName="index"/>
@@ -90,6 +92,7 @@
             <modelFile modelName="Role"/>
             <modelFile modelName="Account"/>
             <modelFile modelName="Permission"/>
+            <modelFile modelName="Accountdetail"/>
           </modelsDirectory>
           <viewsDirectory>
             <viewScriptsDirectory>
@@ -158,6 +161,9 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Permission">
                 <viewScriptFile forActionName="update"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Account">
+                <viewScriptFile forActionName="resetpassword"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

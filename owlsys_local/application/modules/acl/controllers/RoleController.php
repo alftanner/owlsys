@@ -56,9 +56,9 @@ class Acl_RoleController extends Zend_Controller_Action
 					$this->_helper->redirector( "list", "role", "acl" );
 				}
 			} else {
-				$fields = array();
+				/*$fields = array();
 				foreach ( $frmRole->getElements() as $element ) $fields[] = $element->getName();
-				$frmRole->addDisplayGroup( $fields, 'form', array( 'legend' => "ACL_CREATE_ROLE", ) );
+				$frmRole->addDisplayGroup( $fields, 'form', array( 'legend' => "ACL_CREATE_ROLE", ) );*/
 			}
         } catch (Exception $e) {
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
@@ -103,9 +103,9 @@ class Acl_RoleController extends Zend_Controller_Action
 				$rowSelected = array();
 				$frmRole->populate( $role->toArray() );
 				
-				$fields = array();
+				/*$fields = array();
 				foreach ( $frmRole->getElements() as $element ) $fields[] = $element->getName();
-				$frmRole->addDisplayGroup( $fields, 'form', array( 'legend' => "ACL_UPDATE_ROLE", ) );
+				$frmRole->addDisplayGroup( $fields, 'form', array( 'legend' => $translate->translate("ACL_UPDATE_ROLE"), ) );*/
 			}
 	        $this->view->frmRole = $frmRole;
         } catch (Exception $e) {
@@ -122,8 +122,8 @@ class Acl_RoleController extends Zend_Controller_Action
     {
         try {
         	$mdlRole = new Acl_Model_Role();
-        	$adapter = $mdlRole->getPaginatorAdapterList();
-        	$paginator = new Zend_Paginator($adapter);
+        	$adapter = $mdlRole->getList();
+        	$paginator = Zend_Paginator::factory($adapter);
         	$paginator->setItemCountPerPage(10);
         	$pageNumber = $this->getRequest()->getParam('page',1);
         	$paginator->setCurrentPageNumber($pageNumber);

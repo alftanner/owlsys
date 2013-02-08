@@ -47,7 +47,12 @@ class OS_Application_Plugins_Skin extends Zend_Controller_Plugin_Abstract
 			}
 			
 		} catch (Exception $e) {
-			echo $e->getMessage();
+		    try {
+		        $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'plugins.log');
+		        $logger = new Zend_Log($writer);
+		        $logger->log($e->getMessage(), Zend_Log::ERR);
+		    } catch (Exception $e) {
+		    }
 		}
 
 	} 

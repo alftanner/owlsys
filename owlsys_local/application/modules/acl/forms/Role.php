@@ -19,7 +19,7 @@ class Acl_Form_Role extends Twitter_Bootstrap_Form_Horizontal
      */
     public function init()
     {
-    	$this->_addClassNames('well');
+    	#$this->_addClassNames('well');
     	$this->setMethod(Zend_Form::METHOD_POST);
     	
         $this->setTranslator();

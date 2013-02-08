@@ -20,7 +20,8 @@ class Acl_Bootstrap extends Zend_Application_Module_Bootstrap
 		$loader->addPrefixPath('Acl_Plugin', 'application/modules/acl/plugins/');
 		$this->bootstrap('frontController') ;
 		$front = $this->getResource('frontController') ;
-		$front->registerPlugin( new Acl_Plugin_Lang() );
+		#$front->registerPlugin( new Acl_Plugin_Lang() );
+		$front->registerPlugin( new Acl_Plugin_Router() );
 	}
 
 	

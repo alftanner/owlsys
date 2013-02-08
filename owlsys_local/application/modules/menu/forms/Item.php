@@ -142,7 +142,7 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
         
         $token = new Zend_Form_Element_Hash('token');
         $token->setSalt( md5( uniqid( rand(), TRUE ) ) );
-        $token->setTimeout( 60 );
+        $token->setTimeout( 300 );
         $token->setDecorators( array('ViewHelper') );
         $this->addElement($token);
         

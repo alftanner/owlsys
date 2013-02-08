@@ -8,11 +8,21 @@
  */
 ?>
 
-<div class="page-header">
-	<h2><?php echo $this->menu->name; ?>
-	<small><?php echo $this->menuitem->label; ?></small>
-	</h2>
+<div class="accordion" id="accordion_base">
+	<div class="accordion-group">
+		<!-- content header -->
+		<div class="accordion-heading">
+			<h4 class="accordion-toggle">
+			    <?php echo $this->menu->name; ?>
+	            <small><?php echo $this->menuitem->label; ?></small>
+            </h4>
+		</div>
+		<!-- content body -->
+		<div class="accordion-body in">
+			<div class="accordion-inner">
+				<?php echo $this->frmMenuItem; ?>
+			</div>
+		</div>
+	</div>
 </div>
-<div>
-	<?php echo $this->frmMenuItem; ?>
-</div>
+

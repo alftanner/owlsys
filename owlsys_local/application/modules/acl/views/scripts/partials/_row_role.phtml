@@ -13,27 +13,25 @@
 	<td class="center"><?php echo $this->priority ?></td>
 	<td class="center">
 		<?php #if ( $this->id != 1 ) : ?>
-		<i class="icon-list"></i> 
-		<a href='<?=$this->baseUrl()?>/acl/permission/manage/role/<?php echo $this->id;?>'>
+		<a href='<?=$this->baseUrl()?>/acl/permission/manage/role/<?php echo $this->id;?>' class="btn btn-mini">
+		    <i class="icon-list"></i>
 			<?php echo $this->translate("ACL_MANAGE_PERMISSIONS") ?>
 		</a>
 		<?php #endif; ?>
 	</td>
 	<td class="center">
 		<?php if ( $this->id > 3 ) : ?>
-		<i class="icon-edit"></i> 
-		<a href='<?=$this->baseUrl()?>/acl/role/update/id/<?php echo $this->id;?>'>
-			<?php echo $this->translate("LBL_UPDATE") ?>
+		 
+		<a href='<?=$this->baseUrl()?>/acl/role/update/id/<?php echo $this->id;?>' class="btn btn-mini">
+			<i class="icon-edit"></i>
+			<?php echo $this->translate('LBL_EDIT') ?>
 		</a>
 		<?php endif; ?>
-	</td>
-	<td class="center">
-		<?php if ( $this->id > 3 ) : ?>
-		<i class="icon-trash"></i> 
-		<a href='<?=$this->baseUrl()?>/acl/role/delete/id/<?php echo $this->id;?>'>
-			<?php echo $this->translate("LBL_DELETE") ?>
+		<?php /*if ( $this->id > 3 ) : ?>
+		<a href='<?=$this->baseUrl()?>/acl/role/delete/id/<?php echo $this->id;?>' class="btn btn-mini">
+			<i class="icon-trash"></i>
 		</a>
-		<?php endif; ?>
+		<?php endif;*/ ?>
 	</td>
 	<td class="center"><?php echo $this->id ?></td>
 </tr>

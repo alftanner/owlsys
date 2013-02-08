@@ -18,27 +18,31 @@
 	</td>
 	<td class="center">
 		<?php if ( $this->published ): ?>
-			<a href='<?=$this->baseUrl()?>/content/article/publish/id/<?php echo $this->id;?>' class="badge badge-success">
+			<a href='<?=$this->baseUrl()?>/content/article/publish/id/<?php echo $this->id;?>' class="label label-success">
 			<?php echo $this->translate("LBL_PUBLISHED") ?>
 			</a>
 		<?php else: ?>
-			<a href='<?=$this->baseUrl()?>/content/article/publish/id/<?php echo $this->id;?>' class="badge badge-important">
+			<a href='<?=$this->baseUrl()?>/content/article/publish/id/<?php echo $this->id;?>' class="label label-important">
 			<?php echo $this->translate("LBL_UNPUBLISHED") ?>
 			</a>
 		<?php endif; ?>
 	</td>
 	<td class='center'>
-		<a href='<?=$this->baseUrl()?>/content/article/move/direction/up/id/<?php echo $this->id; ?>'>
-		<i class="icon-chevron-up"></i>
-		<?php #echo $this->translate("LBL_MOVE_UP") ?>
-		</a>
-		<span class="muted">|</span>
-		<a href='<?=$this->baseUrl()?>/content/article/move/direction/down/id/<?php echo $this->id;?>'>
-		<i class="icon-chevron-down"></i>
-		<?php #echo $this->translate("LBL_MOVE_DOWN") ?>
-		</a>
-		<span class="muted">|</span>
-		<a href='<?=$this->baseUrl()?>/content/article/delete/id/<?php echo $this->id; ?>'><i class="icon-trash"></i><?php #echo $this->translate("LBL_DELETE") ?></a>
+	    <div class="btn-group">
+    		<a href='<?=$this->baseUrl()?>/content/article/move/direction/up/id/<?php echo $this->id; ?>' class="btn btn-mini">
+    		<i class="icon-chevron-up"></i>
+    		<?php #echo $this->translate("LBL_MOVE_UP") ?>
+    		</a>
+    		
+    		<a href='<?=$this->baseUrl()?>/content/article/move/direction/down/id/<?php echo $this->id;?>' class="btn btn-mini">
+    		<i class="icon-chevron-down"></i>
+    		<?php #echo $this->translate("LBL_MOVE_DOWN") ?>
+    		</a>
+    		
+    		<a href='<?=$this->baseUrl()?>/content/article/delete/id/<?php echo $this->id; ?>' class="btn btn-mini">
+    		    <i class="icon-trash"></i><?php #echo $this->translate("LBL_DELETE") ?>
+		    </a>
+		</div>
 	</td>
 	<td class="center"><?php echo $this->ordering ?></td>
 	<td class="center"><?php echo $this->id ?></td>

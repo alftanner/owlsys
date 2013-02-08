@@ -44,7 +44,7 @@ class Content_Model_Article extends Zend_Db_Table_Abstract
      * Returns a recordset of articles order by category_id asc and ordering
      * @return Zend_Paginator_Adapter_DbTableSelect
      */
-    function getPaginatorAdapterList()
+    function getList()
     {
         $select = $this->select()
         	->setIntegrityCheck(false)
@@ -54,7 +54,8 @@ class Content_Model_Article extends Zend_Db_Table_Abstract
         	->order('art.ordering ASC')
         ;
         #echo $select->__toString();
-        return new Zend_Paginator_Adapter_DbTableSelect($select);
+        #return new Zend_Paginator_Adapter_DbTableSelect($select);
+        return $this->fetchAll($select);
     }
     
     /**

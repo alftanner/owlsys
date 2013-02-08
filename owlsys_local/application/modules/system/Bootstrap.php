@@ -16,10 +16,10 @@ class System_Bootstrap extends Zend_Application_Module_Bootstrap
      */
     public function _initPlugins()
     {
-    	$loader = new Zend_Loader_PluginLoader();
+    	/*$loader = new Zend_Loader_PluginLoader();
     	$loader->addPrefixPath('System_Plugin', 'application/modules/system/plugins/');
     	$this->bootstrap('frontController') ;
     	$front = $this->getResource('frontController') ;
-    	$front->registerPlugin( new System_Plugin_Lang() );
+    	$front->registerPlugin( new System_Plugin_Lang() );*/
     }
 }

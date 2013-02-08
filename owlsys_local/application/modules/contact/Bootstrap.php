@@ -17,11 +17,11 @@ class Contact_Bootstrap extends Zend_Application_Module_Bootstrap
      */
 	public function _initPlugins() 
 	{
-		$loader = new Zend_Loader_PluginLoader();
+		/*$loader = new Zend_Loader_PluginLoader();
 		$loader->addPrefixPath('Menu_Plugin', 'application/modules/contact/plugins/');
 		$this->bootstrap('frontController') ;
 		$front = $this->getResource('frontController') ;
-		$front->registerPlugin( new Contact_Plugin_Lang() );
+		$front->registerPlugin( new Contact_Plugin_Lang() );*/
 	}
 
 }

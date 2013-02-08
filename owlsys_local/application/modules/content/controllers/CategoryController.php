@@ -69,9 +69,9 @@ class Content_CategoryController extends Zend_Controller_Action
         		    $this->_helper->redirector( "listregistered", "category", "content" );
         		}
         	} else {
-        		$fields = array();
+        		/*$fields = array();
         		foreach ( $frmCategory->getElements() as $element ) $fields[] = $element->getName();
-        		$frmCategory->addDisplayGroup( $fields, 'form', array( 'legend' => "CONTENT_ADD_CATEGORY", ) );
+        		$frmCategory->addDisplayGroup( $fields, 'form', array( 'legend' => "CONTENT_ADD_CATEGORY", ) );*/
         	}
         	
         } catch (Exception $e) {
@@ -122,9 +122,9 @@ class Content_CategoryController extends Zend_Controller_Action
         			$this->_helper->redirector( "listregistered", "category", "content" );
         		}
         	} else {
-        		$fields = array();
+        		/*$fields = array();
         		foreach ( $frmCategory->getElements() as $element ) $fields[] = $element->getName();
-        		$frmCategory->addDisplayGroup( $fields, 'form', array( 'legend' => "CONTENT_EDIT_CATEGORY", ) );
+        		$frmCategory->addDisplayGroup( $fields, 'form', array( 'legend' => "CONTENT_EDIT_CATEGORY", ) );*/
         	}
         } catch (Exception $e) {
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );

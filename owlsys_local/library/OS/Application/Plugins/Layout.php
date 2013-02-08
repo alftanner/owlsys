@@ -54,9 +54,14 @@ class OS_Application_Plugins_Layout extends Zend_Controller_Plugin_Abstract
 			Zend_Layout::getMvcInstance()->setLayout( $layout );
 			
 		} catch (Exception $e) {
-			echo $e->getMessage();
 			$layout = "frontend";
 			Zend_Layout::getMvcInstance()->setLayout( $layout );
+			try {
+			    $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'plugins.log');
+			    $logger = new Zend_Log($writer);
+			    $logger->log($e->getMessage(), Zend_Log::ERR);
+			} catch (Exception $e) {
+			}
 		}
 
 	} 

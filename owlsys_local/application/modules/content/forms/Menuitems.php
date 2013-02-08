@@ -56,9 +56,9 @@ class Content_Form_Menuitems extends menu_Form_Item
     {
         $this->setAttrib('enctype', 'multipart/form-data');
         
-        $this->defaultFormFields[] = 'articleFilter';
+        #$this->defaultFormFields[] = 'articleFilter';
         
-        $hArticleId = $this->createElement("hidden", "aid")
+        /*$hArticleId = $this->createElement("hidden", "aid")
         	->setDecorators( array('ViewHelper') );
         $this->addElement( $hArticleId );
         
@@ -68,7 +68,20 @@ class Content_Form_Menuitems extends menu_Form_Item
 	    $txtFilter->setAttrib('size',40);
 	    $txtFilter->setJQueryParam('source', $view->baseUrl() ."/content/article/getbychar/");
 	    #$txtFilter->setJQueryParam('source', "content/article/getbychar/");
-        $this->addElement($txtFilter);
+        $this->addElement($txtFilter);*/
+        
+        /* @var $cbArticle Zend_Form_Element_Select */
+        $cbArticle = $this->createElement('select', 'aid');
+        $cbArticle->setLabel("CONTENT_COD_ARTICLE");
+        $cbArticle->setRequired(true);
+        $cbArticle->setOrder( $this->order++ );
+        $mdlArticle = new Content_Model_Article();
+        $articles = $mdlArticle->getList();
+        foreach ( $articles as $article ) {
+            $cbArticle->addMultiOption($article->id, $article->title);
+        }
+        $this->addElement($cbArticle);
+        
     }
     
     /**

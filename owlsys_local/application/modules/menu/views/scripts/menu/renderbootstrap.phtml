@@ -1,12 +1,14 @@
-<script>
+<?php 
+/*if ( $this->params['distribution'] == 'horizontal' ) : 
+$var = "
 $(document).ready(function(){
 
-	$('ul.nav').children().each( function(){
+	$('#".$this->uid."').children().each( function(){
 		if ( $(this).find('ul').length > 0 ) {
 			$(this).addClass('dropdown');
 			$(this).children('a').attr('data-toggle', 'dropdown');
 			$(this).children('a').addClass('dropdown-toggle');
-			$(this).children('a').append(' <b class="caret"></b>');
+			$(this).children('a').append(' <b class=\"caret\"></b>');
 			$(this).find('ul').addClass('dropdown-menu');
 			$(this).find('li').has('ul.dropdown-menu').each( function(){
 				$(this).addClass('dropdown-submenu');
@@ -15,5 +17,7 @@ $(document).ready(function(){
 	});
 	
 });
-
-</script>
+";
+$this->headScript()->appendScript($var); 
+endif;*/ 
+?>

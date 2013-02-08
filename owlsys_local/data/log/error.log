@@ -1,0 +1,6 @@
+[Sun Jan 13 22:10:50 2013] [warn] RSA server certificate is a CA certificate (BasicConstraints: CA == TRUE !?)
+[Sun Jan 13 22:10:50 2013] [warn] RSA server certificate is a CA certificate (BasicConstraints: CA == TRUE !?)
+[Sun Jan 13 22:12:48 2013] [warn] RSA server certificate is a CA certificate (BasicConstraints: CA == TRUE !?)
+[Sun Jan 13 22:12:48 2013] [warn] RSA server certificate is a CA certificate (BasicConstraints: CA == TRUE !?)
+[Sun Jan 13 22:13:20 2013] [warn] RSA server certificate is a CA certificate (BasicConstraints: CA == TRUE !?)
+[Sun Jan 13 22:13:20 2013] [warn] RSA server certificate is a CA certificate (BasicConstraints: CA == TRUE !?)

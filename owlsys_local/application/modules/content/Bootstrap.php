@@ -20,6 +20,7 @@ class Content_Bootstrap extends Zend_Application_Module_Bootstrap
 		$loader->addPrefixPath('Menu_Plugin', 'application/modules/content/plugins/');
 		$this->bootstrap('frontController') ;
 		$front = $this->getResource('frontController') ;
-		$front->registerPlugin( new Content_Plugin_Lang() );
+		#$front->registerPlugin( new Content_Plugin_Lang() );
+		$front->registerPlugin( new Content_Plugin_Router() );
 	}
 }

@@ -12,7 +12,6 @@
  */
 class Menu_Form_Widgets extends System_Form_Widget
 {
-    
     /**
      * (non-PHPdoc)
      * @see System_Form_Widget::init()
@@ -62,13 +61,13 @@ class Menu_Form_Widgets extends System_Form_Widget
         }
         $this->addElement( $cbMenu );
         
+        /* @var $cbDistribution Zend_Form_Element_Select */
         $cbDistribution = $this->createElement("select", "distribution")
 	        ->setOrder( $this->order++ )
 	        ->setLabel("LBL_DISTRIBUTION")
-	        ->setRequired(true)
-	        ->addMultioption( 'horizontal', "LBL_HORIZONTAL" )
-	        ->addMultioption( 'vertical', "LBL_VERTICAL" )
-        ;
+	        ->setRequired(true);
+        $cbDistribution->addMultiOption('horizontal', "LBL_HORIZONTAL");
+        $cbDistribution->addMultiOption('vertical', "LBL_VERTICAL");
         $this->addElement( $cbDistribution );
         
         $txtCSS = $this->createElement("text", "css")
@@ -80,14 +79,15 @@ class Menu_Form_Widgets extends System_Form_Widget
         ;
         $this->addElement( $txtCSS );
         
-        $rbDropdownMultilevel = $this->createElement("radio", "dropdownmultilevel")
+        /* @var $rbDropdownMultilevel Zend_Form_Element_Radio */
+        /*$rbDropdownMultilevel = $this->createElement("radio", "dropdownmultilevel")
 	        ->setOrder($this->order++)
 	        ->setLabel("MENU_ENABLE_DROPDOWN_MULTILEVEL")
 			->setValue(0)
-			->setRequired(true)
-			->setMultiOptions( array( "LBL_NO", "LBL_YES") )
-        ;
-		$this->addElement($rbDropdownMultilevel);
+			->setRequired(true);
+        $rbDropdownMultilevel->addMultiOption($this->translator->translate('LBL_NO')); 
+        $rbDropdownMultilevel->addMultiOption($this->translator->translate('LBL_YES'));
+		$this->addElement($rbDropdownMultilevel);*/
         
     }
     
@@ -111,7 +111,7 @@ class Menu_Form_Widgets extends System_Form_Widget
 	        ->setLabel("MENU_SET_LAST_LINK")
 	        ->setValue(1)
 	        ->setRequired(true)
-	        ->setMultiOptions( array( "LBL_NO", "LBL_YES") );
+	        ->setMultiOptions( array( $this->translator->translate("LBL_NO"), $this->translator->translate("LBL_YES")) );
         $this->addElement($rbLastLink);
         
         $txtSeparator = $this->createElement("text", "separator")
@@ -143,8 +143,8 @@ class Menu_Form_Widgets extends System_Form_Widget
 	    	->setOrder( $this->order++ )
 	    	->setLabel("LBL_DISTRIBUTION")
 	    	->setRequired(true)
-	    	->addMultioption( 'horizontal', "LBL_HORIZONTAL" )
-	    	->addMultioption( 'vertical', "LBL_VERTICAL" )
+	    	->addMultioption( 'horizontal', $this->translator->translate("LBL_HORIZONTAL") )
+	    	->addMultioption( 'vertical', $this->translator->translate("LBL_VERTICAL") )
     	;
     	$this->addElement( $cbDistribution );
     

@@ -7,17 +7,25 @@
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 ?>
-<article>
-
-	<div>
-		<?php echo $this->frmArticle ?>
+<div class="accordion" id="accordion_base">
+	<div class="accordion-group">
+		<!-- content header -->
+		<div class="accordion-heading">
+			<h4 class="accordion-toggle"><?php echo $this->translate("CONTENT_EDIT_ARTICLE") ?></h4>
+		</div>
+		<!-- content body -->
+		<div class="accordion-body in">
+			<div class="accordion-inner">
+				<?php echo $this->frmArticle ?>
+			</div>
+		</div>
 	</div>
-	
-</article>
+</div>
+
 <script type='text/javascript'>
 $(document).ready(function(){
 	// content
-	$('#content').wysihtml5();
+	$('#content').wysihtml5({stylesheets: '<?php echo $this->baseUrl() ?>/skins/default/css/wysiwyg-color.css'});
 	$('#content').css('width', '600px');
 	$('#content').css('height', '150px');
 	$('#content').attr('placeholder', '<?php echo $this->translate('LBL_ENTER_TEXT') ?>');

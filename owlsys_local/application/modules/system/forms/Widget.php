@@ -17,6 +17,11 @@ class System_Form_Widget extends Twitter_Bootstrap_Form_Horizontal
      * @var int
      */
     public $order = 1;
+    /**
+     *
+     * @var Zend_Translate_Adapter
+     */
+    protected $translator;
 
     /**
      * Init default fields for widget form
@@ -24,8 +29,11 @@ class System_Form_Widget extends Twitter_Bootstrap_Form_Horizontal
      */
     public function init()
     {
+        
         $this->_addClassNames('well');
     	$this->setMethod(Zend_Form::METHOD_POST);
+    	
+    	$this->translator = Zend_Registry::get('Zend_Translate');
     	
         $this->setTranslator();
         
@@ -77,7 +85,7 @@ class System_Form_Widget extends Twitter_Bootstrap_Form_Horizontal
 	        ->setLabel("MENU_RENDER_FOR")
 	        ->setValue(0)
 	        ->setRequired(true)
-	        ->setMultiOptions( array( "LBL_ALL", "LBL_SELECTED_ONLY") );
+	        ->setMultiOptions( array( $this->translator->translate("LBL_ALL"), $this->translator->translate("LBL_SELECTED_ONLY")) );
         $this->addElement($rbRenderFor);
         
         $cbMenuItem = $this->createElement("multiselect", "menuitem")

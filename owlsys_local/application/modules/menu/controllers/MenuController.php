@@ -63,9 +63,9 @@ class Menu_MenuController extends Zend_Controller_Action
             		$this->_helper->redirector( "list", "menu", "menu" );
             	}
             } else {
-            	$fields = array();
+            	/*$fields = array();
             	foreach ( $frmMenu->getElements() as $element ) $fields[] = $element->getName();
-            	$frmMenu->addDisplayGroup( $fields, 'form', array( 'legend' => "MENU_ADD_MENU", ) );
+            	$frmMenu->addDisplayGroup( $fields, 'form', array( 'legend' => "MENU_ADD_MENU", ) );*/
             }
             $frmMenu->setAction( $this->_request->getBaseUrl() . '/menu/menu/create' );
             $this->view->form = $frmMenu;
@@ -101,11 +101,11 @@ class Menu_MenuController extends Zend_Controller_Action
             		$this->_helper->redirector( "list", "menu", "menu" );
             	}
             } else {
-            	$frmMenu->populate( $menu->toArray() );
-            	$fields = array();
+            	/*$fields = array();
             	foreach ( $frmMenu->getElements() as $element ) $fields[] = $element->getName();
-            	$frmMenu->addDisplayGroup( $fields, 'form', array( 'legend' => "MENU_UPDATE_MENU", ) );
+            	$frmMenu->addDisplayGroup( $fields, 'form', array( 'legend' => "MENU_UPDATE_MENU", ) );*/
             }
+            $frmMenu->populate( $menu->toArray() );
             $frmMenu->setAction( $this->_request->getBaseUrl() . '/menu/menu/update' );
             $this->view->form = $frmMenu;
         } catch (Exception $e) {
@@ -212,6 +212,7 @@ class Menu_MenuController extends Zend_Controller_Action
             $navigation = Zend_Layout::getMvcInstance()->getView()->navigation();
             $navigation->setAcl($acl)->setRole( strval($role) );
             #Zend_Debug::dump($navigation);
+            #Zend_Debug::dump($params);
             #die();
             $menuId = trim($params['menuId']);
             $menuSelected = $navigation->findOneById( 'menu-'.$menuId );
@@ -226,10 +227,11 @@ class Menu_MenuController extends Zend_Controller_Action
             if ( array_key_exists('css', $params) ) {
                 $css .= trim($params['css'])." ";
             } 
+            /*
             if ( array_key_exists('dropdownmultilevel', $params) ) {
                 if ( trim($params['dropdownmultilevel']) == 1 ) $css .= " horizontal-dropdown-multilevel ";
                 $this->view->dropdownmultilevel = trim($params['dropdownmultilevel']);
-            }
+            }*/
             $menu->setUlClass( $css );
             #if ( array_key_exists('css', $params) ) $this->view->menuSelected = $menuSelected;
             echo $menu->renderMenu($menuSelected);
@@ -315,25 +317,20 @@ class Menu_MenuController extends Zend_Controller_Action
         	}
         	$params = $this->getRequest()->getParams();
         	$navigation = Zend_Layout::getMvcInstance()->getView()->navigation();
+        	/* @var $navigation Zend_Navigation */
         	$navigation->setAcl($acl)->setRole( strval($role) );
         	$menuId = trim($params['menuId']);
         	$menuSelected = $navigation->findOneById( 'menu-'.$menuId );
         	
-        	#$navigation = new Zend_Navigation();
-        	#$page = new Zend_Navigation_Page_Mvc();
+        	$this->view->params = $params;
         	
-        	echo '<div class="navbar">
-					  <div class="navbar-inner">
-					      <div class="container">
-					        ';
-        	
+        	/* @var $menu Zend_View_Helper_Navigation_Menu */
         	$menu = $navigation->menu();
-        	$menu->setUlClass( 'nav' );
+        	$horizontalCss = ( $params['distribution'] == 'horizontal' ) ? ' menu-horizontal-bootstrap ' : '';
+        	$menu->setUlClass( 'nav '.$horizontalCss );
+        	$menu->setUlId( 'menu-ulh-'.$menuId );
+        	$this->view->uid = 'menu-ulh-'.$menuId;
         	echo $menu->renderMenu($menuSelected);
-        	
-        	echo '			</div>
-				  </div>
-				</div>';
         	
         } catch (Exception $e) {
         	echo $e->getMessage();

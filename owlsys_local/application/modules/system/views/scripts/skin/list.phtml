@@ -7,36 +7,42 @@
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 ?>
-<article>
-
-	<header>
-		<h2>
-			<?php echo $this->translate("SYSTEM_SKINS") ?>
-		</h2>
-	</header>
-	
-	<div>
-		<?php if ( count($this->skins) > 0 ) : ?>
-			<table class="table table-bordered table-hover table-striped">
-				<thead>
-				<tr>
-					<th><?php echo $this->translate("SYSTEM_SKIN") ?></th>
-					<th><?php echo $this->translate("LBL_AUTHOR") ?></th>
-					<th><?php echo $this->translate("LBL_LICENSE") ?></th>
-					<th><?php echo $this->translate("SYSTEM_SKIN_IS_SELECTED") ?></th>
-					<th>#</th>
-				</tr>
-				</thead>
-				<tbody>
-				<?php echo $this->partialLoop('partials/_row_skin.phtml', $this->skins); ?>
-				</tbody>
-			</table>
-		<?php else : ?>
-		<p class="muted"><?php echo $this->translate("LBL_NO_ITEMS_REGISTERED_YET") ?></p>
-		<?php endif; ?>
+<div class="accordion" id="accordion_base">
+	<div class="accordion-group">
+		<!-- content header -->
+		<div class="accordion-heading">
+			<h4 class="accordion-toggle">
+    			<?php echo $this->translate("SYSTEM_SKINS") ?>
+			</h4>
+		</div>
+		<!-- content body -->
+		<div class="accordion-body in">
+			<div class="accordion-inner">
+			
+			    <div>
+            		<?php if ( count($this->skins) > 0 ) : ?>
+            			<table class="table table-bordered table-hover table-striped">
+            				<thead>
+            				<tr>
+            					<th><?php echo $this->translate("SYSTEM_SKIN") ?></th>
+            					<th><?php echo $this->translate("LBL_AUTHOR") ?></th>
+            					<th><?php echo $this->translate("LBL_LICENSE") ?></th>
+            					<th><?php echo $this->translate("SYSTEM_SKIN_IS_SELECTED") ?></th>
+            					<th>#</th>
+            				</tr>
+            				</thead>
+            				<tbody>
+            				<?php echo $this->partialLoop('partials/_row_skin.phtml', $this->skins); ?>
+            				</tbody>
+            			</table>
+            			<?php echo $this->paginationControl( $this->skins, 'Sliding', 'pagination-control.phtml' ); ?>
+            		<?php else : ?>
+            		<p class="muted"><?php echo $this->translate("LBL_NO_ITEMS_REGISTERED_YET") ?></p>
+            		<?php endif; ?>
+            	</div>	
+			
+			</div>
+		</div>
 	</div>
-	
-	<?php echo $this->paginationControl( $this->skins, 'Sliding', 'pagination-control.phtml' ); ?>
-
-</article>
+</div>
 

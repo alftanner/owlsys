@@ -14,26 +14,24 @@
 	<td class="center"><?php echo $this->lastvisitdate ?></td>
 	<td class="center">
 		<?php if ( $this->block ): ?>
-		<a href='<?=$this->baseUrl()?>/acl/account/block/id/<?php echo $this->id;?>' class="badge badge-important">
+		<a href='<?=$this->baseUrl()?>/acl/account/block/id/<?php echo $this->id;?>' class="label label-important">
 			<?php echo $this->translate("ACL_BLOCKED") ?>
 		</a>
 		<?php else: ?>
-		<a href='<?=$this->baseUrl()?>/acl/account/block/id/<?php echo $this->id;?>' class="badge badge-success">
+		<a href='<?=$this->baseUrl()?>/acl/account/block/id/<?php echo $this->id;?>' class="label label-success">
 			<?php echo $this->translate("ACL_UNBLOCKED") ?>
 		</a>
 		<?php endif; ?>
 	</td>
 	<td class="center">
-		<i class="icon-edit"></i> 
-		<a href='<?=$this->baseUrl()?>/acl/account/update/id/<?php echo $this->id;?>'>
-		<?php echo $this->translate("LBL_UPDATE") ?>
+		<a href='<?=$this->baseUrl()?>/acl/account/update/id/<?php echo $this->id;?>' class="btn btn-mini btn-warning">
+		    <i class="icon-edit icon-white"></i>
 		</a>
-	</td>
-	<td class="center">
-		<i class="icon-trash"></i>  
-		<a href='<?=$this->baseUrl()?>/acl/account/delete/id/<?php echo $this->id;?>'>
-		<?php echo $this->translate("LBL_DELETE") ?>
+		<?php /*
+		<a href='<?=$this->baseUrl()?>/acl/account/delete/id/<?php echo $this->id;?>' class="btn btn-mini">
+		    <i class="icon-trash"></i>
 		</a>
+		*/?>
 	</td>
 	<td class="center"><?php echo $this->id ?></td>
 </tr>

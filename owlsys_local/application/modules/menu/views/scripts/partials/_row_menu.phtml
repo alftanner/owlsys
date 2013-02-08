@@ -11,25 +11,25 @@
 	<td class="field"><?php echo $this->name ?></td>
 	<td class="center">
 		<?php if ( $this->published ): ?>
-			<a href='<?=$this->baseUrl()?>/menu/menu/publish/id/<?php echo $this->id;?>' class="badge badge-success">
+			<a href='<?=$this->baseUrl()?>/menu/menu/publish/id/<?php echo $this->id;?>' class="label label-success">
 				<?php echo $this->translate("LBL_PUBLISHED") ?>
 			</a>
 		<?php else: ?>
-			<a href='<?=$this->baseUrl()?>/menu/menu/publish/id/<?php echo $this->id;?>' class="badge badge-important">
+			<a href='<?=$this->baseUrl()?>/menu/menu/publish/id/<?php echo $this->id;?>' class="label label-important">
 				<?php echo $this->translate("LBL_UNPUBLISHED") ?>
 			</a>
 		<?php endif; ?>
 	</td>
 	<td class="center">
-		<a href='<?=$this->baseUrl()?>/menu/item/list/menu/<?php echo $this->id;?>'><?php echo $this->translate("MENU_MANAGE_MENU_ITEMS") ?></a>
+		<a href='<?=$this->baseUrl()?>/menu/item/list/menu/<?php echo $this->id;?>' class="btn btn-mini"><?php echo $this->translate("MENU_MANAGE_MENU_ITEMS") ?></a>
 	</td>
 	<td class="center">
-		<i class="icon-edit"></i>
-		<a href='<?=$this->baseUrl()?>/menu/menu/update/id/<?php echo $this->id;?>'><?php echo $this->translate("LBL_UPDATE") ?></a>
-	</td>
-	<td class="center">
-		<i class="icon-trash"></i>
-		<a href='<?=$this->baseUrl()?>/menu/menu/delete/id/<?php echo $this->id;?>'><?php echo $this->translate("LBL_DELETE") ?></a>
+		<a href='<?=$this->baseUrl()?>/menu/menu/update/id/<?php echo $this->id;?>' title="<?php echo $this->translate("LBL_UPDATE") ?>" class="btn btn-mini">
+		    <i class="icon-edit"></i>
+		</a>
+		<a href='<?=$this->baseUrl()?>/menu/menu/delete/id/<?php echo $this->id;?>' title="<?php echo $this->translate("LBL_DELETE") ?>" class="btn btn-mini">
+		    <i class="icon-trash"></i>
+		</a>
 	</td>
 	<td class="center"><?php echo $this->id ?></td>
 </tr>

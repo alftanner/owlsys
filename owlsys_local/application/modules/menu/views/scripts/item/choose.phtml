@@ -14,43 +14,54 @@ foreach( $this->menuItemTypes as $menuItemType ) :
 	if ( ! in_array($module, $modules) ) $modules[] = $module;
 endforeach; 
 ?>
-
-	<div class="page-header">
-		<h2>
-		<?php echo $this->translate('MENU_CHOOSE_ITEM_TYPE') ?>
-		<small><?php echo $this->translate("MENU_CURRENT_MENU"). ': ' . $this->menu->name; ?></small>
-		</h2> 
-	</div>
-	
-	<div id="accordion" class="accordion">
-	<?php $ind=1; ?>
-	<?php foreach ( $modules as $module ): ?>
+<div class="accordion" id="accordion_base">
 	<div class="accordion-group">
+		<!-- content header -->
 		<div class="accordion-heading">
-			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $ind ?>">
-			<?php echo $this->translate('ACL_MODULE').': '.ucfirst( strtolower($module) ) ?>
-			</a>
+			<h4 class="accordion-toggle">
+    			<?php echo $this->translate('MENU_CHOOSE_ITEM_TYPE') ?>
+		<small><?php echo $this->translate("MENU_CURRENT_MENU"). ': ' . $this->menu->name; ?></small>
+			</h4>
 		</div>
-		<div id="collapse<?php echo $ind ?>" class="accordion-body collapse">
+		<!-- content body -->
+		<div class="accordion-body in">
 			<div class="accordion-inner">
-			
-			<?php foreach( $this->menuItemTypes as $menuItemType ) : ?>
-			<?php if ( $module == $menuItemType->module ): ?>
-				<p>
-					<a href="<?php echo $this->baseUrl().'/menu/item/add/mod/'.$menuItemType->module.'/mid/'.$menuItemType['id'] ?>/menu_id/<?php echo $this->menu->id ?>">
-						<?php echo $menuItemType->label ?>
-					</a>
-					<br>
-					<span class="muted"><?php echo $menuItemType->description ?></span>
-				</p>
-			<?php endif; ?>
-			<?php endforeach; ?>
-			
+				<div id="accordion" class="accordion">
+                	<?php $ind=1; ?>
+                	<?php foreach ( $modules as $module ): ?>
+                	<div class="accordion-group">
+                		<div class="accordion-heading">
+                			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $ind ?>">
+                			<?php echo $this->translate('ACL_MODULE').': '.ucfirst( strtolower($module) ) ?>
+                			</a>
+                		</div>
+                		<div id="collapse<?php echo $ind ?>" class="accordion-body collapse">
+                			<div class="accordion-inner">
+                			
+                			<?php foreach( $this->menuItemTypes as $menuItemType ) : ?>
+                			<?php if ( $module == $menuItemType->module ): ?>
+                				<p>
+                					<a href="<?php echo $this->baseUrl().'/menu/item/add/mod/'.$menuItemType->module.'/mid/'.$menuItemType['id'] ?>/menu_id/<?php echo $this->menu->id ?>">
+                						<?php echo $menuItemType->label ?>
+                					</a>
+                					<br>
+                					<span class="muted"><?php echo $menuItemType->description ?></span>
+                				</p>
+                			<?php endif; ?>
+                			<?php endforeach; ?>
+                			
+                			</div>
+                		</div>
+                	</div>
+                	<?php $ind++ ?>
+                	<?php endforeach; ?>
+            	</div>
 			</div>
 		</div>
 	</div>
-	<?php $ind++ ?>
-	<?php endforeach; ?>
-	</div>
+</div>
+
+	
+	
 	
 

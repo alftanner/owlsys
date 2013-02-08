@@ -15,6 +15,53 @@ class Acl_Plugin_Router extends Zend_Controller_Plugin_Abstract
     
 	public function routeStartup( Zend_Controller_Request_Abstract $request )
 	{
+	    $mdlMenuItem = new menu_Model_Item();
+	    $menuItems = $mdlMenuItem->getListForRouting();
+	    $frontController = Zend_Controller_Front::getInstance();
+	    $router = $frontController->getRouter();
+	    $options = array();
+	    $options['module'] = 'acl';
+	    /*($menuItems as $menuItem) {
+	        if (strcasecmp($menuItem->controller, "authentication") == 0 &&
+	                strcasecmp($menuItem->actioncontroller, "login") == 0) {
+	            $params = Zend_Json::decode($menuItem->params);
+	            $options['controller'] = 'authentication';
+	            $options['action'] = 'login';
+	            $options['mid'] = $menuItem->id;
+	            $route = new Zend_Controller_Router_Route( $menuItem->id_alias, $options );
+	            $router->addRoute($menuItem->id_alias, $route);
+	        }
+	    }*/
+	    $options = array();
+	    $options['module'] = 'acl';
+	    $options['controller'] = 'account';
+	    $options['action'] = 'resetpassword';
+	    $options['change'] = 0;
+	    $route = new Zend_Controller_Router_Route( 'resetpassword', $options );
+	    $router->addRoute('resetpassword', $route);
+	    
+	    $options['action'] = 'resetpassword';
+	    $options['change'] = 1;
+	    $route = new Zend_Controller_Router_Route( 'changepassword', $options );
+	    $router->addRoute('changepassword', $route);
+	    
+	    $options['action'] = 'edit';
+	    $route = new Zend_Controller_Router_Route( 'edit-account', $options );
+	    $router->addRoute('edit-account', $route);
+	    
+	    $options['action'] = 'update';
+	    $route = new Zend_Controller_Router_Route( 'update-account', $options );
+	    $router->addRoute('update-account', $route);
+
+	    $options['controller'] = 'authentication';
+	    $options['action'] = 'login';
+	    $route = new Zend_Controller_Router_Route( 'login', $options );
+	    $router->addRoute('login', $route);
+	    
+	    $options['controller'] = 'authentication';
+	    $options['action'] = 'logout';
+	    $route = new Zend_Controller_Router_Route( 'logout', $options );
+	    $router->addRoute('logout', $route);
 	    
 	}
 	

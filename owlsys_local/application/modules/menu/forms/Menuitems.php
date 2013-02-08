@@ -51,7 +51,7 @@ class Menu_Form_Menuitems extends menu_Form_Item
     private function externalLink()
     {
         $this->getElement('external')->setValue(1);
-        $txtLink = $this->createElement("text", "link")
+        $txtLink = $this->createElement("text", "linkt")
 	        ->setOrder( $this->order++ )
 	        ->setLabel( "LBL_LINK" )
 	        ->addFilter('StripTags')

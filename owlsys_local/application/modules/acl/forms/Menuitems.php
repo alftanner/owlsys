@@ -19,7 +19,8 @@ class Acl_Form_Menuitems extends menu_Form_Item
      */
     public function init()
     {
-        /* Form Elements & Other Definitions Here ... */
+        parent::init();
+        
         switch ($this->getAttrib('menuType')) {
         	case 'login':
         	    $this->login();
@@ -28,7 +29,7 @@ class Acl_Form_Menuitems extends menu_Form_Item
         		$this->defaultParent();
         		break;
         }
-        parent::init();
+        
     }
 
     /**
@@ -43,7 +44,7 @@ class Acl_Form_Menuitems extends menu_Form_Item
      */
     private function login()
     {
-        $txtHeaderTitle = $this->createElement("text", "headertitle")
+        /*$txtHeaderTitle = $this->createElement("text", "headertitle")
 	        ->setOrder( $this->order++ )
 	        ->setLabel( "ACL_HEADER_TITLE" )
 	        ->addFilter('StripTags')
@@ -57,7 +58,8 @@ class Acl_Form_Menuitems extends menu_Form_Item
 	        ->addFilter('StripTags')
 	        ->addValidator( new Zend_Validate_LessThan(250) )
         ;
-        $this->addElement( $txtFooterMessage );
+        $this->addElement( $txtFooterMessage );*/
+        $this->getElement('id_alias')->setValue('login');
     }
 
 }

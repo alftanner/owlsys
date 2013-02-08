@@ -36,7 +36,7 @@
 	</td>
 	<td class="center">
 		<?php if ( $this->published ): ?>
-			<a href='<?=$this->baseUrl()?>/menu/item/publish/id/<?php echo $this->id;?>' class="badge badge-success">
+			<a href='<?=$this->baseUrl()?>/menu/item/publish/id/<?php echo $this->id;?>' class="label label-success">
 			<?php echo $this->translate("LBL_PUBLISHED") ?>
 			</a>
 		<?php else: ?>
@@ -45,14 +45,13 @@
 			</a>
 		<?php endif; ?>
 	</td>
-	<td class='links field'>
-		<a href='<?=$this->baseUrl()?>/menu/item/update/id/<?php echo $this->id; ?>'><i class="icon-edit"></i><?php echo $this->translate("LBL_UPDATE") ?></a>
-		<span class="muted">|</span> 
-		<a href='<?=$this->baseUrl()?>/menu/item/move/direction/up/id/<?php echo $this->id; ?>'><i class="icon-chevron-up"></i><?php #echo $this->translate("LBL_MOVE_UP") ?></a>
-		<span class="muted">|</span>  
-		<a href='<?=$this->baseUrl()?>/menu/item/move/direction/down/id/<?php echo $this->id;?>'><i class="icon-chevron-down"></i><?php #echo $this->translate("LBL_MOVE_DOWN") ?></a>
-		<span class="muted">|</span>
-		<a href='<?=$this->baseUrl()?>/menu/item/delete/id/<?php echo $this->id; ?>'><i class="icon-trash"></i><?php #echo $this->translate("LBL_DELETE") ?></a>
+	<td class=''>
+	    <div class="btn-group">
+    		<a href='<?=$this->baseUrl()?>/menu/item/update/id/<?php echo $this->id; ?>' class="btn btn-mini"><i class="icon-edit"></i></a>
+    		<a href='<?=$this->baseUrl()?>/menu/item/move/direction/up/id/<?php echo $this->id; ?>' class="btn btn-mini"><i class="icon-chevron-up"></i></a>
+    		<a href='<?=$this->baseUrl()?>/menu/item/move/direction/down/id/<?php echo $this->id;?>' class="btn btn-mini"><i class="icon-chevron-down"></i></a>
+    		<a href='<?=$this->baseUrl()?>/menu/item/delete/id/<?php echo $this->id; ?>' class="btn btn-mini"><i class="icon-trash"></i></a>
+		</div>
 	</td>
 	<td class="center"><?php echo $this->ordering ?></td>
 	<td class="center"><?php echo $this->id ?></td>

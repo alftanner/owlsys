@@ -39,8 +39,8 @@ class Acl_Form_ManageResources extends Twitter_Bootstrap_Form_Horizontal
         $id->setDecorators( array('ViewHelper') );
         $this->addElement($id);
         
-        $hRs = $this->createElement('hidden', 'hrs');
-	    $this->addElement($hRs);
+        #$hRs = $this->createElement('hidden', 'hrs');
+	    #$this->addElement($hRs);
         
         $token = new Zend_Form_Element_Hash('token');
         $token->setSalt( md5( uniqid( rand(), TRUE ) ) );

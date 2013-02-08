@@ -7,4 +7,42 @@
  */
 $(document).ready(function(){
 	//$('#menu-0').remove();
+	$("#collapse4").on('shown', function () {
+		$(this).css('overflow', 'visible');
+	});
+	$("#collapse4").on('hidden', function () {
+		$(this).css('overflow', 'hidden');
+	});
+	$("#collapse6").on('shown', function () {
+		$(this).css('overflow', 'visible');
+	});
+	$("#collapse6").on('hidden', function () {
+		$(this).css('overflow', 'hidden');
+	});
+	$("#collapse7").on('shown', function () {
+		$(this).css('overflow', 'visible');
+	});
+	$("#collapse7").on('hidden', function () {
+		$(this).css('overflow', 'hidden');
+	});
+	$("#collapse8").on('shown', function () {
+		$(this).css('overflow', 'visible');
+	});
+	$("#collapse8").on('hidden', function () {
+		$(this).css('overflow', 'hidden');
+	});
+	
+	$('.menu-horizontal-bootstrap').children().each( function(){
+		if ( $(this).find('ul').length > 0 ) {
+			$(this).addClass('dropdown');
+			$(this).children('a').attr('data-toggle', 'dropdown');
+			$(this).children('a').addClass('dropdown-toggle');
+			$(this).children('a').append(' <b class=\"caret\"></b>');
+			$(this).find('ul').addClass('dropdown-menu');
+			$(this).find('li').has('ul.dropdown-menu').each( function(){
+				$(this).addClass('dropdown-submenu');
+			});
+		}
+	});
 });
+

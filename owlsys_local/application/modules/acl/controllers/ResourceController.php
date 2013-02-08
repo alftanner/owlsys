@@ -73,6 +73,17 @@ class Acl_ResourceController extends Zend_Controller_Action
     				$resource->save();
     			}
     		}
+    		
+    		/* @var $cache Zend_Cache_Backend_File */
+    		$cache = Zend_Registry::get('cacheACL');
+    		$mdlRole = new Acl_Model_Role();
+    		$roles = $mdlRole->getList();
+    		foreach( $roles as $role ) {
+    		    if ( $cache->test('cacheACL_'.$role->id) ) {
+    		        $cache->remove('cacheACL_'.$role->id);
+    		    }
+    		}
+    		
     		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("ACL_RESOURCES_SYNCD") ) );
     		return $this->_helper->redirector( "list", "resource", "acl" );
     	} catch (Exception $e) {
@@ -88,6 +99,36 @@ class Acl_ResourceController extends Zend_Controller_Action
     public function listAction()
     {
         try {
+            /*
+            $dir = new DirectoryIterator(APPLICATION_PATH.'/modules/');
+            
+            foreach ($dir as $fileinfo) {
+                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
+                    $moduleController_dir = new DirectoryIterator(APPLICATION_PATH.'/modules/'.$fileinfo->getFilename().'/controllers/');
+                    Zend_Debug::dump($fileinfo->getFilename(), 'Module Dir');
+                    foreach ($moduleController_dir as $moduleControllerDir) {
+                        if ( !$fileinfo->isDot() && $moduleControllerDir->isFile() ){
+                            $controller = ucfirst($fileinfo->getFilename()).'_'.$moduleControllerDir->getFilename();
+                            $controller = str_replace('.php', '', $controller);
+                            #Zend_Debug::dump($moduleControllerDir->getFilename(),'Controller in '.$moduleControllerDir);
+                            $class_exists = class_exists($controller);
+                            if ( $class_exists ) {
+                                $class_methods = get_class_methods($controller);
+                                Zend_Debug::dump($controller, 'Controller');
+                                Zend_Debug::dump($class_methods, 'Methods');
+                            } else {
+                                Zend_Debug::dump($class_exists, 'Controller '.$controller.' doesnt exist');
+                            }
+                        }
+                    }
+                } 
+            }
+            */
+            #Zend_Debug::dump(APPLICATION_PATH.'modules/');
+        
+            #$s = new System_WidgetController(null, null);
+            #var_dump($s);
+            
         	$mdlResource = new Acl_Model_Resource();
         	$adapter = $mdlResource->getPaginatorAdapterList();
         	$paginator = new Zend_Paginator($adapter);

@@ -45,8 +45,8 @@ class Content_ArticleController extends Zend_Controller_Action
         // action body
         try {
             $mdlArticle = new Content_Model_Article();
-            $adapter = $mdlArticle->getPaginatorAdapterList();
-            $paginator = new Zend_Paginator($adapter);
+            $adapter = $mdlArticle->getList();
+            $paginator = Zend_Paginator::factory($adapter);
             $paginator->setItemCountPerPage(10);
             $pageNumber = $this->getRequest()->getParam('page',1);
             $paginator->setCurrentPageNumber($pageNumber);
@@ -92,9 +92,9 @@ class Content_ArticleController extends Zend_Controller_Action
                     $this->_helper->redirector( "listregistered", "article", "content" );
                 }
             } else {
-            	$fields = array();
-            	foreach ( $frmArticle->getElements() as $element ) $fields[] = $element->getName();
-            	$frmArticle->addDisplayGroup( $fields, 'form', array( 'legend' => "CONTENT_ADD_ARTICLE", ) );
+            	#$fields = array();
+            	#foreach ( $frmArticle->getElements() as $element ) $fields[] = $element->getName();
+            	#$frmArticle->addDisplayGroup( $fields, 'form', array( 'legend' => $translate->translate("CONTENT_ADD_ARTICLE"), ) );
             }
             
         } catch (Exception $e) {
@@ -146,9 +146,9 @@ class Content_ArticleController extends Zend_Controller_Action
                     $this->_helper->redirector( "listregistered", "article", "content" );
                 }
             } else {
-            	$fields = array();
+            	/*$fields = array();
             	foreach ( $frmArticle->getElements() as $element ) $fields[] = $element->getName();
-            	$frmArticle->addDisplayGroup( $fields, 'form', array( 'legend' => "CONTENT_EDIT_ARTICLE", ) );
+            	$frmArticle->addDisplayGroup( $fields, 'form', array( 'legend' => "CONTENT_EDIT_ARTICLE", ) );*/
             }
         } catch (Exception $e) {
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );

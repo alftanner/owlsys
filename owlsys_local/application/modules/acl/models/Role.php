@@ -47,9 +47,9 @@ class Acl_Model_Role extends Zend_Db_Table_Abstract
 	
 	/**
 	 * Returns a recordet order by parent, role and priority
-	 * @return Zend_Paginator_Adapter_DbTableSelect
+	 * @return Zend_Db_Table_Rowset_Abstract
 	 */
-	public function getPaginatorAdapterList() {
+	public function getList() {
 		$select = $this->select()
 						->setIntegrityCheck(false)
 						->from( array('ro' => $this->_name), array('id', 'name', 'priority') )
@@ -58,7 +58,7 @@ class Acl_Model_Role extends Zend_Db_Table_Abstract
 						->order('ro.priority ASC')
 						#->order('rop.name DESC')
 						;
-		return new Zend_Paginator_Adapter_DbTableSelect($select);
+		return $this->fetchAll($select);
 	}
 
 	/**

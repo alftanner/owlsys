@@ -46,30 +46,34 @@ class OS_Application_Plugins_Widget extends Zend_Controller_Plugin_Abstract
 				{
 					#Zend_Debug::dump($widget->title); 
 					$params = array();
-					$widgetParams = explode("\n", $widget->params);
 					
-					foreach ( $widgetParams as $strParam ) 
+					$widgetParams = Zend_Json::decode($widget->params);
+					
+					foreach ( $widgetParams as $strParam => $valParam )
 					{
-						$paramKey = substr($strParam, 0, strpos($strParam, "=")); 
-						$paramValue = substr($strParam, strpos($strParam, "=")+1, strlen($strParam)); 
-						if( strlen(trim($paramValue)) > 0 ) # $subItem['params'][$paramKey ] = $paramValue; 
-							$params[ $paramKey ] = trim($paramValue); 
-					} 
+					    $params[ $strParam ] = $valParam;
+					}
+					
 					$rsACL = strtolower($widget->module.':'.$widget->controller); 
 					$prvACL = strtolower($widget->actioncontroller);
-					#Zend_Debug::dump( $acl->isAllowed($role->id, $rsACL, $prvACL) );
-					
 					if ( $acl->isAllowed($role->id, $rsACL, $prvACL) ) 
 					{
+					    #if ( $widget->position == "menu_registrado" )
+					        #var_dump($widget->params, $widget->actioncontroller, $widget->id);
 					    $hookContent .= ($widget->showtitle == 1) ? "<h3>".$widget->title."</h3>" : "";
 						$hookContent .= $viewHelperAction->action($widget->actioncontroller, $widget->controller, $widget->module, $params);
-					} 
+					}
 				}
                 #*/
                 Zend_Layout::getMvcInstance()->assign(strval($hook), $hookContent);
             }
         } catch (Exception $e) { 
-            echo $e->getMessage(); 
+            try {
+		        $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'plugins.log');
+		        $logger = new Zend_Log($writer);
+		        $logger->log($e->getMessage(), Zend_Log::ERR);
+		    } catch (Exception $e) {
+		    }
         }
     }
 }

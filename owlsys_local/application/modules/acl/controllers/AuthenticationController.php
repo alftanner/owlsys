@@ -44,7 +44,8 @@ class Acl_AuthenticationController extends Zend_Controller_Action
         	$frmLogin = new Acl_Form_Login();
         	$this->view->identity = ($role != 3) ? $identity : null;
         	
-        	$frmLogin->setAction( $this->_request->getBaseUrl() . '/acl/authentication/login' );
+        	#$frmLogin->setAction( $this->_request->getBaseUrl() . '/acl/authentication/login' );
+        	$frmLogin->setAction( $this->_request->getBaseUrl() . '/login' );
         	$this->view->frmLogin = $frmLogin;
 	        if ( $this->getRequest()->isPost() )
 			{
@@ -56,10 +57,11 @@ class Acl_AuthenticationController extends Zend_Controller_Action
 					    $role = $auth->getInstance()->getIdentity()->role_id;
 						if ( $role < 3 ) {
 						//	#return $this->_helper->redirector( 'index', 'index', 'system' );
-							return $this->_helper->redirector( "login", "authentication", "acl" );
+							#return $this->_helper->redirector( "login", "authentication", "acl" );
 						}
 						#$this->_helper->redirector( "login", "authentication", "acl" );
-						return $this->_helper->redirector( "login", "authentication", "acl" );
+						#return $this->_helper->redirector( "login", "authentication", "acl" );
+						$this->_redirect('login');
 					} else {
 						throw new Exception( $translate->translate("ACL_ACCESS_DENIED") );
 					}
@@ -89,9 +91,10 @@ class Acl_AuthenticationController extends Zend_Controller_Action
 			$frmLogin->addDisplayGroup( $fields, 'form', array( 'legend' => "ACL_LOGIN", ) );
 			
         } catch (Exception $e) {
-        	#$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
+        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
         	#$this->_helper->redirector( "login", "authentication", "acl" );
-        	echo $e->getMessage();
+        	$this->_redirect('login');
+        	#echo $e->getMessage();
         }
     }
 
@@ -102,11 +105,13 @@ class Acl_AuthenticationController extends Zend_Controller_Action
     {
         try {
             Zend_Auth::getInstance()->clearIdentity();
-            $this->_helper->redirector( "login", "authentication", "acl" );
+            #$this->_helper->redirector( "login", "authentication", "acl" );
+            $this->_redirect('login');
         } catch (Exception $e) {
             #$this->_helper->flashMessenger->addMessage( $e->getMessage() );
             $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
-            $this->_helper->redirector( "login", "authentication", "acl" );
+            #$this->_helper->redirector( "login", "authentication", "acl" );
+            $this->_redirect('login');
         }
     }
 

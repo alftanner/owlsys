@@ -21,7 +21,10 @@ class Acl_Model_Account extends Zend_Db_Table_Abstract {
 	 * (non-PHPdoc)
 	 * @var array
 	 */
-	protected $_dependentTables = array ( 'Contact_Model_Contact' );
+	protected $_dependentTables = 
+	    array ( 
+            'Contact_Model_Contact', 'Acl_Model_Accountdetail', 'Ficha_Model_Ficha' 
+        );
 	/**
 	 * 
 	 * @var array
@@ -50,27 +53,33 @@ class Acl_Model_Account extends Zend_Db_Table_Abstract {
 	 * @return boolean
 	 */
 	function Login( Zend_Db_Table_Row $account ) {
+	    
+	    $select = $this->select()->where('email=?', $account->email)->limit(1);
+	    $row = $this->fetchRow($select);
+	    
 		// set up the auth adapter
 		$db = Acl_Model_Account::getDefaultAdapter();
+		$authAdapter = new OS_Application_Adapter_Auth($account->email, $account->password);
 		$authAdapter = new Zend_Auth_Adapter_DbTable($db);
 		$authAdapter->setTableName( $this->_name )
 					->setIdentityColumn('email')
 					->setCredentialColumn('password')
-					->setCredentialTreatment('MD5(CONCAT(salt,?)) and block = 0');
+					->setCredentialTreatment('block = 0');
 					#->setCredentialTreatment('MD5(?) and block = 0');
 		$authAdapter->setIdentity( $account->email );
-		$authAdapter->setCredential( $account->password );
+		$authAdapter->setCredential( crypt($account->password, $row->password) );
 		$result = $authAdapter->authenticate();
 		Zend_Session::regenerateId();
 		if ($result->isValid()) {
 			$auth = Zend_Auth::getInstance();
 			$storage = $auth->getStorage();
-			$storage->write( $authAdapter->getResultRowObject( array('id', 'email', 'registerdate', 'lastvisitdate', 'role_id') ) );
+			$storage->write( $authAdapter->getResultRowObject( array('id', 'email', 'registerdate', 'lastvisitdate', 'role_id', 'fullname', 'email_alternative') ) );
 			
 			$account = $this->find( $authAdapter->getResultRowObject()->id )->current();
 			#$account = $this->createRow( $account->toArray() );
 			$account->lastvisitdate = Zend_Date::now()->toString('YYYY-MM-dd HH:mm:ss');
 			$account->save();
+			
 			return true;
 		}
 		return false;
@@ -100,6 +109,13 @@ class Acl_Model_Account extends Zend_Db_Table_Abstract {
 	    $records = $this->fetchAll( $select );
 	    return $records;
 	}
-	
+
+	function getByEmail($email)
+	{
+	    $select = $this->select();
+	    $select->where('email=?', $email);
+	    $select->limit(1);
+	    return $this->fetchRow($select);
+	}
 }
 

@@ -165,11 +165,13 @@ class System_WidgetController extends Zend_Controller_Action
 			        {
 			            if ( !in_array($wvk, $defaultFormFields) )
 			            {
-			                $params[] = $wvk.'='.$wv.'';
+			                #$params[] = $wvk.'='.$wv.'';
+			                $params[] = array($wvk=>$wv);
 			            }
 			        }
-			        $params = implode("\n", $params);
-			        $widget->params = $params;
+			        #$params = implode("\n", $params);
+			        #$widget->params = $params;
+			        $widget->params = Zend_Json::encode($params);
 			        $widget->save();
 			        #Zend_Debug::dump($widget);
 			        #print_r( $frmWidget->getValues() );
@@ -195,9 +197,9 @@ class System_WidgetController extends Zend_Controller_Action
 			        $this->_helper->redirector( "list", "widget", "system" );
 			    }
 			} else {
-				$fields = array();
+				/*$fields = array();
 				foreach ( $frmWidget->getElements() as $wfelement ) $fields[] = $wfelement->getName();
-				$frmWidget->addDisplayGroup( $fields, 'form', array( 'legend' => "SYSTEM_NEW_WIDGET", ) );
+				$frmWidget->addDisplayGroup( $fields, 'form', array( 'legend' => $translate->translate("SYSTEM_NEW_WIDGET"), ) );*/
 			}
 
         } catch (Exception $e) {
@@ -273,7 +275,7 @@ class System_WidgetController extends Zend_Controller_Action
 			$renderForAll = $mdlWidgetDetail->isRenderForAll( $widget );
 			if( $renderForAll === false ){
 			    $rowsSelected = array();
-			     $menuItems = $widget->findManyToManyRowset('menu_Model_Item', 'System_Model_Widgetdetail', 'Widget');
+			    $menuItems = $widget->findManyToManyRowset('menu_Model_Item', 'System_Model_Widgetdetail', 'Widget');
 			    foreach ( $menuItems as $menuItemSelected ) $rowsSelected[] = $menuItemSelected->id;
 			    $frmWidget->populate( array('menuitem' => $rowsSelected) );
 			    $frmWidget->getElement('renderfor')->setValue(1);
@@ -282,16 +284,8 @@ class System_WidgetController extends Zend_Controller_Action
 			    $frmWidget->getElement('menuitem')->setAttrib('disabled', true);
 			}
 			
-			#parse_str( $widget->params, $output );
-			#$frmWidget->populate( $output );
-			$params = explode("\n", $widget->params);
-			foreach ( $params as $strParam )
-			{
-				$paramKey = substr($strParam, 0, strpos($strParam, "="));
-				$paramValue = substr($strParam, strpos($strParam, "=")+1, strlen($strParam));
-				$output[$paramKey] = $paramValue;
-				$frmWidget->populate( $output );
-			}
+			$params = Zend_Json::decode($widget->params);
+			$frmWidget->populate( $params );
 			
 			if ( $this->getRequest()->isPost() )
 			{
@@ -310,11 +304,16 @@ class System_WidgetController extends Zend_Controller_Action
 			        {
 			        	if ( !in_array($wvk, $defaultFormFields) )
 			        	{
-			        		$params[] = $wvk.'='.$wv.'';
+			        		#$params[] = $wvk.'='.$wv.'';
+			        	    $params[$wvk] = $wv; 
 			        	}
 			        }
-			        $params = implode("\n", $params);
-			        $widget->params = $params;
+			        #$params = implode("\n", $params);
+			        #$widget->params = $params;
+			        $widget->params = Zend_Json::encode($params);
+			        #Zend_Debug::dump( $widget );
+			        #die();
+			        
 			        $widget->save();
 			        
 			        $menuItemsWidget = $widget->findDependentRowset('System_Model_Widgetdetail', 'Widget');
@@ -342,9 +341,9 @@ class System_WidgetController extends Zend_Controller_Action
 			        $this->_helper->redirector( "list", "widget", "system" );
 			    }
 			} else {
-				$fields = array();
+				/*$fields = array();
 				foreach ( $frmWidget->getElements() as $wfelement ) $fields[] = $wfelement->getName();
-				$frmWidget->addDisplayGroup( $fields, 'form', array( 'legend' => "SYSTEM_UPDATE_WIDGET", ) );
+				$frmWidget->addDisplayGroup( $fields, 'form', array( 'legend' => $translate->translate("SYSTEM_UPDATE_WIDGET"), ) );*/
 			}
 			
 			$this->view->frmWidget = $frmWidget;

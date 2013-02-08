@@ -16,10 +16,10 @@ class menu_Bootstrap extends Zend_Application_Module_Bootstrap
      */
     public function _initPlugins()
     {
-    	$loader = new Zend_Loader_PluginLoader();
+    	/*$loader = new Zend_Loader_PluginLoader();
     	$loader->addPrefixPath('menu_Plugin', 'application/modules/menu/plugins/');
     	$this->bootstrap('frontController') ;
     	$front = $this->getResource('frontController') ;
-    	$front->registerPlugin( new menu_Plugin_Lang() );
+    	$front->registerPlugin( new menu_Plugin_Lang() );*/
     }
 }

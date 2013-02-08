@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2012 Roger Castañeda
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
@@ -12,39 +13,63 @@
 class OS_Application_Plugins_Locale extends Zend_Controller_Plugin_Abstract
 {
     
-	#public function preDispatch( Zend_Controller_Request_Abstract $request)
-	/**
-	 * (non-PHPdoc)
-	 * @see Zend_Controller_Plugin_Abstract::routeShutdown()
-	 */
-	public function routeShutdown( Zend_Controller_Request_Abstract $request)
-	{
-		$translate = new Zend_Translate( "csv",  APPLICATION_PATH."/languages/", null, array("scan"=>Zend_Translate::LOCALE_FILENAME) );
-		Zend_Registry::set("Zend_Translate", $translate);
-	}
-	
-	public function preDispatch($request)
-	{
-	    $translate = Zend_Registry::get("Zend_Translate");
-	    $zl = new Zend_Locale();
-	    $zl->setLocale( Zend_Locale::BROWSER );
-	    $requestedLanguage = key( $zl->getBrowser() );
-	    
-	    if ( in_array($requestedLanguage, $translate->getList()) || self::isSubStrList($translate->getList(), $requestedLanguage) ){
-	    	$language = self::isSubStrList($translate->getList(), $requestedLanguage);
-	    } else {
-	    	$language = "en";
-	    }
-	    $translate->setLocale($language);
-	}
-	
-	static function isSubStrList( $array, $value ) {
-		foreach ( $array as $element ) {
-			if ( stristr($value, $element) !== false ) {
-				return $element;
-			}
-		}
-		return false;
-	}
-	
+    public function preDispatch ($request)
+    {
+        try {
+            
+            $locale = new Zend_Locale();
+            $locale->setDefault('es');
+            $locale->setLocale(Zend_Locale::BROWSER);
+            $requestedLanguage = key($locale->getBrowser());
+            
+            $formatter = new Zend_Log_Formatter_Simple('%message%' . PHP_EOL);
+            $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'translations.log');
+            $writer->setFormatter($formatter);
+            $logger = new Zend_Log($writer);
+            
+            $frontendOptions = array(
+                    'cache_id_prefix' => 'translation', 
+                    'lifetime' => 86400,
+                    'automatic_serialization' => true
+            );
+            $backendOptions = array(
+                    'cache_dir' => APPLICATION_CACHE_PATH
+            );
+            $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+            
+            $options = array(
+                    'adapter' => 'gettext',
+                    'scan' => Zend_Translate::LOCALE_FILENAME,
+                    'content' => APPLICATION_PATH.'/languages/es.mo',
+                    'locale' => 'auto',
+                    'disableNotices' => true,
+                    'log' => $logger,
+                    'logMessage' => '%locale%;%message%',
+                    'logUntranslated' => true,
+            );
+            
+            $translate = new Zend_Translate($options);
+            
+            if (! $translate->isAvailable($locale->getLanguage())) {
+                $locale->setLocale('es');
+            } else {
+                $translate->setLocale($locale);
+            }
+            
+            $translate->setCache($cache);
+            
+            Zend_Registry::set('locale', $locale->getLanguage());
+            Zend_Registry::set('Zend_Translate', $translate);
+            
+            
+        } catch (Exception $e) {
+            try {
+		        $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'plugins.log');
+		        $logger = new Zend_Log($writer);
+		        $logger->log($e->getMessage(), Zend_Log::ERR);
+		    } catch (Exception $e) {
+		    }
+        }
+    }
+
 }

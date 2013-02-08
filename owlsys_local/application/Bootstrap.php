@@ -19,6 +19,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initView()
     {
     	try {
+    	    Zend_Registry::set('options', $this->getOptions());
+    	    
     		// Initialize View
     		$view = new Zend_View();
     		 
@@ -37,6 +39,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     		$moduleDirectory = $rs['frontController']['moduleDirectory'];
     		$view->addHelperPath( $moduleDirectory.'/default/views/helpers/', 'Zend_View_Helper_FlashMessages');
     		$view->addHelperPath( $moduleDirectory.'/default/views/helpers/', 'Zend_View_Helper_Thumbnail');
+    		$view->addHelperPath( $moduleDirectory.'/default/views/helpers/', 'Zend_View_Helper_TemplateHelper');
     		
     		$view->addScriptPath( APPLICATION_PATH."/modules/default/views/scripts/partials/");
     		$view->addScriptPath( APPLICATION_PATH."/modules/default/views/scripts/");
@@ -79,16 +82,24 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		}
 	}
 	
+	public function _initLocale()
+	{
+	    Zend_Locale::setDefault('es');
+	}
+	
 	/**
-	 * It registers ACL, TemplateManager, LangSelector, Navigation and WidgetManager plugin.
+	 * Call plugins.
 	 */
 	public function _initPlugins() 
 	{
 		try {
 			$this->bootstrap('frontController') ;
 			$front = $this->getResource('frontController') ;
+			$front->registerPlugin( new OS_Application_Plugins_Ids() );
+			#$front->registerPlugin( new OS_Application_Plugins_Ssl() );
 			$front->registerPlugin( new OS_Application_Plugins_Router() );
 			$front->registerPlugin( new OS_Application_Plugins_Acl() );
+			$front->registerPlugin( new OS_Application_Plugins_Aclrouter() );
 			$front->registerPlugin( new OS_Application_Plugins_Layout() );
 			$front->registerPlugin( new OS_Application_Plugins_Locale() );
 			$front->registerPlugin( new OS_Application_Plugins_Navigation() );
@@ -97,7 +108,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		} catch (Exception $e) {
 		}
 	}
-
+	
 	/**
 	 * It defines dir_mod_contact_img_uploads and dir_mod_contact_thumbs_uploads
 	 */
@@ -113,6 +124,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		 * @var string
 		 */
 		define('DIR_MOD_CONTACT_THUMB_UPLOADS', $this->getOption('dir_mod_contact_thumbs_uploads'));
+		
+		
+		define('APPLICATION_CACHE_PATH', APPLICATION_PATH.'/../data/cache/');
+		define('APPLICATION_LOG_PATH', APPLICATION_PATH.'/../data/log/');
+		
 	}
-
+	
 }

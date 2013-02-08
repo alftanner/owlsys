@@ -9,35 +9,33 @@
 ?>
 <tr>
 	<td class="field">
-		<i class="icon-edit"></i>
-		<a href='<?=$this->baseUrl()?>/system/widget/update/id/<?php echo $this->id;?>' title="<?php echo $this->translate("LBL_UPDATE").' '.$this->title ?>">
-			<?php echo $this->title ?>
-		</a>
+	    <?php echo $this->title ?>
 	</td>
 	<td class="center"><?php echo $this->position ?></td>
 	<td class="center"><?php echo $this->ordering ?></td>
 	<td class="field"><?php echo $this->module.' / '.$this->controller.' / '.$this->actioncontroller ?></td>
 	<td class="center">
 		<?php if ( $this->published ): ?>
-			<a href='<?=$this->baseUrl()?>/system/widget/publish/id/<?php echo $this->id;?>' class="badge badge-success"><?php echo $this->translate("LBL_PUBLISHED") ?></a>
+			<a href='<?=$this->baseUrl()?>/system/widget/publish/id/<?php echo $this->id;?>' class="label label-success"><?php echo $this->translate("LBL_PUBLISHED") ?></a>
 		<?php else: ?>
-			<a href='<?=$this->baseUrl()?>/system/widget/publish/id/<?php echo $this->id;?>' class="badge badge-important"><?php echo $this->translate("LBL_UNPUBLISHED") ?></a>
+			<a href='<?=$this->baseUrl()?>/system/widget/publish/id/<?php echo $this->id;?>' class="label label-important"><?php echo $this->translate("LBL_UNPUBLISHED") ?></a>
 		<?php endif; ?>
 	</td>
 	<td class='center'>
-		<a href='<?=$this->baseUrl()?>/system/widget/move/direction/up/id/<?php echo $this->id; ?>'>
-		<?php #echo $this->translate("LBL_MOVE_UP") ?>
-		<i class="icon-chevron-up"></i>
-		</a>
-		
-		<a href='<?=$this->baseUrl()?>/system/widget/move/direction/down/id/<?php echo $this->id;?>'>
-		<i class="icon-chevron-down"></i>
-		<?php #echo $this->translate("LBL_MOVE_DOWN") ?>
-		</a>
-	</td>
-	<td class="center">
-		<i class="icon-trash"></i>
-		<a href='<?=$this->baseUrl()?>/system/widget/delete/id/<?php echo $this->id;?>'><?php echo $this->translate("LBL_DELETE") ?></a>
+	    <div class="btn-group">
+    	    <a href='<?=$this->baseUrl()?>/system/widget/update/id/<?php echo $this->id;?>' title="<?php echo $this->translate("LBL_UPDATE").' '.$this->title ?>" class="btn btn-mini">
+    		    <i class="icon-edit"></i>
+    		</a>
+    		<a href='<?=$this->baseUrl()?>/system/widget/move/direction/up/id/<?php echo $this->id; ?>' class="btn btn-mini">
+    		    <i class="icon-chevron-up"></i>
+    		</a>
+    		<a href='<?=$this->baseUrl()?>/system/widget/move/direction/down/id/<?php echo $this->id;?>' class="btn btn-mini">
+    		    <i class="icon-chevron-down"></i>
+    		</a>
+    		<a href='<?=$this->baseUrl()?>/system/widget/delete/id/<?php echo $this->id;?>' class="btn btn-mini">
+    		    <i class="icon-trash"></i>
+    		</a>
+		</div>
 	</td>
 	<td class="center"><?php echo $this->id ?></td>
 </tr>

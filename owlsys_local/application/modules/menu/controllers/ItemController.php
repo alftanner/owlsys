@@ -45,7 +45,7 @@ class Menu_ItemController extends Zend_Controller_Action
         	$mdlMenuItem = new menu_Model_Item();
         	$adapter = $mdlMenuItem->getPaginatorAdapterListByMenu($menu);
 	        $paginator = new Zend_Paginator($adapter);
-	        $paginator->setItemCountPerPage(10);
+	        $paginator->setItemCountPerPage(25);
 	        $pageNumber = $this->getRequest()->getParam('page',1);
 	        $paginator->setCurrentPageNumber($pageNumber);
 	        
@@ -141,11 +141,14 @@ class Menu_ItemController extends Zend_Controller_Action
 					{
 						if ( !in_array($wvk, $frmMenuItem->defaultFormFields) )
 						{
-							$params[] = $wvk.'='.$wv.'';
+							#$params[] = $wvk.'='.$wv.'';
+							#$params[] = array($wvk=>$wv);
+						    $params[$wvk] = $wv;
 						}
 					}
-					$params = implode("\n", $params);
-					$menuItem->params = $params;
+					#$params = implode("\n", $params);
+					#$menuItem->params = $params;
+					$menuItem->params = Zend_Json::encode($params);
 					
 					$menuItem->save();
 					
@@ -153,9 +156,9 @@ class Menu_ItemController extends Zend_Controller_Action
 					$this->_helper->redirector('list', 'item', 'menu', array('menu'=>$menu->id));
     		    } 
     		} else {
-    			$fields = array();
+    			/*$fields = array();
     			foreach ( $frmMenuItem->getElements() as $element ) $fields[] = $element->getName();
-    			$frmMenuItem->addDisplayGroup( $fields, 'form', array( 'legend' => "MENU_CREATE_MENUITEM", ) );
+    			$frmMenuItem->addDisplayGroup( $fields, 'form', array( 'legend' => "MENU_CREATE_MENUITEM", ) );*/
     		}
     		
     	}
@@ -264,11 +267,15 @@ class Menu_ItemController extends Zend_Controller_Action
         	        {
         	        	if ( !in_array($wvk, $frmMenuItem->defaultFormFields) )
         	        	{
-        	        		$params[] = $wvk.'='.$wv.'';
+        	        		#$params[] = $wvk.'='.$wv.'';
+        	        	    $params[$wvk] = $wv;
         	        	}
         	        }
-        	        $params = implode("\n", $params);
-        	        $menuItem->params = $params;
+        	        #$params = implode("\n", $params);
+        	        #$menuItem->params = $params;
+        	        $menuItem->params = Zend_Json::encode($params);
+        	        #Zend_Debug::dump($menuItem->params);
+        	        #die();
         	        
         	        $parentItem = $mdlMenuItem->find( $menuItem->parent_id )->current();
         	        $menuItem->depth = $parentItem->depth+1;
@@ -282,22 +289,22 @@ class Menu_ItemController extends Zend_Controller_Action
         	        #Zend_Debug::dump($frmMenuItem);
         	    }
         	} else {
-        	    $frmMenuItem->populate( $menuItem->toArray() );
-        	    $params = explode("\n", $menuItem->params);
-        	    foreach ( $params as $strParam )
-        	    {
-        	    	$paramKey = substr($strParam, 0, strpos($strParam, "="));
-        	    	#Zend_Debug::dump($paramKey);
-        	    	$paramValue = substr($strParam, strpos($strParam, "=")+1, strlen($strParam));
-        	    	#Zend_Debug::dump($paramValue);
-        	    	$output[$paramKey] = $paramValue;
-        	    	$frmMenuItem->populate( $output );
+        	    
+        	    $data = $menuItem->toArray();
+        	    if ( strlen($data['id_alias']) == 0 ) unset($data['id_alias']);
+        	    $frmMenuItem->populate( $data );
+        	    
+        	    if ( strlen($menuItem->params) > 0 ) {
+        	        $params = Zend_Json::decode($menuItem->params);
+        	        $frmMenuItem->populate( $params );
         	    }
+        	    #Zend_Debug::dump($params[0]);
+        	    
         	    $frmMenuItem->populate ( array('mod'=>$resource->module) );
         	    
-        	    $fields = array();
+        	    /*$fields = array();
         	    foreach ( $frmMenuItem->getElements() as $element ) $fields[] = $element->getName();
-        	    $frmMenuItem->addDisplayGroup( $fields, 'form', array( 'legend' => "MENU_UPDATE_MENUITEM", ) );
+        	    $frmMenuItem->addDisplayGroup( $fields, 'form', array( 'legend' => $translate->translate("MENU_UPDATE_MENUITEM"), ) );*/
         	}
         	$frmMenuItem->setAction( $this->_request->getBaseUrl() . "/menu/item/update" );
         	$this->view->frmMenuItem = $frmMenuItem;
