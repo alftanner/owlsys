@@ -77,7 +77,7 @@ class Acl_ResourceController extends Zend_Controller_Action
     		/* @var $cache Zend_Cache_Backend_File */
     		$cache = Zend_Registry::get('cacheACL');
     		$mdlRole = new Acl_Model_Role();
-    		$roles = $mdlRole->getList();
+    		$roles = $mdlRole->getRoles();
     		foreach( $roles as $role ) {
     		    if ( $cache->test('cacheACL_'.$role->id) ) {
     		        $cache->remove('cacheACL_'.$role->id);
