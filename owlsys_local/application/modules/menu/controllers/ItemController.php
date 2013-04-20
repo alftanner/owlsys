@@ -131,7 +131,8 @@ class Menu_ItemController extends Zend_Controller_Action
 					$menuItem = $mdlMenuItem->createRow( $this->getRequest()->getParams() );
 					
 					$parentItem = $mdlMenuItem->find( $menuItem->parent_id )->current();
-					$menuItem->depth = $parentItem->depth+1;
+					$menuItem->depth = ($parentItem)?$parentItem->depth+1:1;
+        	        $menuItem->parent_id = ($parentItem)?$parentItem->id:null;
 					
 					$mdlMenuItem->save($menuItem);
 					
@@ -278,7 +279,8 @@ class Menu_ItemController extends Zend_Controller_Action
         	        #die();
         	        
         	        $parentItem = $mdlMenuItem->find( $menuItem->parent_id )->current();
-        	        $menuItem->depth = $parentItem->depth+1;
+        	        $menuItem->depth = ($parentItem)?$parentItem->depth+1:1;
+        	        $menuItem->parent_id = ($parentItem)?$parentItem->id:null;
         	        
         	        $menuItem->save();
         	        

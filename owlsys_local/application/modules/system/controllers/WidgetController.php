@@ -180,7 +180,7 @@ class System_WidgetController extends Zend_Controller_Action
 			        {
 			            $widgetDetail = $mdlWidgetDetail->createRow();
 			            $widgetDetail->widget_id = $widget->id;
-			            $widgetDetail->menuitem_id = 0;
+			            $widgetDetail->menuitem_id = null;
 			            $widgetDetail->save();
 			        }else {
 				        foreach ( $frmWidget->getValue('menuitem') as $mi )
@@ -323,7 +323,7 @@ class System_WidgetController extends Zend_Controller_Action
 			        {
 			        	$widgetDetail = $mdlWidgetDetail->createRow();
 			        	$widgetDetail->widget_id = $widget->id;
-			        	$widgetDetail->menuitem_id = 0;
+			        	$widgetDetail->menuitem_id = null;
 			        	$widgetDetail->save();
 			        }else {
 			        	foreach ( $frmWidget->getValue('menuitem') as $mi )

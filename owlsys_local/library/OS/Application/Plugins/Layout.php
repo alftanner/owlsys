@@ -50,7 +50,7 @@ class OS_Application_Plugins_Layout extends Zend_Controller_Plugin_Abstract
 			
 			$layoutPath = Zend_Layout::getMvcInstance()->getLayoutPath();
 			
-			Zend_Layout::getMvcInstance()->setLayoutPath( $layoutPath.'/'.$skinName );
+			Zend_Layout::getMvcInstance()->setLayoutPath( APPLICATION_PATH.'/layouts/scripts/'.$skinName );
 			Zend_Layout::getMvcInstance()->setLayout( $layout );
 			
 		} catch (Exception $e) {

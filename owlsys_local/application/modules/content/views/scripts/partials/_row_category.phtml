@@ -15,8 +15,10 @@
 		</span>
 	</td>
 	<td class="field">
+	    <?php if ( $this->parent_id > 0 ) : ?>
 		<i class="icon-edit"></i>
 		<a href='<?=$this->baseUrl()?>/content/category/edit/id/<?php echo $this->parent_id; ?>'><?php echo $this->parent_title ?></a>
+		<?php endif; ?>
 	</td>
 	<td class="center">
 		<?php if ( $this->published ): ?>

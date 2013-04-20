@@ -203,6 +203,9 @@ class OS_Application_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
 	
 	private function addCurrentPageUnregistered( Zend_Navigation $nav, Zend_Controller_Request_Abstract $request )
 	{
+	    if ( $nav->findBy('id', 'mii-'.$request->getParam('mid')) ){
+	        return;
+	    }
 		$session = new Zend_Session_Namespace('previousPage');
 		if ( strcmp( strtolower($request->getActionName()), 'logout') === 0 ) $session->unsetAll(); #$session->previousPage = null;
 		$previousPage = $session->previousPage;

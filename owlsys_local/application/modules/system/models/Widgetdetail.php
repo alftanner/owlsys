@@ -20,7 +20,7 @@ class System_Model_Widgetdetail extends Zend_Db_Table_Abstract
     /**
      * @var array
      */
-    protected $_primary = array('widget_id', 'menuitem_id');
+    #protected $_primary = array('widget_id', 'menuitem_id');
     /**
      * @var array
      */
@@ -29,15 +29,11 @@ class System_Model_Widgetdetail extends Zend_Db_Table_Abstract
 			'columns'			=> array ( 'widget_id' ),
 			'refTableClass'	=> 'System_Model_Widget',
 			'refColumns'		=> array ( 'id' ),
-			'onDelete'		=> self::CASCADE,
-			'onUpdate'		=> self::RESTRICT
     	),
 	    'MenuItem' => array(
 			'columns'			=> array ( 'menuitem_id' ),
 			'refTableClass'	=> 'Menu_Model_Item',
 			'refColumns'		=> array ( 'id' ),
-			'onDelete'		=> self::CASCADE,
-			'onUpdate'		=> self::RESTRICT
 	    )
     );
     
@@ -59,7 +55,7 @@ class System_Model_Widgetdetail extends Zend_Db_Table_Abstract
     {
         $select = $this->select()
         	->where( 'widget_id=?', $widget->id )
-        	->where( 'menuitem_id=?', 0 )
+        	->where( 'IFNULL(menuitem_id,0)=0' )
         	->limit(1)
         ;
         #echo $select->__toString();
@@ -85,15 +81,18 @@ class System_Model_Widgetdetail extends Zend_Db_Table_Abstract
 	        #->joinInner( array('wgt' => Zend_Registry::get('tablePrefix').'widget'), 'wgt.id = wd.widget_id', array('id', 'position', 'title', 'published', 'ordering', 'params', 'resource_id', 'widget_id') ) # widget
 			->joinInner( array('rs' => Zend_Registry::get('tablePrefix').'acl_resource'), 'rs.id = wgt.resource_id', array('module', 'controller', 'actioncontroller') )
 		;
-		if ( $itemId == 0 ) $select->where( 'wd.menuitem_id=?', 0 );
+		/*if ( $itemId == 0 ) $select->where( 'IFNULL(wd.menuitem_id,0)=0' );
 		else {
-		    $select->where( 'wd.menuitem_id IN (0, ?)', $itemId );
-		}
+		    $select->where( 'wd.menuitem_id IN (?)', $itemId );
+		    
+		}*/
+        $select->where( 'IFNULL(wd.menuitem_id,0)=?',$itemId );
 		$select->where( 'wgt.position=?', strval($hook) )
 	        ->where( 'wgt.published=?', 1 )
 	        ->order( 'wgt.ordering ASC' )
         ;
-        #echo $select->__toString();
+		#echo "<p>&nbsp;</p><p>&nbsp;</p>";
+        #Zend_Debug::dump($select->__toString());
         $rows = $this->fetchAll($select);
         if ( $rows ) return $rows;
         return null;
