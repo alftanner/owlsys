@@ -74,5 +74,22 @@ class Acl_Model_Role extends Zend_Db_Table_Abstract
 			return $items;
 		else return null;
 	}
+	
+	function find($id)
+	{
+	    $frontendOptions = array('lifetime'=>60*60*24, 'automatic_serialization'=>true);
+	    $backendOptions = array('cache_dir'=> APPLICATION_CACHE_PATH );
+	    $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+	     
+	    $row = null;
+	    if ( $cache->load('role-'.$id) ) {
+	        $row = $cache->load('role-'.$id);
+	    } else {
+	        $row = parent::find($id);
+	        $cache->save($row, 'role-'.$row->id);
+	    }
+	     
+	    return $row;
+	}
 
 }

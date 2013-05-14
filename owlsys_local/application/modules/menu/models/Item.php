@@ -64,7 +64,7 @@ class Menu_Model_Item extends Zend_Db_Table_Abstract
 	 * @param Zend_Db_Table_Row_Abstract $menu
 	 * @return Zend_Paginator_Adapter_DbTableSelect
 	 */
-	public function getPaginatorAdapterListByMenu( Zend_Db_Table_Row_Abstract $menu )
+	public function getListByMenu( Zend_Db_Table_Row_Abstract $menu )
 	{
 		$select = $this->select()
 			->setIntegrityCheck(false)
@@ -264,16 +264,28 @@ class Menu_Model_Item extends Zend_Db_Table_Abstract
 	 */
 	public function getListForRouting()
 	{
-		$select = $this->select()
-			->setIntegrityCheck(false)
-			->from( array('mit'=> $this->_name), array('id', 'id_alias', 'params') ) # item
-			->joinInner( array('rs' => Zend_Registry::get('tablePrefix').'acl_resource'), 'rs.id = mit.resource_id', array('module', 'controller', 'actioncontroller') ) # resource
-			->where("mit.published=?", 1)
-			#->where("mit.external=?", 1)
-			#->where("LENGTH(mit.id_alias)>?", 0)
-			->order('mit.ordering');
-		#echo $select->__toString();
-		$items = $this->fetchAll($select);
+	    $frontendOptions = array('lifetime'=>60*60*24, 'automatic_serialization'=>true);
+	    $backendOptions = array('cache_dir'=> APPLICATION_CACHE_PATH );
+	    $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+	    
+	    $items = array();
+	    
+	    if ( $cache->load('getListForRouting') ) {
+	        $items = $cache->load('getListForRouting');
+	    } else {
+	        $select = $this->select();
+	        $select->setIntegrityCheck(false);
+	        $select->from( array('mit'=> $this->_name), array('id', 'id_alias', 'params') ); # item
+	        $select->joinInner( array('rs' => Zend_Registry::get('tablePrefix').'acl_resource'), 'rs.id = mit.resource_id',
+	                array('module', 'controller', 'actioncontroller') ) # resource
+	                ->where("mit.published=?", 1);
+	                #->where("mit.external=?", 1)
+	        #->where("LENGTH(mit.id_alias)>?", 0)
+	        $select->order('mit.ordering');
+	        #echo $select->__toString();
+	        $items = $this->fetchAll($select);
+	        $cache->save($items, 'getListForRouting');
+	    }
 		return $items;
 	}
 

@@ -102,10 +102,6 @@ class OS_Application_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
 	 */
 	private function addExternalPage( Zend_Navigation_Page $pageParent, Zend_Db_Table_Row_Abstract $menuItem )
 	{
-		#Zend_Debug::dump($menuItem->id, 'external');
-		#$params = Zend_Json::decode($menuItem->params);
-		#Zend_Debug::dump($params, $menuItem->title);
-	    #Zend_Debug::dump( $this->getParamByKey( $menuItem, 'linkt'), $menuItem->title );
 		$options = array(
 			'id' => 'mii-'.$menuItem->id,
 			'label' => $menuItem->title,
@@ -148,16 +144,8 @@ class OS_Application_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
 		);
 		
 		$params = array();
-		/*$subItemsParams = explode("\n", $menuItem->params);
-		foreach ( $subItemsParams as $strParam )
-		{
-			$paramKey = substr($strParam, 0, strpos($strParam, "="));
-			$paramValue = substr($strParam, strpos($strParam, "=")+1, strlen($strParam));
-			if( strlen(trim($paramValue)) > 0 ) $params[ $paramKey ] = $paramValue;
-		}*/
 		$subItemsParams = Zend_Json::decode($menuItem->params);
 		if ( !is_null($subItemsParams) ) $params = $subItemsParams;
-		#$options['params'] = $params;
 		$page = Zend_Navigation_Page::factory($options);
 		$page->addParams($params);
 	    $pageParent->addPage($page);
@@ -178,19 +166,6 @@ class OS_Application_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
 	 */
 	protected function getParamByKey( Zend_Db_Table_Row_Abstract $item, $key )
 	{
-	    # explode params
-	    /*
-	    $params = explode( "\n", $item->params );
-	    if ( count($params) > 0 ) 
-	    {
-	        foreach ( $params as $param )
-	        {
-	            $paramKey = substr($param, 0, strpos($param, "="));
-	            $paramValue = substr($param, strpos($param, "=")+1, strlen($param));
-	            if ( strcasecmp($paramKey, $key) === 0 ) return $paramValue;
-	        }
-	    }
-	    return '';*/
 	    $params = Zend_Json::decode($item->params);
 	    foreach ($params as $param) {
 	        if ( isset($param[$key]) )

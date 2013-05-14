@@ -15,7 +15,11 @@
       </controllersDirectory>
       <formsDirectory enabled="false"/>
       <layoutsDirectory enabled="false"/>
-      <modelsDirectory/>
+      <modelsDirectory>
+        <dbTableDirectory>
+          <dbTableFile dbTableName="Account"/>
+        </dbTableDirectory>
+      </modelsDirectory>
       <modelsDirectory/>
       <modulesDirectory>
         <moduleDirectory moduleName="default">
@@ -93,6 +97,10 @@
             <modelFile modelName="Account"/>
             <modelFile modelName="Permission"/>
             <modelFile modelName="Accountdetail"/>
+            <dbTableDirectory>
+              <dbTableFile dbTableName="Account"/>
+            </dbTableDirectory>
+            <modelFile modelName="AccountMapper"/>
           </modelsDirectory>
           <viewsDirectory>
             <viewScriptsDirectory>

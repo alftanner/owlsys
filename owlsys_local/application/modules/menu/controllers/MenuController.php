@@ -147,8 +147,8 @@ class Menu_MenuController extends Zend_Controller_Action
     {
         try {
             $mdlMenu = new menu_Model_Menu();
-            $adapter = $mdlMenu->getPaginatorAdapterList();
-            $paginator = new Zend_Paginator($adapter);
+            $adapter = $mdlMenu->getList();
+            $paginator = Zend_Paginator::factory($adapter);
             $paginator->setItemCountPerPage(10);
             $pageNumber = $this->getRequest()->getParam('page',1);
             $paginator->setCurrentPageNumber($pageNumber);

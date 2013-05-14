@@ -47,11 +47,22 @@ class Menu_Model_Menu extends Zend_Db_Table_Abstract
 	 * Return a recordset of menus
 	 * @return Zend_Paginator_Adapter_DbTableSelect
 	 */
-	public function getPaginatorAdapterList()
+	public function getList()
 	{
-		$select = $this->select();
-		$select->order('id');
-		return new Zend_Paginator_Adapter_DbTableSelect($select);
+	    $frontendOptions = array('lifetime'=>60*60*24, 'automatic_serialization'=>true);
+	    $backendOptions = array('cache_dir'=> APPLICATION_CACHE_PATH );
+	    $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+	    $cacheId = 'menu_getList';
+	    $rows = array();
+	    if ( $cache->test($cacheId) ) {
+	        $rows = $cache->load($cacheId);
+	    } else {
+	        $select = $this->select();
+	        $select->order('id');
+	        $rows = $this->fetchAll($select);
+	        $cache->save($rows, $cacheId);
+	    }
+	    return $rows;
 	}
 
 	/**
@@ -61,10 +72,20 @@ class Menu_Model_Menu extends Zend_Db_Table_Abstract
 	 */
 	public function getByStatus( $status )
 	{
-		$select = $this->select();
-		$select->order('id');
-		$select->where('published=?', $status, Zend_Db::INT_TYPE);
-		return $this->fetchAll($select);
+	    $frontendOptions = array('lifetime'=>60*60*24, 'automatic_serialization'=>true);
+	    $backendOptions = array('cache_dir'=> APPLICATION_CACHE_PATH );
+	    $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+	    $cacheId = 'menu_getByStatus_'.$status;
+	    if ( $cache->test($cacheId) ) {
+	        $rows = $cache->load($cacheId);
+	    } else {
+    		$select = $this->select();
+    		$select->order('id');
+    		$select->where('published=?', $status, Zend_Db::INT_TYPE);
+    		$rows = $this->fetchAll($select);
+    		$cache->save($rows, $cacheId);
+	    }
+	    return $rows;
 	}
 }
 

@@ -114,17 +114,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	 */
 	public function _initDefines()
 	{
-	    /**
-	     * @package modules
-	     * @var string
-	     */
 		define('DIR_MOD_CONTACT_IMG_UPLOADS', $this->getOption('dir_mod_contact_img_uploads'));
-		/**
-		 * @package modules
-		 * @var string
-		 */
 		define('DIR_MOD_CONTACT_THUMB_UPLOADS', $this->getOption('dir_mod_contact_thumbs_uploads'));
-		
 		
 		define('APPLICATION_CACHE_PATH', APPLICATION_PATH.'/../data/cache/');
 		define('APPLICATION_LOG_PATH', APPLICATION_PATH.'/../data/log/');

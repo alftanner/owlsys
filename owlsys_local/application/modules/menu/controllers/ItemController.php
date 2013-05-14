@@ -44,7 +44,7 @@ class Menu_ItemController extends Zend_Controller_Action
         	if ( !$menu ) throw new Exception($translate->translate("MENU_ROW_NOT_FOUND"));
         	$mdlMenuItem = new menu_Model_Item();
         	$adapter = $mdlMenuItem->getPaginatorAdapterListByMenu($menu);
-	        $paginator = new Zend_Paginator($adapter);
+	        $paginator = Zend_Paginator::factory($adapter);
 	        $paginator->setItemCountPerPage(25);
 	        $pageNumber = $this->getRequest()->getParam('page',1);
 	        $paginator->setCurrentPageNumber($pageNumber);

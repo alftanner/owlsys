@@ -18,8 +18,8 @@ class System_SkinController extends Zend_Controller_Action
     	$translate = Zend_Registry::get('Zend_Translate');
         try {
         	$mdlSkin = new System_Model_Skin();
-        	$adapter = $mdlSkin->getPaginatorAdapterList();
-        	$paginator = new Zend_Paginator($adapter);
+        	$adapter = $mdlSkin->getList();
+        	$paginator = Zend_Paginator::factory($adapter);
         	$paginator->setItemCountPerPage(10);
         	$pageNumber = $this->getRequest()->getParam('page',1);
         	$paginator->setCurrentPageNumber($pageNumber);
@@ -40,7 +40,7 @@ class System_SkinController extends Zend_Controller_Action
     		 $skin = $mdlSkin->find( $id )->current();
     		 if ( !$skin ) throw new Exception($translate->translate("SYSTEM_SKIN_NOT_FOUND"));
     		 
-    		 $skinSelected = $mdlSkin->getSelected();
+    		 $skinSelected = $mdlSkin->getSkinSelected();
     		 $skinSelected->isselected = 0;
     		 $skinSelected->save();
     		 

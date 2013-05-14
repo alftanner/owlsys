@@ -16,21 +16,29 @@ class System_Model_Skin extends Zend_Db_Table_Abstract
 	 */
 	function getSkinSelected()
 	{
-		$select = $this->select()->where('isselected=1')->limit(1);
-		return $this->fetchRow($select);
+	    
+		$frontendOptions = array('lifetime'=>60*60*24*30, 'automatic_serialization'=>true);
+	    $backendOptions = array('cache_dir'=> APPLICATION_CACHE_PATH );
+	    $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+	    
+	    $row = null;
+	    if ( $cache->load('skinSelected') ) {
+	        $row = $cache->load('skinSelected');
+	    } else {
+	        $select = $this->select();
+	        $select->where('isselected=1')->limit(1);
+	        $row = $this->fetchRow($select);
+	        $cache->save($row, 'skinSelected');
+	    }
+		
+	    return $row;
 	}
 	
-	public function getPaginatorAdapterList()
+	public function getList()
 	{
 		$select = $this->select();
-		return new Zend_Paginator_Adapter_DbTableSelect($select);
+		return $this->fetchAll($select);
 	}
 
-	function getSelected()
-	{
-		$select = $this->select();
-		$select->where('isselected=1')->limit(1);
-		return $this->fetchRow($select);
-	}
 }
 

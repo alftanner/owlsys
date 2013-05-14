@@ -117,5 +117,24 @@ class Acl_Model_Account extends Zend_Db_Table_Abstract {
 	    $select->limit(1);
 	    return $this->fetchRow($select);
 	}
+
+	function find($id) 
+	{
+	    $frontendOptions = array('lifetime'=>60*60*24, 'automatic_serialization'=>true);
+	    $backendOptions = array('cache_dir'=> APPLICATION_CACHE_PATH );
+	    $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+	    
+	    $row = null;
+	    if ( $cache->load('account-'.$id) ) {
+	        $row = $cache->load('account-'.$id);
+	    } else {
+	        $row = parent::find($id);
+	        $cache->save($row, 'account-'.$row->id);
+	    }
+	    
+	    return $row;
+	    
+	}
+	
 }
 
