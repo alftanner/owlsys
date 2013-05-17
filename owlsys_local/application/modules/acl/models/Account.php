@@ -123,17 +123,15 @@ class Acl_Model_Account extends Zend_Db_Table_Abstract {
 	    $frontendOptions = array('lifetime'=>60*60*24, 'automatic_serialization'=>true);
 	    $backendOptions = array('cache_dir'=> APPLICATION_CACHE_PATH );
 	    $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
-	    
+	    $cacheId = 'account_find_'.$id;
 	    $row = null;
-	    if ( $cache->load('account-'.$id) ) {
-	        $row = $cache->load('account-'.$id);
+	    if ( $cache->load($cacheId) ) {
+	        $row = $cache->load($cacheId);
 	    } else {
 	        $row = parent::find($id);
-	        $cache->save($row, 'account-'.$row->id);
+	        $cache->save($row, $cacheId);
 	    }
-	    
 	    return $row;
-	    
 	}
 	
 }
