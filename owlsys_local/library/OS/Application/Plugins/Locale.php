@@ -18,7 +18,7 @@ class OS_Application_Plugins_Locale extends Zend_Controller_Plugin_Abstract
         try {
             
             $locale = new Zend_Locale();
-            $locale->setDefault('es');
+            $locale->setDefault('en');
             $locale->setLocale(Zend_Locale::BROWSER);
             $requestedLanguage = key($locale->getBrowser());
             
@@ -40,18 +40,18 @@ class OS_Application_Plugins_Locale extends Zend_Controller_Plugin_Abstract
             $options = array(
                     'adapter' => 'gettext',
                     'scan' => Zend_Translate::LOCALE_FILENAME,
-                    'content' => APPLICATION_PATH.'/languages/es.mo',
+                    'content' => APPLICATION_PATH.'/languages/en/en.mo',
                     'locale' => 'auto',
                     'disableNotices' => true,
-                    'log' => $logger,
-                    'logMessage' => '%locale%;%message%',
-                    'logUntranslated' => true,
+            #        'log' => $logger,
+            #        'logMessage' => '%locale%;%message%',
+            #        'logUntranslated' => true,
             );
             
             $translate = new Zend_Translate($options);
             
             if (! $translate->isAvailable($locale->getLanguage())) {
-                $locale->setLocale('es');
+                $locale->setLocale('en');
             } else {
                 $translate->setLocale($locale);
             }
@@ -64,7 +64,7 @@ class OS_Application_Plugins_Locale extends Zend_Controller_Plugin_Abstract
             
         } catch (Exception $e) {
             try {
-		        $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'plugins.log');
+		        $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'plugin-locale.log');
 		        $logger = new Zend_Log($writer);
 		        $logger->log($e->getMessage(), Zend_Log::ERR);
 		    } catch (Exception $e) {

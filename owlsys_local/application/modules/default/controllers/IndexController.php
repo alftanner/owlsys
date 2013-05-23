@@ -22,7 +22,8 @@ class Default_IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->_helper->redirector( "login", "authentication", "acl" );
+        //$this->_helper->redirector( "login", "authentication", "acl" );
+        $this->redirect('login');
     }
 
 

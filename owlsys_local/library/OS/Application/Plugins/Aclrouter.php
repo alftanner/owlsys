@@ -39,7 +39,7 @@ class OS_Application_Plugins_Aclrouter extends Zend_Controller_Plugin_Abstract
 			$redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
 			if ( $acl->isAllowed( $roleID, $resource, $action) != true )
 			{
-			    $redirector->gotoUrl('acl/authentication/logout')->redirectAndExit();
+			    $redirector->gotoUrl('logout')->redirectAndExit();
 			} else {
 				return;
 			}

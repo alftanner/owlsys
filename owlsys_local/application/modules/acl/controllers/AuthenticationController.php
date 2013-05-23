@@ -44,7 +44,6 @@ class Acl_AuthenticationController extends Zend_Controller_Action
         	$frmLogin = new Acl_Form_Login();
         	$this->view->identity = ($role != 3) ? $identity : null;
         	
-        	#$frmLogin->setAction( $this->_request->getBaseUrl() . '/acl/authentication/login' );
         	$frmLogin->setAction( $this->_request->getBaseUrl() . '/login' );
         	$this->view->frmLogin = $frmLogin;
 	        if ( $this->getRequest()->isPost() )
@@ -56,12 +55,9 @@ class Acl_AuthenticationController extends Zend_Controller_Action
 					if ( $mdlAccount->Login($objAccount) ) {
 					    $role = $auth->getInstance()->getIdentity()->role_id;
 						if ( $role < 3 ) {
-						//	#return $this->_helper->redirector( 'index', 'index', 'system' );
-							#return $this->_helper->redirector( "login", "authentication", "acl" );
+						    // is root or super administrator
 						}
-						#$this->_helper->redirector( "login", "authentication", "acl" );
-						#return $this->_helper->redirector( "login", "authentication", "acl" );
-						$this->_redirect('login');
+						$this->redirect('login');
 					} else {
 						throw new Exception( $translate->translate("ACL_ACCESS_DENIED") );
 					}
@@ -92,8 +88,7 @@ class Acl_AuthenticationController extends Zend_Controller_Action
 			
         } catch (Exception $e) {
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
-        	#$this->_helper->redirector( "login", "authentication", "acl" );
-        	$this->_redirect('login');
+        	$this->redirect('login');
         	#echo $e->getMessage();
         }
     }

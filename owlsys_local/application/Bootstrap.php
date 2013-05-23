@@ -30,8 +30,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     		$view->headTitle( $rs['layout']['web_site_title'] );
     		#echo Zend_Version::VERSION;
     		
-    		ZendX_JQuery::enableView($view);
-    		 
     		// Add it to the ViewRenderer
     		$viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
     		$viewRenderer->setView($view);
@@ -84,7 +82,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	
 	public function _initLocale()
 	{
-	    Zend_Locale::setDefault('es');
+	    Zend_Locale::setDefault('en');
 	}
 	
 	/**
