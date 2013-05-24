@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layouts>
+	<files>
+		<layout>backend_mobile</layout>
+		<layout>backend</layout>
+		<layout>frontend_mobile</layout>
+		<layout>frontend</layout>
+	</files>
+</layouts>

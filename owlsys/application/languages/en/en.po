@@ -1,0 +1,1135 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OWLSys\n"
+"POT-Creation-Date: 2013-02-08 10:24-0500\n"
+"PO-Revision-Date: 2013-02-08 10:25-0500\n"
+"Last-Translator: roger castaneda <info@rogercastaneda.com>\n"
+"Language-Team: rogercastaneda.com <info@rogercastaneda.com>\n"
+"Language: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: translate;_;setLabel;setValue;setLegend;gettext;"
+"gettext_noop\n"
+"X-Poedit-Basepath: C:\\Users\\Roger\\git\\owlsys\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:66
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:136
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:193
+#: owlsys_local/application/modules/acl/controllers/ResourceController.php:160
+#: owlsys_local/application/modules/acl/controllers/RoleController.php:55
+#: owlsys_local/application/modules/acl/controllers/RoleController.php:99
+#: owlsys_local/application/modules/acl/controllers/RoleController.php:153
+#: owlsys_local/application/modules/system/controllers/SkinController.php:50
+msgid "LBL_CHANGES_SAVED"
+msgstr "Changes saved"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:107
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:190
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:46
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:157
+#: owlsys_local/application/modules/acl/controllers/ResourceController.php:157
+#: owlsys_local/application/modules/acl/controllers/RoleController.php:85
+#: owlsys_local/application/modules/acl/controllers/RoleController.php:150
+#: owlsys_local/application/modules/contact/controllers/CategoryController.php:129
+#: owlsys_local/application/modules/contact/controllers/CategoryController.php:194
+#: owlsys_local/application/modules/contact/controllers/CategoryController.php:225
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:143
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:222
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:253
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:119
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:173
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:206
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:237
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:260
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:96
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:149
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:182
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:213
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:258
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:221
+#: owlsys_local/application/modules/menu/controllers/MenuController.php:93
+#: owlsys_local/application/modules/menu/controllers/MenuController.php:130
+#: owlsys_local/application/modules/menu/controllers/MenuController.php:175
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:224
+msgid "LBL_ROW_NOT_FOUND"
+msgstr "Row not found"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:184
+msgid "ACL_DEFAULT_ACCOUNT_COULD_NOT_BE_DROPPED"
+msgstr "Account could not be dropped"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:193
+msgid "LBL_MENU_DELETED_SUCCESSFULLY"
+msgstr "Menu deleted successfully"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:215
+msgid "LABEL_ROW_NOT_FOUND"
+msgstr "Row not found"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:220
+msgid "ACL_ACCOUNT_BLOCKED_SUCCESSFULLY"
+msgstr "Account blocked successfully"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:223
+msgid "ACL_ACCOUNT_UNBLOCKED_SUCCESSFULLY"
+msgstr "Account unblocked successfully"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:245
+msgid "ACL_SEND"
+msgstr "Send"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:252
+msgid "ACL_VERIFICATION_CODE"
+msgstr "Verification code"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:259
+msgid "ACL_NEW_PASSWORD"
+msgstr "New Password"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:287
+msgid "ACL_PASSWORD_RESET_REQUEST_BODY"
+msgstr ""
+"<h4>%s - Password Change request</h4><p>You have requested a password "
+"change. If you did not request this change we recommend removing this email."
+"</p><p>To change the password copy the following address <strong>%s</"
+"strong>, and insert the verification code <strong>%s</strong></p><p>&nbsp;</"
+"p><p>For more information or contact us at: %s</p>"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:293
+msgid "ACL_PASSWORD_RESET_EMAIL_SUBJECT"
+msgstr "Change Password"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:296
+msgid "ACL_VALIDATION_CODE_SENT_MESSAGE"
+msgstr "The Verification code has been sent to your email."
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:303
+msgid "ACL_PASSWORD_CHANGED"
+msgstr "The password has been changed"
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:308
+msgid "ACL_VALIDATION_CODE_INVALID"
+msgstr "The verification code is incorrect. Try again."
+
+#: owlsys_local/application/modules/acl/controllers/AccountController.php:321
+msgid "ACL_ERROR_ON_RESET_PASSWORD"
+msgstr "There was an error on change password"
+
+#: owlsys_local/application/modules/acl/controllers/AuthenticationController.php:66
+#: owlsys_local/application/modules/default/views/scripts/error/noauth.phtml:1
+msgid "ACL_ACCESS_DENIED"
+msgstr "Access denied"
+
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:89
+msgid "ACL_DENIED_DEFAULT"
+msgstr "Denied (Default)"
+
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:90
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:95
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:102
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:112
+msgid "ACL_ALLOW"
+msgstr "Allow"
+
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:96
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:101
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:107
+msgid "ACL_DENY"
+msgstr "Deny"
+
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:106
+msgid "ACL_ALLOWED_INHERITED_FROM"
+msgstr "Denied (Inherited from %s)"
+
+#: owlsys_local/application/modules/acl/controllers/PermissionController.php:111
+msgid "ACL_DENIED_INHERITED_FROM"
+msgstr "Allowed (Inherited from %s)"
+
+#: owlsys_local/application/modules/acl/controllers/ResourceController.php:87
+msgid "ACL_RESOURCES_SYNCD"
+msgstr "Resources syncronized"
+
+#: owlsys_local/application/modules/acl/controllers/RoleController.php:146
+msgid "ACL_DEFAULT_ROLE_COULD_NOT_BE_DROPPED"
+msgstr "Default role could not be dropped"
+
+#: owlsys_local/application/modules/acl/forms/Account.php:29
+#: owlsys_local/application/modules/contact/forms/Contact.php:203
+msgid "LBL_FULLNAME"
+msgstr "Fullname"
+
+#: owlsys_local/application/modules/acl/forms/Account.php:42
+#: owlsys_local/application/modules/acl/forms/Login.php:28
+#: owlsys_local/application/modules/acl/views/scripts/account/list.phtml:35
+msgid "ACL_EMAIL"
+msgstr "Email"
+
+#: owlsys_local/application/modules/acl/forms/Account.php:55
+msgid "ACL_EMAIL_ALTERNATIVE"
+msgstr "Email alternative"
+
+#: owlsys_local/application/modules/acl/forms/Account.php:69
+#: owlsys_local/application/modules/acl/forms/Login.php:43
+msgid "ACL_PASSWORD"
+msgstr "Password"
+
+#: owlsys_local/application/modules/acl/forms/Account.php:76
+msgid "ACL_REPEAT_PASSWORD"
+msgstr "Repeat Password"
+
+#: owlsys_local/application/modules/acl/forms/Account.php:86
+#: owlsys_local/application/modules/acl/forms/Role.php:28
+#: owlsys_local/application/modules/acl/views/scripts/account/list.phtml:36
+#: owlsys_local/application/modules/acl/views/scripts/permission/manage.phtml:14
+#: owlsys_local/application/modules/acl/views/scripts/role/list.phtml:35
+msgid "ACL_ROLE"
+msgstr "Role"
+
+#: owlsys_local/application/modules/acl/forms/Account.php:111
+#: owlsys_local/application/modules/acl/forms/ManageResources.php:57
+#: owlsys_local/application/modules/acl/forms/Role.php:92
+#: owlsys_local/application/modules/menu/forms/Menu.php:56
+msgid "LBL_SAVE"
+msgstr "Save"
+
+#: owlsys_local/application/modules/acl/forms/Login.php:50
+msgid "VALIDATE_PASSWORD_MIN"
+msgstr "Password length too short."
+
+#: owlsys_local/application/modules/acl/forms/Login.php:51
+msgid "VALIDATE_PASSWORD_MAX"
+msgstr "Password length too long."
+
+#: owlsys_local/application/modules/acl/forms/Login.php:70
+msgid "ACL_LOGIN"
+msgstr "Login"
+
+#: owlsys_local/application/modules/acl/forms/Menuitems.php:62
+msgid "login"
+msgstr "login"
+
+#: owlsys_local/application/modules/acl/forms/Role.php:37
+#: owlsys_local/application/modules/acl/views/scripts/role/list.phtml:36
+msgid "ACL_ROLE_PARENT"
+msgstr "Parent role"
+
+#: owlsys_local/application/modules/acl/forms/Role.php:53
+msgid "LBL_DESKTOP_LAYOUT"
+msgstr "Desktop Layout"
+
+#: owlsys_local/application/modules/acl/forms/Role.php:57
+msgid "LBL_MOBILE_LAYOUT"
+msgstr "Mobile Layout"
+
+#: owlsys_local/application/modules/acl/forms/Role.php:69
+#: owlsys_local/application/modules/acl/views/scripts/role/list.phtml:37
+msgid "ACL_PRIORITY"
+msgstr "Priority"
+
+#: owlsys_local/application/modules/acl/forms/Widgets.php:49
+msgid "ACL_HEADER_TITLE"
+msgstr "Header title"
+
+#: owlsys_local/application/modules/acl/forms/Widgets.php:57
+msgid "ACL_FOOTER_MESSAGE"
+msgstr "Footer message"
+
+#: owlsys_local/application/modules/contact/controllers/CategoryController.php:98
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:111
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:91
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:68
+msgid "LBL_ITEM_CREATED_SUCCESSFULLY"
+msgstr "Item created successfully"
+
+#: owlsys_local/application/modules/contact/controllers/CategoryController.php:162
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:191
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:145
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:121
+msgid "LBL_ITEM_UPDATED_SUCCESSFULLY"
+msgstr "Item updated successfully"
+
+#: owlsys_local/application/modules/contact/controllers/CategoryController.php:199
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:227
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:211
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:187
+msgid "LBL_ITEM_PUBLISHED_SUCCESSFULLY"
+msgstr "Item published successfully"
+
+#: owlsys_local/application/modules/contact/controllers/CategoryController.php:203
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:231
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:215
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:191
+msgid "LBL_ITEM_UNPUBLISHED_SUCCESSFULLY"
+msgstr "Item unpublished successfully"
+
+#: owlsys_local/application/modules/contact/controllers/CategoryController.php:227
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:255
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:239
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:215
+msgid "LBL_ITEM_DELETED_SUCCESSFULLY"
+msgstr "Item deleted successfully"
+
+#: owlsys_local/application/modules/contact/controllers/CategoryController.php:252
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:316
+msgid "CONTACT_ROW_NOT_FOUND"
+msgstr "Contact not found"
+
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:278
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:186
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:332
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:365
+msgid "MENU_ITEM_NOT_FOUND"
+msgstr "Menu item not found"
+
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:281
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:175
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:151
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:189
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:435
+msgid "LBL_UP_DOWN_NOT_SPECIFIED"
+msgstr "Up or down move not specified"
+
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:286
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:180
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:156
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:194
+msgid "LBL_ITEM_MOVED_UP_SUCCESSFULLY"
+msgstr "Item moved up successfully"
+
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:290
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:184
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:160
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:198
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:444
+msgid "LBL_ITEM_MOVED_DOWN_SUCCESSFULLY"
+msgstr "Item moved down successfully"
+
+#: owlsys_local/application/modules/contact/controllers/ContactController.php:336
+msgid "CONTACT_DEFAULT_SUBJECT"
+msgstr "New contact from website"
+
+#: owlsys_local/application/modules/contact/forms/Category.php:32
+#: owlsys_local/application/modules/content/forms/Article.php:27
+#: owlsys_local/application/modules/content/forms/Category.php:39
+#: owlsys_local/application/modules/menu/forms/Item.php:54
+#: owlsys_local/application/modules/menu/forms/Menu.php:31
+#: owlsys_local/application/modules/system/forms/Widget.php:52
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:32
+#: owlsys_local/application/modules/menu/views/scripts/menu/list.phtml:30
+#: owlsys_local/application/modules/system/views/scripts/widget/list.phtml:30
+msgid "LBL_TITLE"
+msgstr "Title"
+
+#: owlsys_local/application/modules/contact/forms/Category.php:42
+#: owlsys_local/application/modules/content/forms/Category.php:49
+#: owlsys_local/application/modules/menu/forms/Item.php:63
+msgid "LBL_DESCRIPTION"
+msgstr "Description"
+
+#: owlsys_local/application/modules/contact/forms/Category.php:48
+#: owlsys_local/application/modules/contact/forms/Contact.php:150
+#: owlsys_local/application/modules/contact/views/scripts/category/listregistered.phtml:32
+#: owlsys_local/application/modules/contact/views/scripts/contact/listregistered.phtml:34
+msgid "LBL_IMAGE"
+msgstr "Image"
+
+#: owlsys_local/application/modules/contact/forms/Category.php:59
+#: owlsys_local/application/modules/contact/forms/Contact.php:161
+#: owlsys_local/application/modules/content/forms/Article.php:57
+#: owlsys_local/application/modules/content/forms/Category.php:63
+#: owlsys_local/application/modules/menu/forms/Item.php:98
+#: owlsys_local/application/modules/menu/forms/Menu.php:38
+#: owlsys_local/application/modules/system/forms/Widget.php:77
+#: owlsys_local/application/modules/contact/views/scripts/partials/_row_category.phtml:33
+#: owlsys_local/application/modules/contact/views/scripts/partials/_row_contact.phtml:42
+#: owlsys_local/application/modules/content/views/scripts/partials/_row_article.phtml:22
+#: owlsys_local/application/modules/content/views/scripts/partials/_row_category.phtml:24
+#: owlsys_local/application/modules/menu/views/scripts/partials/_menu-item-row.phtml:40
+#: owlsys_local/application/modules/menu/views/scripts/partials/_row_menu.phtml:15
+#: owlsys_local/application/modules/system/views/scripts/partials/_row_widget.phtml:19
+msgid "LBL_PUBLISHED"
+msgstr "Published"
+
+#: owlsys_local/application/modules/contact/forms/Category.php:76
+#: owlsys_local/application/modules/contact/forms/Contact.php:178
+#: owlsys_local/application/modules/contact/forms/Contact.php:273
+#: owlsys_local/application/modules/content/forms/Article.php:78
+#: owlsys_local/application/modules/content/forms/Category.php:80
+#: owlsys_local/application/modules/menu/forms/Item.php:155
+#: owlsys_local/application/modules/system/forms/Widget.php:115
+msgid "LBL_SUBMIT"
+msgstr "Submit"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:47
+#: owlsys_local/application/modules/contact/views/scripts/contact/listregistered.phtml:31
+msgid "ACL_ACCOUNT"
+msgstr "Account"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:52
+#: owlsys_local/application/modules/content/forms/Article.php:52
+#: owlsys_local/application/modules/content/forms/Menuitems.php:93
+#: owlsys_local/application/modules/contact/views/scripts/category/listregistered.phtml:31
+#: owlsys_local/application/modules/contact/views/scripts/contact/listregistered.phtml:32
+#: owlsys_local/application/modules/content/views/scripts/article/listregistered.phtml:34
+#: owlsys_local/application/modules/content/views/scripts/category/listregistered.phtml:31
+msgid "LBL_CATEGORY"
+msgstr "Category"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:57
+msgid "LBL_MOBILE"
+msgstr "Mobile"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:65
+#: owlsys_local/application/modules/contact/forms/Contact.php:227
+msgid "LBL_WEBPAGE"
+msgstr "Webpage"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:72
+msgid "CONTACT_EMAIL_TO"
+msgstr "E-mail to"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:81
+msgid "LBL_MISC"
+msgstr "Misc"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:87
+msgid "LBL_FAX"
+msgstr "Fax"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:95
+#: owlsys_local/application/modules/contact/forms/Contact.php:212
+msgid "LBL_TELEPHONE"
+msgstr "Telephone"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:103
+msgid "LBL_POSTCODE"
+msgstr "Postcode"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:111
+#: owlsys_local/application/modules/contact/forms/Contact.php:234
+msgid "LBL_COUNTRY"
+msgstr "Country"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:120
+#: owlsys_local/application/modules/contact/forms/Contact.php:243
+msgid "LBL_CITY"
+msgstr "City"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:129
+#: owlsys_local/application/modules/contact/views/scripts/category/view.phtml:26
+msgid "CONTACT_CON_POSITION"
+msgstr "Con. position"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:140
+msgid "LBL_ADDRESS"
+msgstr "Address"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:220
+msgid "LBL_EMAIL"
+msgstr "E-mail"
+
+#: owlsys_local/application/modules/contact/forms/Contact.php:254
+msgid "LBL_MESSAGE"
+msgstr "Message"
+
+#: owlsys_local/application/modules/contact/forms/Menuitems.php:56
+msgid "CONTACT_SELECT"
+msgstr "Select contact"
+
+#: owlsys_local/application/modules/contact/forms/Menuitems.php:78
+msgid "CONTACT_CATEGORY_SELECT"
+msgstr "Select Category"
+
+#: owlsys_local/application/modules/content/controllers/ArticleController.php:76
+msgid "CONTENT_CATEGORIES_EMPTY"
+msgstr "Categories empty"
+
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:55
+#: owlsys_local/application/modules/content/controllers/CategoryController.php:103
+msgid "LBL_NOT_PARENT"
+msgstr "Not parent"
+
+#: owlsys_local/application/modules/content/forms/Article.php:34
+msgid "CONTENT_INTRO"
+msgstr "Content Intro"
+
+#: owlsys_local/application/modules/content/forms/Article.php:43
+msgid "LBL_CONTENT"
+msgstr "Content"
+
+#: owlsys_local/application/modules/content/forms/Category.php:57
+#: owlsys_local/application/modules/menu/forms/Item.php:83
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:36
+msgid "MENU_ITEM_PARENT"
+msgstr "Item Parent"
+
+#: owlsys_local/application/modules/content/forms/Menuitems.php:75
+msgid "CONTENT_COD_ARTICLE"
+msgstr "Article Id"
+
+#: owlsys_local/application/modules/content/forms/Menuitems.php:105
+msgid "CONTENT_ORDER_FIELD"
+msgstr "Order field"
+
+#: owlsys_local/application/modules/content/forms/Menuitems.php:115
+msgid "CONTENT_ORDER_TYPE"
+msgstr "Order Type"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:44
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:74
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:391
+msgid "MENU_ROW_NOT_FOUND"
+msgstr "Menu not found"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:83
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:228
+msgid "MENU_XML_FILE_NOT_FOUND"
+msgstr "Menu XML file not found"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:94
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:239
+msgid "MENU_XML_ITEM_ELEMENT_NOT_FOUND"
+msgstr "Menu item in XML file not found"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:98
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:112
+msgid "ACL_RESOURCE_NOT_FOUND"
+msgstr "Resource not found"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:113
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:253
+msgid "MENU_NOT_PARENT"
+msgstr "Not Parent"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:155
+msgid "MENU_ITEM_ADDED_SUCCESSFULLY"
+msgstr "Item added successfully"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:247
+msgid "MENU_NOT_FOUND"
+msgstr "Menu not found"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:285
+msgid "MENU_ITEM_UPDATED_SUCCESSFULLY"
+msgstr "Menu item updated successfully"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:338
+msgid "MENU_ITEM_PUBLISHED_SUCCESSFULLY"
+msgstr "Menu item published successfully"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:342
+msgid "MENU_ITEM_UNPUBLISHED_SUCCESSFULLY"
+msgstr "Menu item unpublished successfully"
+
+#: owlsys_local/application/modules/menu/controllers/ItemController.php:369
+msgid "MENU_ITEM_DELETED_SUCCESSFULLY"
+msgstr "Menu item deleted successfully"
+
+#: owlsys_local/application/modules/menu/controllers/MenuController.php:62
+msgid "MENU_MENU_CREATED_SUCCESSFULLY"
+msgstr "Menu created successfully"
+
+#: owlsys_local/application/modules/menu/controllers/MenuController.php:100
+msgid "MENU_MENU_UPDATED_SUCCESSFULLY"
+msgstr "Menu updated successfully"
+
+#: owlsys_local/application/modules/menu/controllers/MenuController.php:132
+msgid "MENU_MENU_DELETED_SUCCESSFULLY"
+msgstr "Menu deleted successfully"
+
+#: owlsys_local/application/modules/menu/controllers/MenuController.php:178
+msgid "MENU_MENU_UNPUBLISHED_SUCCESSFULLY"
+msgstr "Menu unpublished successfully"
+
+#: owlsys_local/application/modules/menu/controllers/MenuController.php:181
+msgid "MENU_MENU_PUBLISHED_SUCCESSFULLY"
+msgstr "Menu published successfully"
+
+#: owlsys_local/application/modules/menu/forms/Item.php:73
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:38
+msgid "MENU_ITEM_ID_ALIAS"
+msgstr "ID Alias"
+
+#: owlsys_local/application/modules/menu/forms/Item.php:89
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:37
+msgid "MENU_ITEM_WINDOW_TYPE"
+msgstr "Window Type"
+
+#: owlsys_local/application/modules/menu/forms/Item.php:105
+msgid "LBL_VISIBLE"
+msgstr "Visible"
+
+#: owlsys_local/application/modules/menu/forms/Item.php:112
+msgid "LBL_CSS_CLASS"
+msgstr "CSS Class"
+
+#: owlsys_local/application/modules/menu/forms/Menuitems.php:56
+msgid "LBL_LINK"
+msgstr "Link"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:52
+#: owlsys_local/application/modules/menu/forms/Widgets.php:130
+msgid "MENU"
+msgstr "Menu"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:67
+#: owlsys_local/application/modules/menu/forms/Widgets.php:144
+msgid "LBL_DISTRIBUTION"
+msgstr "Distribution"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:75
+msgid "LBL_CSS_CLASS_ALTERNATIVE"
+msgstr "CSS Class alternative"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:101
+msgid "MENU_DEPTH"
+msgstr "Depth"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:111
+msgid "MENU_SET_LAST_LINK"
+msgstr "Set Last item as link"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:114
+#: owlsys_local/application/modules/system/views/scripts/partials/_row_skin.phtml:24
+msgid "LBL_NO"
+msgstr "No"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:114
+#: owlsys_local/application/modules/system/views/scripts/partials/_row_skin.phtml:21
+msgid "LBL_YES"
+msgstr "Yes"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:119
+msgid "/"
+msgstr "/"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:120
+msgid "MENU_SEPARATOR"
+msgstr "Menu separator"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:146
+msgid "LBL_HORIZONTAL"
+msgstr "Horizontal"
+
+#: owlsys_local/application/modules/menu/forms/Widgets.php:147
+msgid "LBL_VERTICAL"
+msgstr "Vertical"
+
+#: owlsys_local/application/modules/system/controllers/SkinController.php:41
+msgid "SYSTEM_SKIN_NOT_FOUND"
+msgstr "Skin not found"
+
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:97
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:231
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:373
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:405
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:432
+msgid "SYSTEM_WIDGET_NOT_FOUND"
+msgstr "Widget not found"
+
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:108
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:242
+msgid "SYSTEM_WIDGET_ELEMENT_NOT_FOUND"
+msgstr "Widget element not found"
+
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:196
+msgid "SYSTEM_WIDGET_ADDED_SUCCESSFULLY"
+msgstr "Widget added successfully"
+
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:340
+msgid "SYSTEM_WIDGET_UPDATED_SUCCESSFULLY"
+msgstr "Widget updated successfully"
+
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:378
+msgid "SYSTEM_WIDGET_PUBLISHED_SUCCESSFULLY"
+msgstr "Widget published successfully"
+
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:382
+msgid "SYSTEM_WIDGET_UNPUBLISHED_SUCCESSFULLY"
+msgstr "Widget unpublished successfully"
+
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:411
+#: owlsys_local/application/modules/system/controllers/WidgetController.php:440
+msgid "SYSTEM_WIDGET_DELETED_SUCCESSFULLY"
+msgstr "Widget deleted successfully"
+
+#: owlsys_local/application/modules/system/forms/Widget.php:62
+msgid "LBL_SHOWTITLE"
+msgstr "Show title"
+
+#: owlsys_local/application/modules/system/forms/Widget.php:70
+#: owlsys_local/application/modules/contact/views/scripts/contact/listregistered.phtml:33
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:41
+#: owlsys_local/application/modules/system/views/scripts/widget/list.phtml:31
+msgid "LBL_POSITION"
+msgstr "Position"
+
+#: owlsys_local/application/modules/system/forms/Widget.php:85
+msgid "MENU_RENDER_FOR"
+msgstr "Render for"
+
+#: owlsys_local/application/modules/system/forms/Widget.php:88
+msgid "LBL_ALL"
+msgstr "All"
+
+#: owlsys_local/application/modules/system/forms/Widget.php:88
+msgid "LBL_SELECTED_ONLY"
+msgstr "Selected only"
+
+#: owlsys_local/application/modules/system/forms/Widget.php:93
+msgid "MENU_ITEM"
+msgstr "Menu item"
+
+#: owlsys_local/application/layouts/scripts/default/includes/powered.phtml:11
+#: owlsys_local/application/modules/default/views/scripts/index/index.phtml:3
+msgid "LBL_POWERED_BY"
+msgstr "Powered by"
+
+#: owlsys_local/application/layouts/scripts/default/includes/powered.phtml:11
+#: owlsys_local/application/modules/default/views/scripts/index/index.phtml:3
+msgid "LBL_AND"
+msgstr "and"
+
+#: owlsys_local/application/layouts/scripts/default/includes/powered.phtml:13
+#: owlsys_local/application/modules/default/views/scripts/index/index.phtml:5
+msgid "LBL_IS_FREE_SOFTWARE_RELEASED_UNDER_THE"
+msgstr "is free software released under the"
+
+#: owlsys_local/application/layouts/scripts/default/includes/powered.phtml:15
+#: owlsys_local/application/modules/default/views/scripts/index/index.phtml:7
+msgid "LBL_DEVELOPED_BY"
+msgstr "LBL_DEVELOPED_BY"
+
+#: owlsys_local/application/modules/acl/views/scripts/account/create.phtml:15
+#: owlsys_local/application/modules/acl/views/scripts/account/list.phtml:25
+msgid "ACL_CREATE_ACCOUNT"
+msgstr "Create account"
+
+#: owlsys_local/application/modules/acl/views/scripts/account/list.phtml:15
+msgid "ACL_MANAGE_ACCOUNTS"
+msgstr "Manage accounts"
+
+#: owlsys_local/application/modules/acl/views/scripts/account/list.phtml:37
+msgid "ACL_REGISTER_DATE"
+msgstr "Register Date"
+
+#: owlsys_local/application/modules/acl/views/scripts/account/list.phtml:38
+msgid "ACL_LAST_VISIT_DATE"
+msgstr "Last visit Date"
+
+#: owlsys_local/application/modules/acl/views/scripts/account/list.phtml:39
+#: owlsys_local/application/modules/contact/views/scripts/category/listregistered.phtml:33
+#: owlsys_local/application/modules/contact/views/scripts/contact/listregistered.phtml:35
+#: owlsys_local/application/modules/content/views/scripts/article/listregistered.phtml:35
+#: owlsys_local/application/modules/content/views/scripts/category/listregistered.phtml:33
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:39
+#: owlsys_local/application/modules/menu/views/scripts/menu/list.phtml:31
+#: owlsys_local/application/modules/system/views/scripts/widget/list.phtml:34
+msgid "LBL_STATUS"
+msgstr "Status"
+
+#: owlsys_local/application/modules/acl/views/scripts/account/list.phtml:51
+#: owlsys_local/application/modules/acl/views/scripts/resource/list.phtml:48
+#: owlsys_local/application/modules/acl/views/scripts/role/list.phtml:49
+#: owlsys_local/application/modules/contact/views/scripts/category/listregistered.phtml:43
+#: owlsys_local/application/modules/contact/views/scripts/contact/listregistered.phtml:47
+#: owlsys_local/application/modules/content/views/scripts/article/listregistered.phtml:47
+#: owlsys_local/application/modules/content/views/scripts/category/listregistered.phtml:44
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:51
+#: owlsys_local/application/modules/menu/views/scripts/menu/list.phtml:43
+#: owlsys_local/application/modules/system/views/scripts/skin/list.phtml:40
+#: owlsys_local/application/modules/system/views/scripts/widget/list.phtml:45
+msgid "LBL_NO_ITEMS_REGISTERED_YET"
+msgstr "No items registered yet"
+
+#: owlsys_local/application/modules/acl/views/scripts/account/resetpassword.phtml:6
+msgid "ACL_RESET_PASSWORD"
+msgstr "Reset Password"
+
+#: owlsys_local/application/modules/acl/views/scripts/account/update.phtml:16
+msgid "ACL_UPDATE_ACCOUNT"
+msgstr "Update account"
+
+#: owlsys_local/application/modules/acl/views/scripts/authentication/login.phtml:11
+msgid "LBL_WELCOME"
+msgstr "Welcome"
+
+#: owlsys_local/application/modules/acl/views/scripts/authentication/login.phtml:28
+msgid "ACL_FORGET_PASSWORD"
+msgstr "Forget my password"
+
+#: owlsys_local/application/modules/acl/views/scripts/partials/_row_account.phtml:18
+msgid "ACL_BLOCKED"
+msgstr "Blocked"
+
+#: owlsys_local/application/modules/acl/views/scripts/partials/_row_account.phtml:22
+msgid "ACL_UNBLOCKED"
+msgstr "Unblocked"
+
+#: owlsys_local/application/modules/acl/views/scripts/partials/_row_resource.phtml:17
+#: owlsys_local/application/modules/acl/views/scripts/resource/list.phtml:39
+#: owlsys_local/application/modules/contact/views/scripts/partials/_row_category.phtml:43
+#: owlsys_local/application/modules/contact/views/scripts/partials/_row_contact.phtml:58
+#: owlsys_local/application/modules/content/views/scripts/partials/_row_category.phtml:43
+#: owlsys_local/application/modules/menu/views/scripts/partials/_row_menu.phtml:30
+msgid "LBL_DELETE"
+msgstr "Delete"
+
+#: owlsys_local/application/modules/acl/views/scripts/partials/_row_role.phtml:18
+#: owlsys_local/application/modules/acl/views/scripts/permission/manage.phtml:13
+msgid "ACL_MANAGE_PERMISSIONS"
+msgstr "Manage permissions"
+
+#: owlsys_local/application/modules/acl/views/scripts/partials/_row_role.phtml:27
+msgid "LBL_EDIT"
+msgstr "Edit"
+
+#: owlsys_local/application/modules/acl/views/scripts/resource/list.phtml:16
+msgid "ACL_MANAGE_RESOURCES"
+msgstr "Manage Resources"
+
+#: owlsys_local/application/modules/acl/views/scripts/resource/list.phtml:26
+msgid "ACL_SYNC_RESOURCES"
+msgstr "Sync Resources"
+
+#: owlsys_local/application/modules/acl/views/scripts/resource/list.phtml:36
+#: owlsys_local/application/modules/menu/views/scripts/item/choose.phtml:35
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:33
+#: owlsys_local/application/modules/system/views/scripts/widget/choose.phtml:35
+msgid "ACL_MODULE"
+msgstr "Module"
+
+#: owlsys_local/application/modules/acl/views/scripts/resource/list.phtml:37
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:34
+msgid "ACL_CONTROLLER"
+msgstr "Controller"
+
+#: owlsys_local/application/modules/acl/views/scripts/resource/list.phtml:38
+msgid "ACL_ACTION"
+msgstr "Action"
+
+#: owlsys_local/application/modules/acl/views/scripts/role/create.phtml:15
+#: owlsys_local/application/modules/acl/views/scripts/role/list.phtml:25
+msgid "ACL_CREATE_ROLE"
+msgstr "Create Role"
+
+#: owlsys_local/application/modules/acl/views/scripts/role/list.phtml:15
+msgid "ACL_MANAGE_ROLES"
+msgstr "Manage Roles"
+
+#: owlsys_local/application/modules/acl/views/scripts/role/list.phtml:38
+msgid "ACL_PERMISSIONS"
+msgstr "Permissions"
+
+#: owlsys_local/application/modules/acl/views/scripts/role/update.phtml:15
+msgid "ACL_UPDATE_ROLE"
+msgstr "Update role"
+
+#: owlsys_local/application/modules/contact/views/scripts/category/listregistered.phtml:14
+msgid "CONTACT_MANAGE_CATEGORIES"
+msgstr "Manage categories"
+
+#: owlsys_local/application/modules/contact/views/scripts/category/listregistered.phtml:19
+#: owlsys_local/application/modules/contact/views/scripts/contact/listregistered.phtml:19
+#: owlsys_local/application/modules/content/views/scripts/article/listregistered.phtml:25
+#: owlsys_local/application/modules/content/views/scripts/category/listregistered.phtml:19
+msgid "LBL_ADD_NEW"
+msgstr "Add new item"
+
+#: owlsys_local/application/modules/contact/views/scripts/category/view.phtml:14
+msgid "CONTACT_CATEGORIES"
+msgstr "Contact Categories"
+
+#: owlsys_local/application/modules/contact/views/scripts/category/view.phtml:23
+msgid "CONTACT_NAME"
+msgstr "Contact name"
+
+#: owlsys_local/application/modules/contact/views/scripts/contact/listregistered.phtml:14
+msgid "CONTACT_MANAGE_ROWS"
+msgstr "Manage contacts"
+
+#: owlsys_local/application/modules/contact/views/scripts/contact/listregistered.phtml:38
+#: owlsys_local/application/modules/content/views/scripts/article/listregistered.phtml:37
+#: owlsys_local/application/modules/content/views/scripts/category/listregistered.phtml:35
+#: owlsys_local/application/modules/system/views/scripts/widget/list.phtml:32
+msgid "LBL_ORDER"
+msgstr "Order"
+
+#: owlsys_local/application/modules/contact/views/scripts/partials/_row_category.phtml:37
+#: owlsys_local/application/modules/contact/views/scripts/partials/_row_contact.phtml:46
+#: owlsys_local/application/modules/content/views/scripts/partials/_row_article.phtml:26
+#: owlsys_local/application/modules/content/views/scripts/partials/_row_category.phtml:28
+#: owlsys_local/application/modules/menu/views/scripts/partials/_menu-item-row.phtml:44
+#: owlsys_local/application/modules/menu/views/scripts/partials/_row_menu.phtml:19
+#: owlsys_local/application/modules/system/views/scripts/partials/_row_widget.phtml:21
+msgid "LBL_UNPUBLISHED"
+msgstr "Unpublished"
+
+#: owlsys_local/application/modules/contact/views/scripts/partials/_row_contact.phtml:51
+msgid "LBL_MOVE_UP"
+msgstr "Move up"
+
+#: owlsys_local/application/modules/contact/views/scripts/partials/_row_contact.phtml:53
+msgid "LBL_MOVE_DOWN"
+msgstr "Move down"
+
+#: owlsys_local/application/modules/content/views/scripts/article/add.phtml:15
+msgid "CONTENT_ADD_ARTICLE"
+msgstr "Add article"
+
+#: owlsys_local/application/modules/content/views/scripts/article/add.phtml:32
+#: owlsys_local/application/modules/content/views/scripts/article/add.phtml:37
+#: owlsys_local/application/modules/content/views/scripts/article/edit.phtml:31
+#: owlsys_local/application/modules/content/views/scripts/article/edit.phtml:36
+#: owlsys_local/application/modules/content/views/scripts/category/add.phtml:30
+#: owlsys_local/application/modules/content/views/scripts/category/edit.phtml:30
+msgid "LBL_ENTER_TEXT"
+msgstr "Enter text..."
+
+#: owlsys_local/application/modules/content/views/scripts/article/edit.phtml:14
+msgid "CONTENT_EDIT_ARTICLE"
+msgstr "Edit Article"
+
+#: owlsys_local/application/modules/content/views/scripts/article/listregistered.phtml:15
+msgid "CONTENT_MANAGE_ARTICLES"
+msgstr "Manage content articles"
+
+#: owlsys_local/application/modules/content/views/scripts/article/listregistered.phtml:33
+msgid "CONTENT_ARTICLE"
+msgstr "Article"
+
+#: owlsys_local/application/modules/content/views/scripts/category/add.phtml:14
+msgid "CONTENT_ADD_CATEGORY"
+msgstr "Add content category"
+
+#: owlsys_local/application/modules/content/views/scripts/category/edit.phtml:14
+msgid "CONTENT_EDIT_CATEGORY"
+msgstr "Edit content category"
+
+#: owlsys_local/application/modules/content/views/scripts/category/listregistered.phtml:14
+msgid "CONTENT_MANAGE_CATEGORIES"
+msgstr "Manage content categories"
+
+#: owlsys_local/application/modules/content/views/scripts/category/listregistered.phtml:32
+msgid "LBL_CATEGORY_PARENT"
+msgstr "Parent category"
+
+#: owlsys_local/application/modules/content/views/scripts/category/viewbloglayout.phtml:15
+msgid "CONTENT_NO_ARTICLES_AVAILABLE_UNDER_THIS_CATEGORY"
+msgstr "There is not articles available under this category"
+
+#: owlsys_local/application/modules/content/views/scripts/partials/_row_category_articles_blog_layout.phtml:21
+msgid "LBL_READMORE"
+msgstr "Read more"
+
+#: owlsys_local/application/modules/default/views/scripts/partials/pagination-control.phtml:24
+#: owlsys_local/application/modules/default/views/scripts/partials/pagination-control.phtml:28
+msgid "LBL_PREVIOUS"
+msgstr "Previous"
+
+#: owlsys_local/application/modules/default/views/scripts/partials/pagination-control.phtml:50
+#: owlsys_local/application/modules/default/views/scripts/partials/pagination-control.phtml:54
+msgid "LBL_NEXT"
+msgstr "Next"
+
+#: owlsys_local/application/modules/menu/views/scripts/item/choose.phtml:22
+msgid "MENU_CHOOSE_ITEM_TYPE"
+msgstr "Choose Menu Item Type"
+
+#: owlsys_local/application/modules/menu/views/scripts/item/choose.phtml:23
+msgid "MENU_CURRENT_MENU"
+msgstr "Current Menu"
+
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:14
+#: owlsys_local/application/modules/menu/views/scripts/menu/list.phtml:32
+#: owlsys_local/application/modules/menu/views/scripts/partials/_row_menu.phtml:24
+msgid "MENU_MANAGE_MENU_ITEMS"
+msgstr "Manage menu items"
+
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:24
+msgid "MENU_CREATE_MENUITEM"
+msgstr "Create new item"
+
+#: owlsys_local/application/modules/menu/views/scripts/item/list.phtml:35
+msgid "MENU_ACTION_PRIVILEGE"
+msgstr "Privilege"
+
+#: owlsys_local/application/modules/menu/views/scripts/item/update.phtml:16
+msgid "MENU_UPDATE_MENUITEM"
+msgstr "Update menu item"
+
+#: owlsys_local/application/modules/menu/views/scripts/menu/create.phtml:15
+#: owlsys_local/application/modules/menu/views/scripts/menu/list.phtml:22
+msgid "MENU_ADD_MENU"
+msgstr "Add menu"
+
+#: owlsys_local/application/modules/menu/views/scripts/menu/list.phtml:14
+msgid "LBL_MANAGE_MENU"
+msgstr "Manage menu"
+
+#: owlsys_local/application/modules/menu/views/scripts/menu/update.phtml:16
+msgid "MENU_UPDATE_MENU"
+msgstr "Update menu"
+
+#: owlsys_local/application/modules/menu/views/scripts/partials/_row_menu.phtml:27
+#: owlsys_local/application/modules/system/views/scripts/partials/_row_widget.phtml:26
+msgid "LBL_UPDATE"
+msgstr "Update"
+
+#: owlsys_local/application/modules/system/views/scripts/skin/list.phtml:15
+msgid "SYSTEM_SKINS"
+msgstr "Skins"
+
+#: owlsys_local/application/modules/system/views/scripts/skin/list.phtml:27
+msgid "SYSTEM_SKIN"
+msgstr "Skin"
+
+#: owlsys_local/application/modules/system/views/scripts/skin/list.phtml:28
+msgid "LBL_AUTHOR"
+msgstr "Author"
+
+#: owlsys_local/application/modules/system/views/scripts/skin/list.phtml:29
+msgid "LBL_LICENSE"
+msgstr "License"
+
+#: owlsys_local/application/modules/system/views/scripts/skin/list.phtml:30
+msgid "SYSTEM_SKIN_IS_SELECTED"
+msgstr "Is Selected"
+
+#: owlsys_local/application/modules/system/views/scripts/widget/choose.phtml:22
+msgid "SYSTEM_CHOOSE_WIDGET_TYPE"
+msgstr "Choose Widget Type"
+
+#: owlsys_local/application/modules/system/views/scripts/widget/list.phtml:14
+msgid "SYSTEM_MANAGE_WIDGETS"
+msgstr "Manage Widgets"
+
+#: owlsys_local/application/modules/system/views/scripts/widget/list.phtml:22
+msgid "SYSTEM_ADD_WIDGET"
+msgstr "Add Widget"
+
+#: owlsys_local/application/modules/system/views/scripts/widget/list.phtml:33
+msgid "ACL_RESOURCE"
+msgstr "Resource"
+
+#, fuzzy
+#~ msgid "GEO_REGION"
+#~ msgstr "Distribution"
+
+#~ msgid "LBL_SELECT_OPTION"
+#~ msgstr "Select option"
+
+#, fuzzy
+#~ msgid "GEO_DISTRITO"
+#~ msgstr "Distribution"
+
+#, fuzzy
+#~ msgid "GEO_SECTOR"
+#~ msgstr "Distribution"
+
+#~ msgid "CANDIDATE_PUBLISHED_SUCCESSFULLY"
+#~ msgstr "Candidate published successfully"
+
+#~ msgid "CANDIDATE_UNPUBLISHED_SUCCESSFULLY"
+#~ msgstr "Candidate unpublished successfully"
+
+#~ msgid "CANDIDATE_FULLNAME"
+#~ msgstr "Fullname"
+
+#~ msgid "CANDIDATE_POSITION"
+#~ msgstr "Position"
+
+#~ msgid "CANDIDATE_AGE_OF_EXPERIENCE"
+#~ msgstr "Years of experience"
+
+#~ msgid "CANDIDATE_DESCRIPTION"
+#~ msgstr "Description"
+
+#~ msgid "CANDIDATE_SKILLS"
+#~ msgstr "Skills"
+
+#~ msgid "CANDIDATE_IS_AVAILABLE"
+#~ msgstr "Is available"
+
+#~ msgid "CANDIDATE_REFERENCE_CODE"
+#~ msgstr "Reference #"
+
+#~ msgid "CANDIDATE_SEARCH"
+#~ msgstr "Search"
+
+#~ msgid "CANDIDATE_SELECT_ONE"
+#~ msgstr "Select one"
+
+#~ msgid "CANDIDATE_FIND_CANDIDATES"
+#~ msgstr "Find Candidates"
+
+#~ msgid "CANDIDATE_TAG"
+#~ msgstr "Tag"
+
+#~ msgid "CANDIDATE_CREATE_NEW_CANDIDATE"
+#~ msgstr "Create new candidate"
+
+#~ msgid "LBL_CANCEL"
+#~ msgstr "Cancel"
+
+#~ msgid "CANDIDATE_LIST"
+#~ msgstr "Candidate List"
+
+#~ msgid "CANDIDATE_NO_ITEMS_FOUND"
+#~ msgstr "No candidates found, please try another search."
+
+#~ msgid "CANDIDATE_OPEN_FILTER"
+#~ msgstr "Open Filter"
+
+#~ msgid "CANDIDATE_FILTER_BY"
+#~ msgstr "Filter by"
+
+#~ msgid "CANDIDATE_UPDATE_CANDIDATE"
+#~ msgstr "Update candidate"
+
+#~ msgid "LBL_AVAILABLE"
+#~ msgstr "Available"
+
+#~ msgid "LBL_NOT_AVAILABLE"
+#~ msgstr "Not available"
+
+#~ msgid "CANDIDATE_TAGS"
+#~ msgstr "Tags"
+
+#~ msgid "CANDIDATE_NEW"
+#~ msgstr "New"
+
+#~ msgid "CANDIDATE_CREATE_NEW_POSITION"
+#~ msgstr "Create new position"
+
+#~ msgid "CANDIDATE_POSITION_LIST"
+#~ msgstr "Position list"
+
+#~ msgid "CANDIDATE_UPDATE_POSITION"
+#~ msgstr "Update position"
+
+#~ msgid "CANDIDATE_CREATE_NEW_TAG"
+#~ msgstr "Create new tag"
+
+#~ msgid "CANDIDATE_TAG_LIST"
+#~ msgstr "Tag List"
+
+#~ msgid "CANDIDATE_UPDATE_TAG"
+#~ msgstr "Update tag"
+
+#~ msgid "CONTENT_FILTER_BY_ARTICLE"
+#~ msgstr "Filter by article"
+
+#~ msgid "MENU_ENABLE_DROPDOWN_MULTILEVEL"
+#~ msgstr "Enable dropdown multilevel (for horizontal distribution only)"
+
+#~ msgid "ACL_LOGOUT"
+#~ msgstr "Log out"
+
+#, fuzzy
+#~ msgid "LABEL_ACCESS_DENIED"
+#~ msgstr "Access denied"

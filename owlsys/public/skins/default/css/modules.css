@@ -1,0 +1,22 @@
+@CHARSET "UTF-8";
+#token-label, #token-element { display: none; }
+body { font-size: 12px; }
+.powered {
+	clear: both;
+	color: #999;
+    width: 100%;
+	text-align: center;
+	font-size: 10px; 
+}
+.powered a {
+	color: #B7BDC4;
+}
+.powered a:hover {
+	color: #FCCF65;
+	text-decoration: none;
+}
+.admin-header {
+	background-color: #F3F1ED; /*#682321*/
+	color: #333;
+}
+/* menu */

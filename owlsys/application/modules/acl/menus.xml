@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- License GPL 3 -->
+<menus>
+	<menu id="1">
+		<label>List Accounts</label>
+		<description>Display accounts registered</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>acl</module>
+		<controller>account</controller>
+		<action>list</action>
+		<version>1.0</version>
+		<menu_type>account-list</menu_type>
+	</menu>
+	<menu id="2">
+		<label>Add Accounts</label>
+		<description>Display form for add new account</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>acl</module>
+		<controller>account</controller>
+		<action>add</action>
+		<version>1.0</version>
+		<menu_type>account-add</menu_type>
+	</menu>
+	<menu id="3">
+		<label>List Roles</label>
+		<description>Display roles registered</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>acl</module>
+		<controller>role</controller>
+		<action>list</action>
+		<version>1.0</version>
+		<menu_type>role-list</menu_type>
+	</menu>
+	<menu id="4">
+		<label>Add Role</label>
+		<description>Display form for add new role</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>acl</module>
+		<controller>role</controller>
+		<action>add</action>
+		<version>1.0</version>
+		<menu_type>role-add</menu_type>
+	</menu>
+	<menu id="5">
+		<label>List Resources</label>
+		<description>Display resources registered</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>acl</module>
+		<controller>resource</controller>
+		<action>list</action>
+		<version>1.0</version>
+		<menu_type>resource-list</menu_type>
+	</menu>
+	<menu id="6">
+		<label>Sync Resources</label>
+		<description>Synchronize resources from xml file system</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>acl</module>
+		<controller>resource</controller>
+		<action>sync</action>
+		<version>1.0</version>
+		<menu_type>resource-sync</menu_type>
+	</menu>
+	<menu id="7">
+		<label>Login</label>
+		<description>Show Login form in site</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>acl</module>
+		<controller>authentication</controller>
+		<action>login</action>
+		<version>1.0</version>
+		<menu_type>login</menu_type>
+	</menu>
+</menus>

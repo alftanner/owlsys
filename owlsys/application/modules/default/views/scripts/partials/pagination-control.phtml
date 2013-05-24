@@ -1,0 +1,60 @@
+<?php 
+/**
+ * Copyright 2012 Roger Castañeda
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+?>
+<?php
+if ( $this->pageCount )
+{
+	$params = Zend_Controller_Front::getInstance()->getRequest()->getParams();
+}
+?>
+
+<div class="pagination pagination-centered">
+	
+	<ul>
+
+	<!-- Previous page link -->
+	<?php if ( isset($this->previous) ): ?>
+	<li>
+		<a href="<?php echo $this->url( array_merge($params, array('page' => $this->previous)), 'pagination', true ) ?>"><?php echo $this->translate('LBL_PREVIOUS') ?></a>
+	</li>
+	<?php else: ?>
+	<li class="disabled">
+		<span><?php echo $this->translate('LBL_PREVIOUS') ?></span>
+	</li>
+	<?php endif; ?>
+	
+	<!-- Numbered page link -->
+	<?php foreach ( $this->pagesInRange as $page ): ?>
+		
+		<?php if ( $page != $this->current ): ?>
+		<li>
+			<a href="<?php echo $this->url( array_merge($params, array('page' => $page)), 'pagination', true ) ?>"><?php echo $page ?></a>
+		</li>
+		<?php else: ?>
+		<li class="active">
+			<span><?php echo $page; ?></span>
+		</li> 
+		<?php endif; ?>
+		
+	<?php endforeach; ?>
+	
+	<!-- Previous page link -->
+	<?php if ( isset($this->next) ): ?>
+	<li>
+		<a href="<?php echo $this->url( array_merge($params, array('page' => $this->next)), 'pagination', true ) ?>"><?php echo $this->translate('LBL_NEXT') ?></a>
+	</li>
+	<?php else: ?>
+	<li class="disabled">
+		<span><?php echo $this->translate('LBL_NEXT') ?></span>
+	</li> 
+	<?php endif; ?>
+	
+	</ul>
+
+</div>

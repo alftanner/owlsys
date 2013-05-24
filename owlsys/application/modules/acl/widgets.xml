@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- License GPL 3 -->
+<widgets>
+	<widget id="1">
+		<label>Login Form</label>
+		<description>Render a Login Form</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>acl</module>
+		<controller>authentication</controller>
+		<action>login</action>
+		<version>1.0</version>
+		<widget_type>login</widget_type>
+	</widget>
+</widgets>

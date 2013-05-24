@@ -1,0 +1,58 @@
+<?php 
+/**
+ * Copyright 2012 Roger Castañeda
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+?>
+<tr>
+	<td class="field">
+		<span class="text-info"><?php echo $this->title ?></span>
+		<?php if ( strlen($this->description) > 0 ) : ?>
+			<br />
+			<span class="muted"><?php echo $this->description ?></span>
+			<br />
+		<?php endif; ?>
+	</td>
+	<td class="center">
+		<?php echo $this->module ?>
+	</td>
+	<td class="center">
+		<?php echo $this->controller ?>
+	</td>
+	<td class="center">
+		<?php echo $this->actioncontroller ?>
+	</td>
+	<td class="center">
+		<?php echo $this->titleParent ?>
+	</td>
+	<td class="center">
+		<?php echo $this->wtype ?>
+	</td>
+	<td class="center">
+		<?php echo $this->id_alias ?>
+	</td>
+	<td class="center">
+		<?php if ( $this->published ): ?>
+			<a href='<?=$this->baseUrl('menu-item-publish/'.$this->id)?>' class="label label-success">
+			<?php echo $this->translate("LBL_PUBLISHED") ?>
+			</a>
+		<?php else: ?>
+			<a href='<?=$this->baseUrl('menu-item-publish/'.$this->id)?>' class="badge badge-important">
+			<?php echo $this->translate("LBL_UNPUBLISHED") ?>
+			</a>
+		<?php endif; ?>
+	</td>
+	<td class=''>
+	    <div class="btn-group">
+    		<a href='<?=$this->baseUrl('menu-item-update/'.$this->id)?>' class="btn btn-mini"><i class="icon-edit"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-move/up/'.$this->id)?>' class="btn btn-mini"><i class="icon-chevron-up"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-move/down/'.$this->id)?>' class="btn btn-mini"><i class="icon-chevron-down"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-delete/'.$this->id)?>' class="btn btn-mini xdialog"><i class="icon-trash"></i></a>
+		</div>
+	</td>
+	<td class="center"><?php echo $this->ordering ?></td>
+	<td class="center"><?php echo $this->id ?></td>
+</tr>

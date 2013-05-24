@@ -1,0 +1,29 @@
+<?php 
+/**
+ * Copyright 2012 Roger Castañeda
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+?>
+<tr>
+	<td class="field">
+		<p class="info"><?php echo $this->name ?></p>
+		<span class="muted"><?php echo $this->description ?></span>
+	</td>
+	<td class="center"><?php echo $this->author ?></td>
+	<td class="center"><?php echo $this->license ?></td>
+	
+	<td>
+		<?php if ( $this->isselected ): ?>
+			<i class="icon-ok"></i>
+			<?php echo $this->translate('LBL_YES') ?>
+		<?php else: ?>
+			<a href='<?=$this->baseUrl('skin-select/'.$this->id)?>' class="link">
+				<span class="muted"><?php echo $this->translate('LBL_NO') ?></span>
+			</a>
+		<?php endif; ?>
+	</td>
+	<td class="center"><?php echo $this->id ?></td>
+</tr>

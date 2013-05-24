@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- License GPL 3 -->
+<widgets>
+    <widget id="1">
+		<label>Menu Widget</label>
+		<description>Render a Menu</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>menu</module>
+		<controller>menu</controller>
+		<action>render</action>
+		<version>1.0</version>
+		<widget_type>menu</widget_type>
+	</widget>
+	<widget id="2">
+		<label>Breadcrumb</label>
+		<description>Render a Breadcrumb</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>menu</module>
+		<controller>menu</controller>
+		<action>breadcrumb</action>
+		<version>1.0</version>
+		<widget_type>breadcrumb</widget_type>
+	</widget>
+	<widget id="3">
+		<label>Menu Bootstrap Widget</label>
+		<description>Render a Menu</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>menu</module>
+		<controller>menu</controller>
+		<action>renderbootstrap</action>
+		<version>1.0</version>
+		<widget_type>menubootstrap</widget_type>
+	</widget>
+	<widget id="4">
+		<label>Simple Menu Widget</label>
+		<description>Render a Simple Menu</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>menu</module>
+		<controller>widget</controller>
+		<action>simple</action>
+		<version>1.0</version>
+		<widget_type>menu</widget_type>
+	</widget>
+</widgets>
