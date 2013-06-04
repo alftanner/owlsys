@@ -44,12 +44,20 @@ class System_IndexController extends Zend_Controller_Action
         // action body
         try {
         	$translate = Zend_Registry::get('Zend_Translate');
-        	$mdlResource = new Acl_Model_Resource();
-        	$modules = $mdlResource->getModules();
+        	$mdlResource = Acl_Model_ResourceMapper::getInstance();
+        	$resources = $mdlResource->getAll();
+        	
+        	$modules = array();
+        	foreach ( $resources as $resource ) {
+        	    if ( !in_array($resource->getModule(), $modules) ) {
+        	        $modules[] = $resource->getModule();
+        	    }
+        	}
+        	
         	$modData = array();
         	foreach ( $modules as $module )
         	{
-        		$moduleInfoFile = APPLICATION_PATH.'/modules/'.$module->module.'/about.xml';
+        		$moduleInfoFile = APPLICATION_PATH.'/modules/'.$module.'/about.xml';
         		if ( file_exists( $moduleInfoFile ) )
         		{
         			$sxe = new SimpleXMLElement( $moduleInfoFile, null, true);

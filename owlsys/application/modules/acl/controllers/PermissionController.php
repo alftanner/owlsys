@@ -39,92 +39,48 @@ class Acl_PermissionController extends Zend_Controller_Action
     {
         try {
             $translate = Zend_Registry::get('Zend_Translate');
-            $roleId = $this->getRequest()->getParam( 'role', 0);
-            $mdlRole = new Acl_Model_Role();
-            $role = $mdlRole->find( $roleId );
-            if ( ! $role ) {
-            	throw new Exception($translate->translate("LBL_ROW_NOT_FOUND"));
-            }
+            $roleId = $this->getRequest()->getParam('role', 0);
+            $mdlRole = new Acl_Model_RoleMapper();
+            $role = new Acl_Model_Role();
+            $mdlRole->find($roleId, $role);
              
-            $select = $mdlRole->select()->order('priority DESC')->limit(1);
-            $childRole = $role->findDependentRowset('Acl_Model_Role', null, $select)->current();
-            
             $frmManageResource = new Acl_Form_ManageResources();
-            $action = $this->_request->getBaseUrl() . "/acl/permission/update";
+            $action = $this->_request->getBaseUrl() . "/permissions-update/".$role->getId();
             $frmManageResource->setAction($action);
-            $frmManageResource->getElement('id')->setValue($role->id);
+            $frmManageResource->getElement('id')->setValue($role->getId());
              
-            $mdlResource = new Acl_Model_Resource();
-            $mdlPermission = new Acl_Model_Permission();
-            $modules = $mdlResource->getModules();
+            $mdlPermission = Acl_Model_PermissionMapper::getInstance();
+            $privileges = $mdlPermission->getResourcesByRole($role);
             
             $zfelements = array();
-            $resourceDataIds = array();
+            $resourceIds = array();
+            $modules = array();
             $order = 1;
-            foreach ( $modules as $module ): 
-                $resources = $mdlResource->getByModule($module);
-            	if ( !array_key_exists( strtolower($module->module), $zfelements) ) {
-            	    $zfelements[strtolower($module->module)] = array();
-            	}
-            	
-                foreach ( $resources as $resource ) :
-                    $resourceDataIds[] = $resource->id;
-                    $cbResource = new Zend_Form_Element_Select( "cb_res_".$resource->id );
-                    $zfelements[strtolower($module->module)][] = "cb_res_".$resource->id;
-                    
-                    $lblResource = $resource->controller.' / '.$resource->actioncontroller;
-                    $cbResource->setLabel( $lblResource );
-                    
-                    $childPrivilege = ($childRole) ? $mdlPermission->getByResource($resource, $childRole) : null;
-                    $rolePrivilege = $mdlPermission->getByResource($resource, $role);
-                    
-                    #var_dump($childPrivilege, $rolePrivilege, $lblResource);
-                    /*if ( strcasecmp($resource->controller, 'tag') == 0 && strcasecmp($resource->actioncontroller, 'list') == 0 ){
-                        Zend_Debug::dump( $childPrivilege, 'child privilege' );
-                        Zend_Debug::dump( $rolePrivilege, 'role privilege' );
-                    }*/
-                    
-                    if ( ( $childPrivilege == null && $rolePrivilege == null ) )
-                    {
-                        $cbResource->addMultiOption( 'deny', $translate->translate("ACL_DENIED_DEFAULT") );
-                        $cbResource->addMultiOption( 'allow', $translate->translate("ACL_ALLOW") );
-                    } elseif ( 
-                    	isset($rolePrivilege->privilege) &&
-                    	strcasecmp($rolePrivilege->privilege, 'allow') == 0 
-                    ) {
-                        $cbResource->addMultiOption( 'allow', $translate->translate("ACL_ALLOW") );
-                        $cbResource->addMultiOption( 'deny', $translate->translate("ACL_DENY") );
-                    } elseif (
-                    	isset($rolePrivilege->privilege) &&
-                    	strcasecmp($rolePrivilege->privilege, 'deny') == 0  
-                    ) {
-                        $cbResource->addMultiOption( 'deny', $translate->translate("ACL_DENY") );
-                        $cbResource->addMultiOption( 'allow', $translate->translate("ACL_ALLOW") );
-                    } elseif (
-                    	( $childPrivilege && strcasecmp($childPrivilege->privilege, 'allow') == 0 && !$rolePrivilege ) 
-                    ) {
-                        $cbResource->addMultiOption( 'allow', sprintf( $translate->translate("ACL_ALLOWED_INHERITED_FROM"), $privilege->name ) );
-						$cbResource->addMultiOption( 'deny', $translate->translate("ACL_DENY") );
-                    } elseif (
-                    	( $childPrivilege && strcasecmp($childPrivilege->privilege, 'deny') == 0 && !$rolePrivilege )
-                    ) {
-                        $cbResource->addMultiOption( 'deny', sprintf( $translate->translate("ACL_DENIED_INHERITED_FROM"), $privilege->name ) );
-                        $cbResource->addMultiOption( 'allow', $translate->translate("ACL_ALLOW") );
-                    } 
-                    
-					$cbResource->setOrder($order);
-					$frmManageResource->addElement( $cbResource );
-					$order++;
-				endforeach;
-
-			endforeach;
+            
+            foreach ( $privileges as $permission ) {
+                $resourceIds[] = $permission->getResource()->getId();
+                if ( !in_array($permission->getResource()->getModule(), $modules) ) {
+                    $modules[] = strtolower($permission->getResource()->getModule());
+                }
+                
+                $cbResource = new Zend_Form_Element_Select( "cb_res_".$permission->getResource()->getId() );
+                $zfelements[strtolower($permission->getResource()->getModule())][] = "cb_res_".$permission->getResource()->getId();
+                $lblResource = $permission->getResource()->getController().' / '.$permission->getResource()->getActioncontroller();
+                $cbResource->setLabel( $lblResource );
+                
+                $cbResource->addMultiOption( 0, $translate->translate("Deny") );
+                $cbResource->addMultiOption( 1, $translate->translate("Allow") );
+                
+                $cbResource->setOrder($order);
+                $frmManageResource->addElement( $cbResource );
+                $cbResource->setValue($permission->getIsAllowed());
+                $order++;
+            }
+            
 			
-			#$frmManageResource->getMessages()
-			
-            $resourceDataIds = implode(',', $resourceDataIds);
+            $resourceDataIds = implode(',', $resourceIds);
             $hrs = new Zend_Session_Namespace('resourceDataIds');
             $hrs->hrs = $resourceDataIds;
-            #$frmManageResource->getElement('hrs')->setValue( $resourceDataIds );
             $this->view->modules = $modules;
             $this->view->zfelements = $zfelements;
             
@@ -133,10 +89,13 @@ class Acl_PermissionController extends Zend_Controller_Action
             
             $fields = array();
             foreach ( $frmManageResource->getElements() as $element ) $fields[] = $element->getName();
-            $frmManageResource->addDisplayGroup( $fields, 'form', array( 'legend' => "ACL_UPDATE_ROLE", ) );
+            $frmManageResource->addDisplayGroup( $fields, 'form', array( 'legend' => "Update", ) );
         } catch (Exception $e) {
+//             Zend_Debug::dump($e->getMessage());
+//             Zend_Debug::dump($e->getTraceAsString());
+//             die();
             $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
-            $this->_helper->redirector( "list", "role", "acl" );
+            $this->redirect('roles');
         }
         return null;
     }
@@ -148,56 +107,52 @@ class Acl_PermissionController extends Zend_Controller_Action
      */
     public function updateAction()
     {
-        // action body
+        $translate = Zend_Registry::get('Zend_Translate');
+        $adapter = null;
         try {
-        	$translate = Zend_Registry::get('Zend_Translate');
-        	$roleId = $this->getRequest()->getParam( 'id', 0);
-	        $mdlRole = new Acl_Model_Role();
-	        $role = $mdlRole->find( $roleId );
-	        if ( ! $role ) throw new Exception($translate->translate("LBL_ROW_NOT_FOUND"));
+        	
+        	$roleId = $this->getRequest()->getParam('id', 0);
+	        $mdlRole = new Acl_Model_RoleMapper();
+	        $role = new Acl_Model_Role();
+	        $mdlRole->find( $roleId, $role );
 	        
-	        #Zend_Debug::dump( $this->getRequest()->getParams() );
-	        $mdlPermission = new Acl_Model_Permission();
-	        #$resources = $this->getRequest()->getParam( 'hrs');
+	        $mdlPermission = new Acl_Model_PermissionMapper();
 	        $hrs = new Zend_Session_Namespace('resourceDataIds');
-	        $resources = $hrs->hrs;
+	        $resources = $hrs->hrs; // Hidden ReSources hrs
 	        zend_session::namespaceUnset('resourceDataIds');
 	        
 	        $arrResources = explode(',', $resources);
-	        #$mdlPermission->deleteByRole($role);
-	        $permissions = $role->findDependentRowset('Acl_Model_Permission', 'Role');
-	        foreach ( $permissions as $perm ) 
-	        {
-	            #$perm = $mdlPermission->find()->current();
-	            $perm->delete();
-	        }
+	        
+	        $adapter = $mdlPermission->getAdapter();
+	        $adapter->beginTransaction();
+	        $mdlPermission->delete($role);
+	        
 	        foreach ($arrResources as $resourceId) {
-	        	#echo $this->getRequest()->getParam('cb_res_'.$resourceId, 'deny')."<br>";
-	        	$permission = $mdlPermission->createRow();
-	        	$permission->role_id = $role->id;
-	        	$permission->resource_id = $resourceId;
-	        	$permission->privilege = $this->getRequest()->getParam('cb_res_'.$resourceId, 'deny');
-	        	$permission->save();
+	            $permission = new Acl_Model_Permission();
+	            $permission->setIsAllowed( $this->getRequest()->getParam('cb_res_'.$resourceId, 0) );
+	            $resource = new Acl_Model_Resource();
+	            $resource->setId($resourceId);
+	            $permission->setResource($resource);
+	            $permission->setRole($role);
+	            $mdlPermission->save($permission);
 	        }
+	        
+	        $adapter->commit();
+	        $adapter->closeConnection();
 	        
 	        /* @var $cache Zend_Cache_Backend_File */
 	        $cache = Zend_Registry::get('cacheACL');
-	        $mdlRole = new Acl_Model_Role();
-	        $roles = $mdlRole->getList();
-	        foreach( $roles as $role ) {
-	            if ( $cache->test('cacheACL_'.$role->id) ) {
-	                $cache->remove('cacheACL_'.$role->id);
-	            }
-	        }
+            if ( $cache->test('cacheACL_'.$role->getId()) ) {
+                $cache->remove('cacheACL_'.$role->getId());
+            }
 	        
-	        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("LBL_CHANGES_SAVED") ) );
-	       	//$this->_helper->redirector( "manage", "permission", "acl", array('role'=>$role->id) );
-	        $this->_helper->redirector( "list", "role", "acl" );
+	        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("Changes saved") ) );
+	        $this->redirect('roles');
         } catch (Exception $e) {
+            if ( $adapter != null ) $adapter->rollBack();
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
-        	$this->_helper->redirector( "list", "role", "acl" );
+        	$this->redirect('roles');
         }
-        return null;
     }
 
 

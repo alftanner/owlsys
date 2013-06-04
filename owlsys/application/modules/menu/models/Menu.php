@@ -10,61 +10,93 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class Menu_Model_Menu extends Zend_Db_Table_Abstract 
+class menu_Model_Menu extends OS_Entity
 {
+
+    protected $_name;
+    protected $_isPublished;
+    /**
+     * @var menu_Model_Item[]
+     */
+    protected $_menuItems;
+    
+	/**
+     * @return the $_name
+     */
+    public function getName ()
+    {
+        return $this->_name;
+    }
+
+	/**
+     * @return the $_isPublished
+     */
+    public function getIsPublished ()
+    {
+        return $this->_isPublished;
+    }
+
+	/**
+     * @param field_type $name
+     */
+    public function setName ($name)
+    {
+        $this->_name = $name;
+        return $this;
+    }
+
+	/**
+     * @param field_type $isPublished
+     */
+    public function setIsPublished ($isPublished)
+    {
+        $this->_isPublished = $isPublished;
+        return $this;
+    }
+
+    /**
+     * @return menu_Model_Item[] $_menuItems
+     */
+    public function getChildren ()
+    {
+        return $this->_menuItems;
+    }
+    
+    /**
+     * @param multitype:menu_Model_Item $children
+     */
+    public function setChildren ($children)
+    {
+        $this->_menuItems = $children;
+        return $this;
+    }
 
     /**
      * 
-     * @var string
+     * @param menu_Model_Item $menuItem
+     * @return menu_Model_Menu
      */
-	protected $_name = 'menu';
-	/**
-	 * 
-	 * @var array
-	 */
-	protected $_dependentTables = array ( 'menu_Model_Item' );
-	
-	/**
-	 * renames the table by adding the prefix defined in the global configuration parameters
-	 */
-	function __construct() {
-		$this->_name = Zend_Registry::get('tablePrefix').$this->_name;
-		parent::__construct();
-	}
-	
-	/**
-	 * Return a recordset of menus
-	 * @return Zend_Db_Table_Rowset_Abstract
-	 */
-	public function getMenus()
-	{
-		$select = $this->select();
-		$select->order('id');
-		return $this->fetchAll($select);
-	}
-	
-	/**
-	 * 
-	 * @param int $status
-	 * @return Zend_Db_Table_Rowset_Abstract
-	 */
-	public function getByStatus( $status )
-	{
-		$rows = array();
-		$frontendOptions = array('lifetime'=>60*60*24, 'automatic_serialization'=>true);
-		$backendOptions = array('cache_dir'=> APPLICATION_CACHE_PATH );
-		$cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
-		
-		if ( $cache->test('menu_getByStatus_'.$status) ) {
-			$rows = $cache->load('menu_getByStatus_'.$status);
-		} else {
-			$select = $this->select();
-			$select->order('id');
-			$select->where('published=?', $status, Zend_Db::INT_TYPE);
-			$rows = $this->fetchAll($select);
-			$cache->save($rows, 'menu_getByStatus_'.$status);
-		}
-		return $rows;
-	}
+    public function addChild(menu_Model_Item $menuItem)
+    {
+        if ( count($this->_menuItems) == 0 ) {
+            $this->_menuItems[] = $menuItem;
+            return $this;
+        }
+        $bolExists = false;
+        foreach ( $this->_menuItems as $child )
+        {
+            if ( $child->getId() == $menuItem->getId() ) {
+                $bolExists = true;
+                break;
+            }
+        }
+        if ( $bolExists == false ) {
+            $this->_menuItems[] = $menuItem;
+        }
+        return $this;
+    }
+    
+    
 }
+
 

@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
 include_path=5;org.zend.php.framework.CONTAINER\u00050;/owlsys
+org.eclipse.php.core.phpDoc=false
 use_asp_tags_as_php=false

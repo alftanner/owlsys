@@ -9,7 +9,7 @@
  * @author roger castaÃ±eda <rogercastanedag@gmail.com>
  * @version 1
  */
-class OS_Application_Plugins_Aclrouter extends Zend_Controller_Plugin_Abstract
+class OS_Plugins_Aclrouter extends Zend_Controller_Plugin_Abstract
 {
 	
     /**
@@ -32,9 +32,9 @@ class OS_Application_Plugins_Aclrouter extends Zend_Controller_Plugin_Abstract
 			$identity = $auth->getIdentity();
 			$roleID = $auth->hasIdentity() ? $auth->getIdentity()->role_id : 3;
 			
-			#var_dump($acl->isAllowed( $roleID, $resource, $action), $roleID, $resource, $action);
-			#Zend_Debug::dump($module, $controller, $action, $roleID, $acl);
-			#die();
+// 			var_dump($acl->isAllowed( $roleID, $resource, $action), $roleID, $resource, $action);
+// 			Zend_Debug::dump($module, $controller, $action, $roleID, $acl);
+// 			die();
 			
 			$redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
 			if ( $acl->isAllowed( $roleID, $resource, $action) != true )
@@ -45,6 +45,9 @@ class OS_Application_Plugins_Aclrouter extends Zend_Controller_Plugin_Abstract
 			}
 			
 		} catch (Exception $e) {
+// 		    Zend_Debug::dump($e->getMessage());
+// 		    Zend_Debug::dump($e->getTraceAsString());
+// 		    die();
 		    try {
 		        $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'plugins.log');
 		        $logger = new Zend_Log($writer);

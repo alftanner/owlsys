@@ -1,6 +1,6 @@
 <?php
 
-class OS_Application_Plugins_Ssl extends Zend_Controller_Plugin_Abstract
+class OS_Plugins_Ssl extends Zend_Controller_Plugin_Abstract
 {
 
     /**

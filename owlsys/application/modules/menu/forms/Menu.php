@@ -28,17 +28,17 @@ class Menu_Form_Menu extends Twitter_Bootstrap_Form_Horizontal
         $this->addElement($id);
         
         $name = $this->createElement('text', 'name')
-        	->setLabel( 'LBL_TITLE' )
+        	->setLabel( 'Title' )
         	->setRequired(TRUE)
         	->setAttrib('size', 40);
         $this->addElement($name);
 
         /* @var $rbPublished Zend_Form_Element_Radio */
-        $rbPublished = $this->createElement("radio", "published")
-        	->setLabel("LBL_PUBLISHED")
+        $rbPublished = $this->createElement("radio", "isPublished")
+        	->setLabel("Published")
         	->setValue(1);
-        $rbPublished->addMultiOption(0, "LBL_NO");
-        $rbPublished->addMultiOption(1, "LBL_YES");
+        $rbPublished->addMultiOption(0, "No");
+        $rbPublished->addMultiOption(1, "Yes");
         $this->addElement($rbPublished);
         
         $token = new Zend_Form_Element_Hash('token');
@@ -48,7 +48,7 @@ class Menu_Form_Menu extends Twitter_Bootstrap_Form_Horizontal
         $this->addElement($token);
         
         $btnSubmit = $this->createElement('submit', 'submit');
-        $btnSubmit->setLabel('LBL_SUBMIT');
+        $btnSubmit->setLabel('Submit');
         $btnSubmit->removeDecorator('Label');
         $btnSubmit->setAttrib('class', 'btn btn-info');
         $this->addElement($btnSubmit);

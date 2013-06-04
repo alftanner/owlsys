@@ -49,7 +49,7 @@ class System_Form_Widget extends Twitter_Bootstrap_Form_Horizontal
 
         $txtTitle = $this->createElement("text", "title")
         	->setOrder($this->order++)
-        	->setLabel( "LBL_TITLE" )
+        	->setLabel( "Title" )
         	->addFilter('StripTags')
         	->addValidator( new Zend_Validate_LessThan(100) )
         	->setRequired(true)
@@ -59,38 +59,38 @@ class System_Form_Widget extends Twitter_Bootstrap_Form_Horizontal
         $rbShowTitle = $this->createElement("radio", "showtitle");
         $rbShowTitle->setRequired(TRUE)
         	->setOrder( $this->order++ )
-        	->setLabel( "LBL_SHOWTITLE" )
+        	->setLabel( "Show title" )
         	->setValue(0)
-        	->setMultiOptions( array( "LBL_NO", "LBL_YES") );
+        	->setMultiOptions( array( "No", "Yes") );
         ;
         $this->addElement($rbShowTitle);
         
         $cbPosition = $this->createElement("select", "position")
 	        ->setOrder($this->order++)
-	        ->setLabel("LBL_POSITION")
+	        ->setLabel("Position")
 	        ->setRequired(true)
         ;
         $this->addElement( $cbPosition );
         
         $rbPublished = $this->createElement("radio", "published")
         	->setOrder($this->order++)
-	        ->setLabel("LBL_PUBLISHED")
+	        ->setLabel("Published")
 	        ->setValue(1)
 	        ->setRequired(true)
-	        ->setMultiOptions( array( "LBL_NO", "LBL_YES") );
+	        ->setMultiOptions( array( "No", "Yes") );
         $this->addElement($rbPublished);
         
         $rbRenderFor = $this->createElement("radio", "renderfor") # menu item (all | selected only)
 	        ->setOrder($this->order++)
-	        ->setLabel("MENU_RENDER_FOR")
+	        ->setLabel("Render in")
 	        ->setValue(0)
 	        ->setRequired(true)
-	        ->setMultiOptions( array( $this->translator->translate("LBL_ALL"), $this->translator->translate("LBL_SELECTED_ONLY")) );
+	        ->setMultiOptions( array( $this->translator->translate("All"), $this->translator->translate("Selected only")) );
         $this->addElement($rbRenderFor);
         
         $cbMenuItem = $this->createElement("multiselect", "menuitem")
 	        ->setOrder($this->order++)
-	        ->setLabel("MENU_ITEM")
+	        ->setLabel("Menu item")
 	        #->setRequired(true)
         ;
         $this->addElement( $cbMenuItem );
@@ -102,14 +102,16 @@ class System_Form_Widget extends Twitter_Bootstrap_Form_Horizontal
         
         $token = new Zend_Form_Element_Hash('token');
         $token->setSalt( md5( uniqid( rand(), TRUE ) ) );
-        $token->setTimeout( 60 );
+        $token->setTimeout( 300 );
+        $token->setRequired(true);
         $token->setDecorators( array('ViewHelper') );
         $this->addElement($token);
         
         $btnSubmit = $this->createElement('submit', 'submit');
-        $btnSubmit->setLabel('LBL_SUBMIT');
+        $btnSubmit->setLabel('Submit');
         $btnSubmit->removeDecorator('Label');
-        $btnSubmit->setAttrib('class', 'btn btn-info');
+        $btnSubmit->setAttrib('class', 'btn btn-info')
+            ->setOrder(99999);
         $this->addElement($btnSubmit);
     }
 

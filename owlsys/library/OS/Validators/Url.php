@@ -10,7 +10,7 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class OS_Application_Validators_Url extends Zend_Validate_Abstract
+class OS_Validators_Url extends Zend_Validate_Abstract
 {
     /**
      * @access public INVALID_URL

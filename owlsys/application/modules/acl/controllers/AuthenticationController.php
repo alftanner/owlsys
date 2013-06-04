@@ -49,15 +49,18 @@ class Acl_AuthenticationController extends Zend_Controller_Action
 	        if ( $this->getRequest()->isPost() )
 			{
 				if ( $frmLogin->isValid( $this->getRequest()->getParams() ) ) {
-					$mdlAccount = new Acl_Model_Account();
-					$objAccount = $mdlAccount->createRow( $frmLogin->getValues() );
-					$objAccount->password = $objAccount->password;
-					if ( $mdlAccount->Login($objAccount) ) {
-					    $role = $auth->getInstance()->getIdentity()->role_id;
-						if ( $role < 3 ) {
-						    // is root or super administrator
-						}
-						$this->redirect('login');
+					$mdlAccountMapper = Acl_Model_AccountMapper::getInstance();
+					$account = new Acl_Model_Account();
+					$account->setEmail( $frmLogin->getValue('email') );
+					$account->setPassword( $frmLogin->getValue('password') );
+					
+					if ( $mdlAccountMapper->login($account) ) {
+					    $role_id = $auth->getInstance()->getIdentity()->role_id;
+					    // custom redirector here
+					    if ( $role < 3 ) {
+					        // is root or super administrator
+					    }
+					    $this->redirect('login');
 					} else {
 						throw new Exception( $translate->translate("ACL_ACCESS_DENIED") );
 					}
@@ -89,7 +92,6 @@ class Acl_AuthenticationController extends Zend_Controller_Action
         } catch (Exception $e) {
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
         	$this->redirect('login');
-        	#echo $e->getMessage();
         }
     }
 
@@ -100,13 +102,10 @@ class Acl_AuthenticationController extends Zend_Controller_Action
     {
         try {
             Zend_Auth::getInstance()->clearIdentity();
-            #$this->_helper->redirector( "login", "authentication", "acl" );
-            $this->_redirect('login');
+            $this->redirect('login');
         } catch (Exception $e) {
-            #$this->_helper->flashMessenger->addMessage( $e->getMessage() );
             $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
-            #$this->_helper->redirector( "login", "authentication", "acl" );
-            $this->_redirect('login');
+            $this->redirect('login');
         }
     }
 

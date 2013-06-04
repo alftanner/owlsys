@@ -13,7 +13,7 @@
 		<!-- content header -->
 		<div class="accordion-heading">
 			<h4 class="accordion-toggle">
-    			<?php echo $this->translate("ACL_MANAGE_ACCOUNTS") ?>
+    			<?php echo $this->translate("Accounts") ?>
 			</h4>
 		</div>
 		<!-- content body -->
@@ -21,9 +21,9 @@
 			<div class="accordion-inner">
 				
 				<p>
-        			<a href='<?php echo $this->baseUrl('account-new') ?>' class="btn">
+        			<a href='<?php echo $this->baseUrl('account-new') ?>' class="btn btn-small">
         				<i class="icon-plus"></i>
-        				<?php echo $this->translate("ACL_CREATE_ACCOUNT") ?>
+        				<?php echo $this->translate("New account") ?>
         			</a>
         		</p>
         		<div>
@@ -33,23 +33,26 @@
             	<table class="table table-bordered table-hover table-striped">
             		<thead>
             		<tr>
-            			<th><?php echo $this->translate("ACL_EMAIL") ?></th>
-            			<th><?php echo $this->translate("ACL_ROLE") ?></th>
-            			<th><?php echo $this->translate("ACL_REGISTER_DATE") ?></th>
-            			<th><?php echo $this->translate("ACL_LAST_VISIT_DATE") ?></th>
-            			<th><?php echo $this->translate("LBL_STATUS") ?></th>
+            			<th><?php echo $this->translate("Email") ?></th>
+            			<th><?php echo $this->translate("Role") ?></th>
+            			<th><?php echo $this->translate("Register date") ?></th>
+            			<th><?php echo $this->translate("Last visit date") ?></th>
+            			<th><?php echo $this->translate("Status") ?></th>
             			<th>&nbsp;</th>
             			<th>#</th>
             		</tr>
             		</thead>
             		<tbody>
-            		<?php echo $this->partialLoop('partials/_row_account.phtml', $this->accounts); ?>
+            		<?php 
+            		  echo $this->partialLoop()
+                		  ->setObjectKey('account')
+                		  ->partialLoop('partials/_row_account.phtml', $this->accounts) 
+            		?>
             		</tbody>
             	</table>
-            	<?php #echo $this->paginationControl( $this->accounts, 'Sliding', 'partials/pagination-control.phtml' ); ?>
-            	<?php echo $this->paginationControl( $this->accounts, 'Sliding', 'pagination-control.phtml' ); ?>
+            	<?php echo $this->paginationControl( $this->accounts, 'Sliding', 'pagination-control.phtml', array('route'=>'accounts') ) ?>
             	<?php else : ?>
-            		<p class="muted"><?php echo $this->translate("LBL_NO_ITEMS_REGISTERED_YET") ?></p>
+            		<p class="muted"><?php echo $this->translate("No registered items") ?></p>
             	<?php endif; ?>
             	</div>
 				
@@ -62,7 +65,7 @@
 $(document).ready(function() {
 	$('.xdialog').click(function(e){
 		e.preventDefault();
-		$(this).xdialog({q:'Do you really want to remove it?'});
+		$(this).xdialog({q:'<?php echo $this->translate("Do you really want to remove it?") ?>'});
 	});
 });
 </script>

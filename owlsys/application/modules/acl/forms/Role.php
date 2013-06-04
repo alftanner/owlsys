@@ -31,47 +31,15 @@ class Acl_Form_Role extends Twitter_Bootstrap_Form_Horizontal
 					->addValidator( new Zend_Validate_NotEmpty() );
 		$this->addElement($txtName);
 
-		$mdlRole = new Acl_Model_Role();
-        $roles = $mdlRole->getRoles();
-        $cbRole = $this->createElement("select", "parent_id");
-        $cbRole->setLabel("ACL_ROLE_PARENT")
-        				->setRequired( FALSE );
-        if ( $roles->count() > 0 ) {
-	        foreach ( $roles as $role ) {
-	        	$cbRole->addMultiOption( $role->id, $role->name );
-	        }
-        }
-        $this->addElement( $cbRole );
-        
-        $mdlSkin = new System_Model_Skin();
-        $skin = $mdlSkin->getSkinSelected();
-        $skinName = is_null($skin) ? 'default' : strtolower($skin->name);
-        $layouts = new Zend_Config_Xml( APPLICATION_PATH.'/layouts/scripts/'.$skinName.'/layouts.xml');
-        $layouts = $layouts->files->layout->toArray();
-        
-        $cbDesktopLayout = $this->createElement("select", "desktop_layout");
-        $cbDesktopLayout->setLabel('LBL_DESKTOP_LAYOUT');
-        $cbDesktopLayout->setRequired(true);
-        
-        $cbMobileLayout = $this->createElement("select", "mobile_layout");
-        $cbMobileLayout->setLabel('LBL_MOBILE_LAYOUT');
-        $cbMobileLayout->setRequired(true);
-        
+        $mdlLayout = System_Model_LayoutMapper::getInstance();
+        $layouts = $mdlLayout->getAll();
+        $cbLayout = $this->createElement("select", "layout");
+        $cbLayout->setLabel('Layout');
+        $cbLayout->setRequired(true);
         foreach ( $layouts as $layout ) {
-        	$cbDesktopLayout->addMultiOption( $layout, $layout );
-        	$cbMobileLayout->addMultiOption( $layout, $layout );
+        	$cbLayout->addMultiOption( $layout->getId(), $layout->getName() );
         }
-        
-        $this->addElement( $cbDesktopLayout );
-        $this->addElement( $cbMobileLayout );
-        
-        $txtPriority = $this->createElement('text', 'priority');
-		$txtPriority->setLabel( 'ACL_PRIORITY' )
-					->setRequired(TRUE)
-					->setAttrib('size', 10)
-					->setAttrib('maxlength', 2) 
-					->addValidator( new Zend_Validate_NotEmpty() );
-		$this->addElement($txtPriority);
+        $this->addElement( $cbLayout );
         
         $id = $this->createElement('hidden', 'id');
         $id->setDecorators( array('ViewHelper') );
@@ -79,28 +47,14 @@ class Acl_Form_Role extends Twitter_Bootstrap_Form_Horizontal
         
         $token = new Zend_Form_Element_Hash('token');
         $token->setSalt( md5( uniqid( rand(), TRUE ) ) );
-        $token->setTimeout( 60 );
+        $token->setTimeout( 300 );
         $token->setDecorators( array('ViewHelper') );
         $this->addElement($token);
         
-        $submitOptions = array( 
-        	'buttonType' => Twitter_Bootstrap_Form_Element_Button::BUTTON_LINK,
-        	'type' => 'submit',
-        	'buttonType'    => 'default',
-        ); 
-        $btnSubmit = new Twitter_Bootstrap_Form_Element_Button('submit', $submitOptions);
-        $btnSubmit->setLabel('LBL_SAVE');
+        $btnSubmit = $this->createElement('submit', 'submit');
+        $btnSubmit->setLabel('LBL_SUBMIT');
         $btnSubmit->removeDecorator('Label');
-        $btnSubmit->setDecorators(array(
-        	array('FieldSize'),
-        	array('ViewHelper'),
-        	array('Addon'),
-        	array('ElementErrors'),
-        	array('Description', array('tag' => 'p', 'class' => 'help-block')),
-        	array('HtmlTag', array('tag' => 'div', 'class' => 'controls')),
-        	array('Wrapper')
-        ));
-        $btnSubmit->removeDecorator('Label');
+        $btnSubmit->setAttrib('class', 'btn btn-info');
         $this->addElement($btnSubmit);
         
     }

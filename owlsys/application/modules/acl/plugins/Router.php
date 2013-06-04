@@ -21,10 +21,11 @@ class Acl_Plugin_Router extends Zend_Controller_Plugin_Abstract
 	    $options = array();
 	    $options['module'] = 'acl';
 	    
-	    // account controller
+// account controller
 	    $options['controller'] = 'account';
 	    $options['action'] = 'resetpassword';
 	    $options['change'] = 0;
+	    $options['page'] = 1;
 	    $route = new Zend_Controller_Router_Route( 'resetpassword', $options );
 	    $router->addRoute('resetpassword', $route);
 	    
@@ -36,6 +37,9 @@ class Acl_Plugin_Router extends Zend_Controller_Plugin_Abstract
 	    $options['action'] = 'list';
 	    $route = new Zend_Controller_Router_Route( 'accounts', $options );
 	    $router->addRoute('accounts', $route);
+	    
+	    $route = new Zend_Controller_Router_Route( 'accounts/page/:page', $options );
+	    $router->addRoute('accounts/page/:page', $route);
 	    
 	    $options['action'] = 'create';
 	    $route = new Zend_Controller_Router_Route( 'account-new', $options );
@@ -58,7 +62,7 @@ class Acl_Plugin_Router extends Zend_Controller_Plugin_Abstract
 	    $route = new Zend_Controller_Router_Route( 'account-delete/:id', $options );
 	    $router->addRoute('account-delete/:id', $route);
 
-	    // authentication controller
+// authentication controller
 	    $options['controller'] = 'authentication';
 	    $options['action'] = 'login';
 	    $route = new Zend_Controller_Router_Route( 'login', $options );
@@ -68,11 +72,14 @@ class Acl_Plugin_Router extends Zend_Controller_Plugin_Abstract
 	    $route = new Zend_Controller_Router_Route( 'logout', $options );
 	    $router->addRoute('logout', $route);
 	    
-	    // resource controller
+// resource controller
 	    $options['controller'] = 'resource';
 	    $options['action'] = 'list';
 	    $route = new Zend_Controller_Router_Route( 'resources', $options );
 	    $router->addRoute('resources', $route);
+	    
+	    $route = new Zend_Controller_Router_Route( 'resources/page/:page', $options );
+	    $router->addRoute('resources/page/:page', $route);
 	    
 	    $options['action'] = 'sync';
 	    $route = new Zend_Controller_Router_Route( 'resources-sync', $options );
@@ -82,11 +89,14 @@ class Acl_Plugin_Router extends Zend_Controller_Plugin_Abstract
 	    $route = new Zend_Controller_Router_Route( 'resource-delete/:id', $options );
 	    $router->addRoute('resource-delete/:id', $route);
 	    
-	    // role controller
+// role controller
 	    $options['controller'] = 'role';
 	    $options['action'] = 'list';
 	    $route = new Zend_Controller_Router_Route( 'roles', $options );
 	    $router->addRoute('roles', $route);
+	    
+	    $route = new Zend_Controller_Router_Route( 'roles/page/:page', $options );
+	    $router->addRoute('roles/page/:page', $route);
 	    
 	    $options['action'] = 'create';
 	    $route = new Zend_Controller_Router_Route( 'role-create', $options );
@@ -99,6 +109,17 @@ class Acl_Plugin_Router extends Zend_Controller_Plugin_Abstract
 	    $options['action'] = 'delete';
 	    $route = new Zend_Controller_Router_Route( 'role-delete/:id', $options );
 	    $router->addRoute('role-delete/:id', $route);
+	    
+// permission controller
+	    $options['controller'] = 'permission';
+	    $options['action'] = 'manage';
+	    $options['role'] = 0;
+	    $route = new Zend_Controller_Router_Route( 'permissions-manager/:role', $options );
+	    $router->addRoute('permissions-manager/:role', $route);
+	    
+	    $options['action'] = 'update';
+	    $route = new Zend_Controller_Router_Route( 'permissions-update/:id', $options );
+	    $router->addRoute('permissions-update/:id', $route);
 	}
 	
 }

@@ -39,22 +39,22 @@ class Menu_ItemController extends Zend_Controller_Action
     	$translate = Zend_Registry::get('Zend_Translate');
         try {
         	$menuId = $this->getRequest()->getParam('menu', 0);
-        	$mdlMenu = new menu_Model_Menu();
-        	$menu = $mdlMenu->find( $menuId )->current();
-        	if ( !$menu ) throw new Exception($translate->translate("MENU_ROW_NOT_FOUND"));
-        	$mdlMenuItem = new menu_Model_Item();
-        	$adapter = $mdlMenuItem->getListByMenu($menu);
-        	$paginator = Zend_Paginator::factory($adapter);
-	        #$paginator = new Zend_Paginator($adapter);
+        	$mdlMenu = menu_Model_MenuMapper::getInstance();
+        	$mdlMenuItem = menu_Model_ItemMapper::getInstance();
+        	$menu = new menu_Model_Menu();
+        	$mdlMenu->find($menuId, $menu);
+        	
+        	$menuItems = $mdlMenuItem->getListByMenu($menu);
+        	$paginator = Zend_Paginator::factory($menuItems);
 	        $paginator->setItemCountPerPage(25);
 	        $pageNumber = $this->getRequest()->getParam('page',1);
 	        $paginator->setCurrentPageNumber($pageNumber);
 	        
 	        $this->view->items = $paginator;
         	$this->view->menu = $menu;
-        	$this->view->rows = $adapter;
+        	$this->view->rows = $menuItems;
         } catch (Exception $e) {
-        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
+        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('menus');
         }
         return;
@@ -71,10 +71,10 @@ class Menu_ItemController extends Zend_Controller_Action
     	try {
     		$translate = Zend_Registry::get('Zend_Translate');
     		
-    		$menuId = $this->getRequest()->getParam('menu_id', 0);
-    		$mdlMenu = new menu_Model_Menu();
-    		$menu = $mdlMenu->find( $menuId )->current();
-    		if ( !$menu ) throw new Exception($translate->translate("MENU_ROW_NOT_FOUND"));
+    		$menuId = $this->getRequest()->getParam('menu', 0);
+    		$mdlMenu = new menu_Model_MenuMapper();
+    		$menu = new menu_Model_Menu();
+    		$mdlMenu->find($menuId, $menu);
     		$this->view->menu = $menu;
     		$menuId = $menu->id;
 
@@ -86,7 +86,6 @@ class Menu_ItemController extends Zend_Controller_Action
     		if ( !file_exists( $menuFile ) ) {
     			throw new Exception($translate->translate("MENU_XML_FILE_NOT_FOUND"));
     		}
-    		
     		$sxe = new SimpleXMLElement( $menuFile, null, true);
     		$element = null;
     		foreach( $sxe as $sxeMenuItem ) {
@@ -95,80 +94,93 @@ class Menu_ItemController extends Zend_Controller_Action
     				break;
     			}
     		}
+    		
     		if ( !$element ) throw new Exception($translate->translate("MENU_XML_ITEM_ELEMENT_NOT_FOUND"));
     		
-    		$mdlResource = new Acl_Model_Resource();
-    		$resource = $mdlResource->getIdByDetail($module, strval($element->controller), strval($element->action));
+    		$mdlResource = Acl_Model_ResourceMapper::getInstance();
+    		$resource = new Acl_Model_Resource();
+    		$resource->setModule($module)
+    		  ->setController($element->controller)
+    		  ->setActioncontroller($element->action)
+    		;
+    		$mdlResource->getIdByDetail($resource);
+    		
     		if ( !$resource ) throw new Exception($translate->translate("ACL_RESOURCE_NOT_FOUND"));
     		
     		$frmMenuItem = ucfirst( strtolower( strval($element->module) ) ).'_Form_Menuitems';
     		$frmMenuItem = ( strtolower(strval($element->module)) == 'menu' ) ? 'menu_Form_Menuitems' : $frmMenuItem;
-    		#$frmWidget = new $frmWidget( array('typeForm'=>'test') );
+    		/* @var $frmMenuItem menu_Form_Item */
     		$frmMenuItem = new $frmMenuItem( array('menuType'=>strtolower(strval($element->menu_type))) );
     		
     		$frmMenuItem->getElement('mid')->setValue( (int) $mid );
     		$frmMenuItem->getElement('mod')->setValue( strval($module) );
-    		$frmMenuItem->getElement('menu_id')->setValue( $menuId );
-    		$frmMenuItem->getElement('resource_id')->setValue( $resource->id );
+    		$frmMenuItem->getElement('menu')->setValue( $menuId );
+    		$frmMenuItem->getElement('resource')->setValue( $resource->id );
     		
-    		$cbParentItem = $frmMenuItem->getElement('parent_id');
-    		$mdlMenuItem = new menu_Model_Item();
-    		$menuItemList = $mdlMenuItem->getListItemsByMenu($menu);
+    		$cbParentItem = $frmMenuItem->getElement('parent');
+    		$mdlMenuItem = menu_Model_ItemMapper::getInstance();
+    		$mdlMenuItem->getByMenu($menu);
+    		$menuItemList = $menu->getChildren();
     		$cbParentItem->addMultiOption( 0, $translate->translate("MENU_NOT_PARENT") );
-    		if ( $menuItemList )
+    		if ( count($menuItemList) > 0 )
     		{
 	    		foreach ( $menuItemList as $menuItemRow ) {
-	    			$cbParentItem->addMultiOption( $menuItemRow->id, $menuItemRow->title );
+	    			$cbParentItem->addMultiOption( $menuItemRow->getId(), $menuItemRow->getTitle() );
 	    		}
     		}
     		
-    		$frmMenuItem->setAction( $this->_request->getBaseUrl() . "/menu-item-add/".$module.'/'.$mid.'/'.$menu->id );
-    		$this->view->frmMenuItem = $frmMenuItem;
-    		$this->view->menuitem = $element;
+    		$frmMenuItem->setAction( $this->_request->getBaseUrl() . "/menu-item-add/".$module.'/'.$mid.'/'.$menu->getId() );
+    		$frmMenuItem->removeElement('id');
     		
     		if ( $this->getRequest()->isPost() )
     		{
     		    if ( $frmMenuItem->isValid( $this->getRequest()->getParams() ) )
     		    {
-    		    	
-					$mdlMenuItem = new menu_Model_Item();
-					$menuItem = $mdlMenuItem->createRow( $this->getRequest()->getParams() );
+    		        
+    		        $frmMIValues = $frmMenuItem->getValues();
+					$menuItem = new menu_Model_Item();
+					$menuItemParent = new menu_Model_Item();
 					
-					$parentItem = $mdlMenuItem->find( $menuItem->parent_id )->current();
-					$menuItem->depth = ($parentItem)?$parentItem->depth+1:1;
-        	        $menuItem->parent_id = ($parentItem)?$parentItem->id:null;
+					$menuItemParent->setId( $frmMenuItem->getValue('parent') );
+					$menuItem->setDepth( $mdlMenuItem->find($frmMenuItem->getValue('parent'), $menuItemParent) ? $menuItemParent->getDepth()+1 : 1 );
+					$menuItemParent->setId( ($menuItemParent->getId()>0) ? $menuItemParent->getId() : null);
+					$menuItem->setParent( $menuItemParent );
+					$menuItem->setCssClass( $frmMenuItem->getValue('css_class') );
+					$menuItem->setDescription( $frmMenuItem->getValue('description') );
+					$menuItem->setExternal($frmMenuItem->getValue('external'));
+					$menuItem->setIsPublished($frmMenuItem->getValue('published'));
+					$menuItem->setIsVisible($frmMenuItem->getValue('isvisible'));
+					$menuItem->setMenu($menu);
+					$menuItem->setMid($frmMenuItem->getValue('mid'));
+					$menuItem->setResource($resource);
+					$menuItem->setRoute($frmMenuItem->getValue('route'));
+					$menuItem->setTitle($frmMenuItem->getValue('title'));
+					$menuItem->setWtype($frmMenuItem->getValue('wtype'));
 					
-					$mdlMenuItem->save($menuItem);
-					
-					$frmMIValues = $frmMenuItem->getValues();
 					$params = array();
 					foreach ( $frmMIValues as $wvk => $wv )
 					{
 						if ( !in_array($wvk, $frmMenuItem->defaultFormFields) )
 						{
-							#$params[] = $wvk.'='.$wv.'';
-							#$params[] = array($wvk=>$wv);
 						    $params[$wvk] = $wv;
 						}
 					}
-					#$params = implode("\n", $params);
-					#$menuItem->params = $params;
-					$menuItem->params = Zend_Json::encode($params);
+					$menuItem->setParams(Zend_Json::encode($params));
 					
-					$menuItem->save();
+					$mdlMenuItem->save($menuItem);
 					
-					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("MENU_ITEM_ADDED_SUCCESSFULLY") ) );
+					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("MENU_ITEM_ADDED_SUCCESSFULLY") ) );
 					$this->redirect('menu-items/'.$menu->id);
     		    } 
-    		} else {
-    			/*$fields = array();
-    			foreach ( $frmMenuItem->getElements() as $element ) $fields[] = $element->getName();
-    			$frmMenuItem->addDisplayGroup( $fields, 'form', array( 'legend' => "MENU_CREATE_MENUITEM", ) );*/
-    		}
-    		
+    		} 
+    		$this->view->frmMenuItem = $frmMenuItem;
+    		$this->view->menuitem = $element;
     	}
     	catch (Exception $e) {
-    		$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
+//     	    Zend_Debug::dump($e->getMessage());
+//     	    Zend_Debug::dump($e->getTraceAsString());
+//     	    die();
+    		$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('menu-items/'.$menu->id);
     	}
     	return;
@@ -180,31 +192,32 @@ class Menu_ItemController extends Zend_Controller_Action
      */
     public function moveAction()
     {
+        $id = null;
         try {
         	$translate = Zend_Registry::get('Zend_Translate');
-        	$id = $this->_request->getParam( 'id' );
+        	$id = (int)$this->_request->getParam( 'id' );
+        	$mdlMenuItem = menu_Model_ItemMapper::getInstance();
+        	$menuItem = new menu_Model_Item();
+        	$id = (int)$this->getRequest()->getParam('id', 0);
         	$direction = $this->_request->getParam('direction');
-        	$mdlMenuItem = new menu_Model_Item();
-        	$menuItem = $mdlMenuItem->find( $id )->current();
-        	if ( !$menuItem )
-        	{
-        		throw new Exception($translate->translate("MENU_ITEM_NOT_FOUND"));
-        	}
+        	$mdlMenuItem->find($id, $menuItem);
+        	
         	if ( !in_array($direction, array('down', 'up')) ) {
-        		throw new Exception($translate->translate("LBL_UP_DOWN_NOT_SPECIFIED"));
+        		throw new Exception($translate->translate("Direction unknowed"));
         	}
-        	if ( $direction == "up" )
-        	{
+        	
+        	if ( $direction == "up" ) {
         		$mdlMenuItem->moveUp($menuItem);
-        		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("LBL_ITEM_MOVED_UP_SUCCESSFULLY") ) );
-        	} elseif ( $direction == "down" )
-        	{
+        	} elseif ( $direction == "down" ) {
         		$mdlMenuItem->moveDown($menuItem);
-        		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("LBL_ITEM_MOVED_DOWN_SUCCESSFULLY") ) );
         	}
-        	$this->redirect('menu-items/'.$menuItem->menu_id);
+        	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The item was moved") ) );
+        	$this->redirect('menu-items/'.$menuItem->getMenu()->getId());
         } catch (Exception $e) {
-        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
+            Zend_Debug::dump($e->getMessage());
+    	    Zend_Debug::dump($e->getTraceAsString());
+    	    die();
+        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('menus');
         }
         return;
@@ -220,15 +233,17 @@ class Menu_ItemController extends Zend_Controller_Action
         try {
         	$translate = Zend_Registry::get('Zend_Translate');
         	
-        	$id = $this->getRequest()->getParam('id', 0);
-        	$mdlMenuItem = new menu_Model_Item();
-        	$menuItem = $mdlMenuItem->find($id)->current();
-        	if ( !$menuItem ) throw new Exception($translate->translate("LBL_ROW_NOT_FOUND"));
+        	$mdlMenuItem = menu_Model_ItemMapper::getInstance();
+        	$menuItem = new menu_Model_Item();
+        	$id = (int)$this->getRequest()->getParam('id', 0);
+        	$direction = $this->_request->getParam('direction');
+        	$mdlMenuItem->find($id, $menuItem);
         	
-        	$mdlResource = new Acl_Model_Resource();
-        	$resource = $mdlResource->find( $menuItem->resource_id )->current();
+        	$mdlResource = new Acl_Model_ResourceMapper();
+        	$resource = new Acl_Model_Resource();
+        	$mdlResource->find($menuItem->getResource()->getId(), $resource);
         	
-        	$menuFile = APPLICATION_PATH.'/modules/'.$resource->module.'/menus.xml';
+        	$menuFile = APPLICATION_PATH.'/modules/'.$resource->getModule().'/menus.xml';
         	if ( !file_exists( $menuFile ) ) {
         		throw new Exception($translate->translate("MENU_XML_FILE_NOT_FOUND"));
         	}
@@ -236,7 +251,7 @@ class Menu_ItemController extends Zend_Controller_Action
         	$sxe = new SimpleXMLElement( $menuFile, null, true);
         	$element = null;
         	foreach( $sxe as $sxeMenuItem ) {
-        		if ( $sxeMenuItem['id'] == $menuItem->mid ) {
+        		if ( $sxeMenuItem['id'] == $menuItem->getMid() ) {
         			$element = $sxeMenuItem;
         			break;
         		}
@@ -245,26 +260,39 @@ class Menu_ItemController extends Zend_Controller_Action
         	
         	$frmMenuItem = ucfirst( strtolower( strval($element->module) ) ).'_Form_Menuitems';
         	$frmMenuItem = ( strtolower(strval($element->module)) == 'menu' ) ? 'menu_Form_Menuitems' : $frmMenuItem;
+        	/* @var $frmMenuItem menu_Form_Item */
         	$frmMenuItem = new $frmMenuItem( array('menuType'=>strtolower(strval($element->menu_type))) );
         	
-        	$mdlMenu = new menu_Model_Menu();
-        	$menu = $mdlMenu->find( $menuItem->menu_id )->current();
-        	if ( !$menu ) throw new Exception($translate->translate("MENU_NOT_FOUND"));
+        	$mdlMenu = menu_Model_MenuMapper::getInstance();
+        	$menu = new menu_Model_Menu();
+        	$mdlMenu->find($menuItem->getMenu()->getId(), $menu);
         	$this->view->menu = $menu;
         	
-        	$cbParentItem = $frmMenuItem->getElement('parent_id');
-        	$mdlMenuItem = new menu_Model_Item();
-        	$menuItemList = $mdlMenuItem->getListItemsByMenu($menu);
+        	$cbParentItem = $frmMenuItem->getElement('parent');
+        	$mdlMenuItem->getByMenu($menu);
+        	$menuItemList = $menu->getChildren();
         	$cbParentItem->addMultiOption( 0, $translate->translate("MENU_NOT_PARENT") );
-        	foreach ( $menuItemList as $menuItemRow ) {
-        		$cbParentItem->addMultiOption( $menuItemRow->id, $menuItemRow->title );
+        	if ( count($menuItemList) > 0 ) {
+            	foreach ( $menuItemList as $menuItemRow ) {
+            		$cbParentItem->addMultiOption( $menuItemRow->getId(), $menuItemRow->getTitle() );
+            	}
         	}
         	
         	if ( $this->getRequest()->isPost() )
         	{
         	    if ( $frmMenuItem->isValid( $_POST ) )
         	    {
-        	        $menuItem->setFromArray( $frmMenuItem->getValues() );
+        	        
+        	        $frmMIValues = $frmMenuItem->getValues();
+        	        $menuItem->setCssClass( $frmMenuItem->getValue('css_class') );
+        	        $menuItem->setDescription( $frmMenuItem->getValue('description') );
+        	        $menuItem->setExternal($frmMenuItem->getValue('external'));
+        	        $menuItem->setIsPublished($frmMenuItem->getValue('published'));
+        	        $menuItem->setIsVisible($frmMenuItem->getValue('isvisible'));
+        	        $menuItem->setMid($frmMenuItem->getValue('mid'));
+        	        $menuItem->setRoute($frmMenuItem->getValue('route'));
+        	        $menuItem->setTitle($frmMenuItem->getValue('title'));
+        	        $menuItem->setWtype($frmMenuItem->getValue('wtype'));
         	        
         	        $frmMIValues = $frmMenuItem->getValues();
         	        $params = array();
@@ -272,52 +300,50 @@ class Menu_ItemController extends Zend_Controller_Action
         	        {
         	        	if ( !in_array($wvk, $frmMenuItem->defaultFormFields) )
         	        	{
-        	        		#$params[] = $wvk.'='.$wv.'';
         	        	    $params[$wvk] = $wv;
         	        	}
         	        }
-        	        #$params = implode("\n", $params);
-        	        #$menuItem->params = $params;
-        	        $menuItem->params = Zend_Json::encode($params);
-        	        #Zend_Debug::dump($menuItem->params);
-        	        #die();
+        	        $menuItem->setParams(Zend_Json::encode($params));
         	        
-        	        $parentItem = $mdlMenuItem->find( $menuItem->parent_id )->current();
-        	        $menuItem->depth = ($parentItem)?$parentItem->depth+1:1;
-        	        $menuItem->parent_id = ($parentItem)?$parentItem->id:null;
+        	        $mdlMenuItem->save($menuItem);
         	        
-        	        $menuItem->save();
-        	        
-        	        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("MENU_ITEM_UPDATED_SUCCESSFULLY") ) );
+        	        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Menu item updated") ) );
         	        $this->redirect('menu-items/'.$menu->id);
         	    } 
-        	    else {
-        	        #Zend_Debug::dump($frmMenuItem);
-        	    }
+        	    
         	} else {
-        	    
         	    $data = $menuItem->toArray();
-        	    if ( strlen($data['id_alias']) == 0 ) unset($data['id_alias']);
-        	    $frmMenuItem->populate( $data );
-        	    
-        	    if ( strlen($menuItem->params) > 0 ) {
-        	        $params = Zend_Json::decode($menuItem->params);
+        	    $values = array(
+        	            'id' => $menuItem->getId(),
+        	            'route' => $menuItem->getRoute(),
+                        'menu' => $menuItem->getMenu()->getId(),
+                        'resource' => $menuItem->getResource()->getId(),
+                        'parent' => $menuItem->getParent()->getId(),
+                        'wtype' => $menuItem->getWtype(),
+                        'published' => $menuItem->getIsPublished(),
+                        'title' => $menuItem->getTitle(),
+                        'description' => $menuItem->getDescription(),
+                        'external' => $menuItem->getExternal(),
+                        'mid' => $menuItem->getMid(),
+                        'isvisible' => $menuItem->getIsVisible(),
+                        'css_class' => $menuItem->getCssClass(),
+        	    );
+        	    $frmMenuItem->populate($values);
+        	    if ( strlen($menuItem->getParams()) > 0 ) {
+        	        $params = Zend_Json::decode($menuItem->getParams());
         	        $frmMenuItem->populate( $params );
         	    }
-        	    #Zend_Debug::dump($params[0]);
-        	    
-        	    $frmMenuItem->populate ( array('mod'=>$resource->module) );
-        	    
-        	    /*$fields = array();
-        	    foreach ( $frmMenuItem->getElements() as $element ) $fields[] = $element->getName();
-        	    $frmMenuItem->addDisplayGroup( $fields, 'form', array( 'legend' => $translate->translate("MENU_UPDATE_MENUITEM"), ) );*/
+        	    $frmMenuItem->populate ( array('mod'=>$resource->getModule()) );
         	}
-        	$frmMenuItem->setAction( $this->_request->getBaseUrl() . "/menu-item-update/".$menuItem->id );
+        	$frmMenuItem->setAction( $this->_request->getBaseUrl() . "/menu-item-update/".$menuItem->getId() );
         	$this->view->frmMenuItem = $frmMenuItem;
 			
         } catch (Exception $e) {
-        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
-        	$this->redirect('menu-items/'.$menu->id);
+            Zend_Debug::dump($e->getMessage());
+    	    Zend_Debug::dump($e->getTraceAsString());
+    	    die();
+        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
+        	$this->redirect('menu-items/'.$menu->getId());
         }
         
         return;
@@ -331,26 +357,24 @@ class Menu_ItemController extends Zend_Controller_Action
     {
         try {
         	$translate = Zend_Registry::get('Zend_Translate');
-        	$mdlMenuItem = new menu_Model_Item();
+        	$mdlMenuItem = menu_Model_ItemMapper::getInstance();
+        	$menuItem = new menu_Model_Item();
         	$id = $this->getRequest()->getParam('id', 0);
-        	$menuItem = $mdlMenuItem->find( $id )->current();
-        	if ( !$menuItem ) {
-        		throw new Exception($translate->translate("MENU_ITEM_NOT_FOUND"));
-        	}
-        	if ( $menuItem->published == 0 ) {
-        	    
-        	    $menuItem->published = 1;
-        	    $menuItem->save();
-        	    $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("MENU_ITEM_PUBLISHED_SUCCESSFULLY") ) );
+        	
+        	$mdlMenuItem->find($id, $menuItem);
+        	
+        	if ( $menuItem->getIsPublished() == 0 ) {
+        	    $menuItem->setIsPublished(1);
         	} else {
-        	    $menuItem->published = 0;
-        	    $menuItem->save();
-        	    $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("MENU_ITEM_UNPUBLISHED_SUCCESSFULLY") ) );
+        	    $menuItem->setIsPublished(0);
         	}
-        	$this->redirect('menu-items/'.$menuItem->menu_id);
+        	
+        	$mdlMenuItem->save($menuItem);
+        	
+        	$this->redirect('menu-items/'.$menuItem->getMenu()->getId());
         } catch (Exception $e) {
-        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
-        	$this->redirect('menu-items/'.$menuItem->menu_id);
+        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
+        	$this->redirect('menu-items/'.$menuItem->getMenu()->getId());
         }
         return;
     }
@@ -362,20 +386,25 @@ class Menu_ItemController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
+        $id = 0;
         try {
         	$translate = Zend_Registry::get('Zend_Translate');
-        	$mdlMenuItem = new menu_Model_Item();
-        	$id = $this->getRequest()->getParam('id', 0);
-        	$menuItem = $mdlMenuItem->find( $id )->current();
-        	if ( !$menuItem ) {
-        		throw new Exception($translate->translate("MENU_ITEM_NOT_FOUND"));
-        	}
-        	$menuId = $menuItem->menu_id;
-        	$menuItem->delete();
-        	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("MENU_ITEM_DELETED_SUCCESSFULLY") ) );
+        	$mdlMenuItem = menu_Model_ItemMapper::getInstance();
+        	$menuItem = new menu_Model_Item();
+        	$id = (int)$this->getRequest()->getParam('id', 0);
+        	
+        	$mdlMenuItem->find($id, $menuItem);
+        	
+        	$menuId = $menuItem->getMenu()->getId();
+        	$mdlMenuItem->remove($menuItem);
+        	
+        	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Menu item deleted") ) );
         	$this->redirect('menu-items/'.$menuId);
         } catch (Exception $e) {
-        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
+//             Zend_Debug::dump($e->getMessage());
+//     	    Zend_Debug::dump($e->getTraceAsString());
+//     	    die();
+        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('menu-items/'.$menuId);
         }
         return;
@@ -392,18 +421,25 @@ class Menu_ItemController extends Zend_Controller_Action
         try {
             $translate = Zend_Registry::get('Zend_Translate');
             $menuId = $this->getRequest()->getParam('menu', 0);
-            $mdlMenu = new menu_Model_Menu();
-            $menu = $mdlMenu->find( $menuId )->current();
-            if ( !$menu ) throw new Exception($translate->translate("MENU_ROW_NOT_FOUND"));
+            $mdlMenu = menu_Model_MenuMapper::getInstance();
+            $menu = new menu_Model_Menu();
+            $mdlMenu->find($menuId, $menu);
             $this->view->menu = $menu;
             
-            $mdlResource = new Acl_Model_Resource();
-            $modules = $mdlResource->getModules();
+            $mdlResource = Acl_Model_ResourceMapper::getInstance();
+            $resources = $mdlResource->getAll();
+            $modules = array();
+            foreach ( $resources as $resource ) {
+                if ( !in_array($resource->getModule(), $modules) ) {
+                    $modules[] = $resource->getModule();
+                }
+            }
+            
             $menus = array();
             foreach ( $modules as $module )
             {
             	#echo APPLICATION_PATH.'/modules/'.$module->module.'<br>';
-            	$menuFile = APPLICATION_PATH.'/modules/'.$module->module.'/menus.xml';
+            	$menuFile = APPLICATION_PATH.'/modules/'.$module.'/menus.xml';
             	if ( file_exists( $menuFile ) )
             	{
             		#echo "si en ".$module->module.'<br>';
@@ -418,7 +454,7 @@ class Menu_ItemController extends Zend_Controller_Action
             $this->view->menuItemTypes = $menus;
             	
         } catch (Exception $e) {
-            $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
+            $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
             $this->redirect('menu-items/'.$menuId);
         }
         return;

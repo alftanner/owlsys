@@ -6,32 +6,33 @@
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+/* @var $role Acl_Model_Role */
+$role = $this->role;
 ?>
 <tr>
-	<td class="field"><?php echo $this->name ?></td>
-	<td class="field"><?php echo $this->parent_name ?></td>
-	<td class="center"><?php echo $this->priority ?></td>
+	<td class="field"><?php echo $role->getName() ?></td>
+	<td class="center"><?php echo $role->getLayout()->getName() ?></td>
 	<td class="center">
 		<?php #if ( $this->id != 1 ) : ?>
-		<a href='<?=$this->baseUrl()?>/acl/permission/manage/role/<?php echo $this->id;?>' class="btn btn-mini">
+		<a href='<?=$this->baseUrl('permissions-manager/'.$role->getId())?>' class="btn btn-mini">
 		    <i class="icon-list"></i>
-			<?php echo $this->translate("ACL_MANAGE_PERMISSIONS") ?>
+			<?php echo $this->translate("Privileges") ?>
 		</a>
 		<?php #endif; ?>
 	</td>
 	<td class="center">
-		<?php if ( $this->id > 3 ) : ?>
+		<?php if ( $role->getId() > 1 ) : ?>
 		 
-		<a href='<?=$this->baseUrl()?>/acl/role/update/id/<?php echo $this->id;?>' class="btn btn-mini">
+		<a href='<?=$this->baseUrl('role-update/'.$role->getId())?>' class="btn btn-mini">
 			<i class="icon-edit"></i>
-			<?php echo $this->translate('LBL_EDIT') ?>
+			<?php echo $this->translate('Edit') ?>
 		</a>
 		<?php endif; ?>
-		<?php /*if ( $this->id > 3 ) : ?>
-		<a href='<?=$this->baseUrl()?>/acl/role/delete/id/<?php echo $this->id;?>' class="btn btn-mini">
+		<?php if ( $role->getId() > 3 ) : ?>
+		<a href='<?=$this->baseUrl('role-delete/'.$role->getId())?>' class="btn btn-mini xdialog">
 			<i class="icon-trash"></i>
 		</a>
-		<?php endif;*/ ?>
+		<?php endif; ?>
 	</td>
-	<td class="center"><?php echo $this->id ?></td>
+	<td class="center"><?php echo $this->partialCounter ?></td>
 </tr>

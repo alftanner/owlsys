@@ -6,16 +6,18 @@
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+/* @var $resource Acl_Model_Resource */
+$resource = $this->resource;
 ?>
 <tr>
-	<td><?php echo $this->module ?></td>
-	<td><?php echo $this->controller ?></td>
-	<td><?php echo $this->actioncontroller ?></td>
+	<td><?php echo $resource->getModule() ?></td>
+	<td><?php echo $resource->getController() ?></td>
+	<td><?php echo $resource->getActioncontroller() ?></td>
 	<td class="center">
-		<a href='<?=$this->baseUrl('resource-delete/'.$this->id)?>' class="btn btn-mini btn-danger xdialog">
+		<a href='<?=$this->baseUrl('resource-delete/'.$resource->getId())?>' class="btn btn-mini btn-danger xdialog">
 			<i class="icon-trash icon-white"></i>
-			<?php echo $this->translate('LBL_DELETE') ?>
+			<?php echo $this->translate('Remove') ?>
 		</a>
 	</td>
-	<td class="center"><?php echo $this->id ?></td>
+	<td class="center"><?php echo $this->partialCounter ?></td>
 </tr>

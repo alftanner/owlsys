@@ -93,16 +93,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		try {
 			$this->bootstrap('frontController') ;
 			$front = $this->getResource('frontController') ;
-			$front->registerPlugin( new OS_Application_Plugins_Ids() );
-			#$front->registerPlugin( new OS_Application_Plugins_Ssl() );
-			$front->registerPlugin( new OS_Application_Plugins_Router() );
-			$front->registerPlugin( new OS_Application_Plugins_Acl() );
-			$front->registerPlugin( new OS_Application_Plugins_Aclrouter() );
-			$front->registerPlugin( new OS_Application_Plugins_Layout() );
-			$front->registerPlugin( new OS_Application_Plugins_Locale() );
-			$front->registerPlugin( new OS_Application_Plugins_Navigation() );
-			$front->registerPlugin( new OS_Application_Plugins_Skin());
-			$front->registerPlugin( new OS_Application_Plugins_Widget() );
+			$front->registerPlugin( new OS_Plugins_Ids() );
+			$front->registerPlugin( new OS_Plugins_Cache() );
+			$front->registerPlugin( new OS_Plugins_Locale() );
+			//$front->registerPlugin( new OS_Application_Plugins_Ssl() );
+			$front->registerPlugin( new OS_Plugins_Router() );
+			$front->registerPlugin( new OS_Plugins_Acl() );
+			$front->registerPlugin( new OS_Plugins_Aclrouter() );
+            $front->registerPlugin( new OS_Plugins_Layout() );
+			$front->registerPlugin( new OS_Plugins_Navigation() );
+			$front->registerPlugin( new OS_Plugins_Skin());
+			$front->registerPlugin( new OS_Plugins_Widget() );
 		} catch (Exception $e) {
 		}
 	}
@@ -116,5 +117,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		define('APPLICATION_LOG_PATH', APPLICATION_PATH.'/../data/log/');
 		
 	}
+	
 	
 }

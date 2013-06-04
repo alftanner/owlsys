@@ -9,7 +9,7 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class OS_Application_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
+class OS_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
 {
     /**
      * @access private
@@ -24,67 +24,58 @@ class OS_Application_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
 	public function preDispatch(Zend_Controller_Request_Abstract $request)
 	{
 		try {
-		    #Zend_Debug::dump($request->getParams());
-		    #die();
 			
-			$mdlRole = new Acl_Model_Role();
+			$roleId = 3;
 			
 			$auth = Zend_Auth::getInstance();
 			$acl = Zend_Registry::get('ZendACL');
 			if ( $auth->hasIdentity() ) {
 				$identity = $auth->getIdentity();
-				$this->role = $mdlRole->find( $identity->role_id );
-			}else{
-				$this->role = $mdlRole->find( 3 );
+				$roleId = intval($identity->role_id);
 			}
 			
-		    $mdlMenuItem = new menu_Model_Item();
-		    $mdlMenu = new menu_Model_Menu();
-
-		    $navLinks = array();
-		    $nav = new Zend_Navigation($navLinks);
-		    
-		    $menuList = $mdlMenu->getByStatus(1);
-		    foreach ($menuList as $menu) {
-		    	
-		    	$options = array(
-	    			'id' => 'menu-'.$menu->id,
-	    			'label' => $menu->name,
-	    			'uri'   => '',
-		    	);
-		    	$page = Zend_Navigation_Page::factory( $options );
-		    	$nav->addPage( $page );
-		    	
-		    	$menuitemList = $mdlMenuItem->getItemsForNavigationByMenu($menu);
-		    	foreach ( $menuitemList as $menuItem )
-		    	{
-		    		if ( $menuItem->parent_id == 0 ) {
-		    			if ( $menuItem->external == 1 ) {
-		    				$this->addExternalPage($page, $menuItem);
-		    			} else {
-		    				$this->addInternalPage($page, $menuItem);
-		    			}
-		    		} else {
-		    			$parent = $nav->findBy('id', 'mii-'.$menuItem->parent_id);
-		    			if ( $menuItem->external == 1 ) {
-		    				$this->addExternalPage($parent, $menuItem);
-		    			} else {
-		    				$this->addInternalPage($parent, $menuItem);
-		    			}
-		    		}
-		    	}
-		    }
-		    
-		    $this->addCurrentPageUnregistered($nav, $request);
-		    
-		    $page = $nav->findBy("id", "mii-".$request->getParam("mid"));
-		    if ( $page ) $page->setActive(true);
-		    
+			$mdlMenuItemMapper = menu_Model_ItemMapper::getInstance();
+			$mdlMenuMapper = menu_Model_MenuMapper::getInstance();
+			
+			$navLinks = array();
+			$nav = new Zend_Navigation($navLinks);
+			$menus = $mdlMenuMapper->getByStatus(1);
+			foreach ( $menus as $menu ) {
+			    $mdlMenuItemMapper->getByMenu($menu);
+			    if ( $menu->getChildren() > 0 ) {
+    			    foreach ( $menu->getChildren() as $menuItem ) {
+    			        /* @var $menuItem menu_Model_Item */
+    			        $mdlMenuItemMapper->getMenuItemsRecursively($menuItem);
+    			    }
+			    }
+			}
+			
+			foreach ( $menus as $menu ) {
+			    $options = array(
+			            'id' => 'menu-'.$menu->getId(),
+			            'label' => $menu->getName(),
+			            'uri'   => '',
+			    );
+			    $page = Zend_Navigation_Page::factory( $options );
+			    $nav->addPage( $page );
+			    if ( $menu->getChildren() > 0 ) {
+    			    foreach ( $menu->getChildren() as $menuItem ) {
+    			        $this->_addPage($page, $menuItem);
+    			    }
+			    }
+			}
+			
+			$this->_addCurrentPageUnregistered($nav, $request);
+			$page = $nav->findBy("id", "mii-".$request->getParam("mid"));
+			if ( $page ) $page->setActive(true);
+			
 		    Zend_Registry::set('Zend_Navigation', $nav);
-		    #Zend_Debug::dump($nav->toArray());
-		    #die();
+// 		    Zend_Debug::dump($nav->toArray()); die();
 		    
 		} catch (Exception $e) {
+		    Zend_Debug::dump($e->getMessage());
+		    Zend_Debug::dump($e->getTraceAsString());
+		    die();
 		    try {
 		        $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'plugins.log');
 		        $logger = new Zend_Log($writer);
@@ -94,25 +85,35 @@ class OS_Application_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
 		} 
 	}
 	
+	private function _addPage(Zend_Navigation_Page $pageParent, menu_Model_Item $menuItem) 
+	{
+        $page = ( $menuItem->getExternal() == 1 ) ? $this->_addExternalPage($pageParent, $menuItem) : $this->_addInternalPage($pageParent, $menuItem);
+        if ( count($menuItem->getChildren()) > 0 ) {
+            foreach ( $menuItem->getChildren() as $child ) {
+                $this->_addPage($page, $child);
+            }
+        }
+	}
+	
 	/**
 	 * 
 	 * @param Zend_Navigation_Page $pageParent
-	 * @param Zend_Db_Table_Row_Abstract $menuItem
+	 * @param menu_Model_Item $menuItem
 	 * @return Ambigous <Zend_Navigation_Page, Zend_Navigation_Page_Mvc, Zend_Navigation_Page_Uri, unknown>
 	 */
-	private function addExternalPage( Zend_Navigation_Page $pageParent, Zend_Db_Table_Row_Abstract $menuItem )
+	private function _addExternalPage( Zend_Navigation_Page $pageParent, menu_Model_Item $menuItem )
 	{
 		$options = array(
-			'id' => 'mii-'.$menuItem->id,
-			'label' => $menuItem->title,
-			'title' => $menuItem->title,
-			'uri' 	=> $this->getParamByKey( $menuItem, 'linkt'),
-			'target' => $menuItem->wtype,
-			'resource' => strtolower( $menuItem->module.':'.$menuItem->controller ),
-			'privilege' => strtolower( $menuItem->actioncontroller ),
-			'order' => $menuItem->ordering,
-			'visible' => $menuItem->isvisible,
-			'class' => $menuItem->css_class
+			'id' => 'mii-'.$menuItem->getId(),
+			'label' => $menuItem->getTitle(),
+			'title' => $menuItem->getTitle(),
+			'uri' 	=> $this->_getParamByKey( $menuItem, 'linkt'),
+			'target' => $menuItem->getWtype(),
+			'resource' => strtolower( $menuItem->getResource()->getModule().':'.$menuItem->getResource()->getController() ),
+			'privilege' => strtolower( $menuItem->getResource()->getActioncontroller() ),
+			'order' => $menuItem->getOrdering(),
+			'visible' => true,
+			'class' => $menuItem->getCssClass()
 		);
 		$page = Zend_Navigation_Page::factory($options);
 		$pageParent->addPage($page);
@@ -120,53 +121,49 @@ class OS_Application_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
 	}
 	
 	/**
-	 *
+	 * 
 	 * @param Zend_Navigation_Page $pageParent
-	 * @param Zend_Db_Table_Row_Abstract $menuItem
+	 * @param menu_Model_Item $menuItem
 	 * @return Ambigous <Zend_Navigation_Page, Zend_Navigation_Page_Mvc, Zend_Navigation_Page_Uri, unknown>
 	 */
-	private function addInternalPage( Zend_Navigation_Page $pageParent, Zend_Db_Table_Row_Abstract $menuItem )
+	private function _addInternalPage( Zend_Navigation_Page $pageParent, menu_Model_Item $menuItem )
 	{
-		
+		if ( $menuItem->getIsPublished() == 0 ) return;
 		$options = array(
-			'id' => 'mii-'.$menuItem->id,
-			'label' => $menuItem->title,
-			'title' => $menuItem->title,
-			'target' => $menuItem->wtype,
-			'resource' => strtolower( $menuItem->module.':'.$menuItem->controller ),
-			'privilege' => strtolower( $menuItem->actioncontroller ),
-			'order' => $menuItem->ordering,
-			'visible' => $menuItem->isvisible,
-			'class' => $menuItem->css_class,
-			'module' => $menuItem->module,
-			'controller' => $menuItem->controller,
-			'action' => $menuItem->actioncontroller,
+			'id' => 'mii-'.$menuItem->getId(),
+			'label' => $menuItem->getTitle(),
+			'title' => $menuItem->getTitle(),
+			'target' => $menuItem->getWtype(),
+			'resource' => strtolower( $menuItem->getResource()->getModule().':'.$menuItem->getResource()->getController() ),
+			'privilege' => strtolower( $menuItem->getResource()->getActioncontroller() ),
+			'order' => $menuItem->getOrdering(),
+			'visible' => true,
+			'class' => $menuItem->getCssClass(),
+			'module' => $menuItem->getResource()->getModule(),
+			'controller' => $menuItem->getResource()->getController(),
+			'action' => $menuItem->getResource()->getActioncontroller(),
 		);
 		
 		$params = array();
-		$subItemsParams = Zend_Json::decode($menuItem->params);
+		$subItemsParams = Zend_Json::decode($menuItem->getParams());
 		if ( !is_null($subItemsParams) ) $params = $subItemsParams;
 		$page = Zend_Navigation_Page::factory($options);
 		$page->addParams($params);
 	    $pageParent->addPage($page);
-	    
-	    if ( strlen($menuItem->id_alias) > 0 ) {
-	        $page->setRoute( $menuItem->id_alias );
-	    } else $page->setRoute( strtolower($menuItem->module.'-'.$menuItem->controller.'-'.$menuItem->actioncontroller) );
-	    
+	    $page->setRoute( $menuItem->getRoute() );
 		return $page;
 	}
 	
 	/**
 	 * Get param by key
 	 * @access protected
-	 * @param Zend_Db_Table_Row_Abstract $item
+	 * @param Zend_Db_Table_Row_Abstract $menuItem
 	 * @param string $key
 	 * @return string
 	 */
-	protected function getParamByKey( Zend_Db_Table_Row_Abstract $item, $key )
+	private function _getParamByKey( menu_Model_Item $menuItem, $key )
 	{
-	    $params = Zend_Json::decode($item->params);
+	    $params = Zend_Json::decode($menuItem->getParams());
 	    foreach ($params as $param) {
 	        if ( isset($param[$key]) )
 	        {
@@ -176,18 +173,17 @@ class OS_Application_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
 	    return '';
 	}
 	
-	private function addCurrentPageUnregistered( Zend_Navigation $nav, Zend_Controller_Request_Abstract $request )
+	private function _addCurrentPageUnregistered( Zend_Navigation $nav, Zend_Controller_Request_Abstract $request )
 	{
 	    if ( $nav->findBy('id', 'mii-'.$request->getParam('mid')) ){
 	        return;
-	    }
+	    } 
 		$session = new Zend_Session_Namespace('previousPage');
 		if ( strcmp( strtolower($request->getActionName()), 'logout') === 0 ) $session->unsetAll(); #$session->previousPage = null;
 		$previousPage = $session->previousPage;
 		$currentPage = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
 		$navItem = $nav->findAllBy('active', true);
 		if ( count($navItem) == 0 ) {
-		
 			$navItem = array (
 				'module' => strtolower( $request->getModuleName() ),
 				'controller' => strtolower( $request->getControllerName() ),
@@ -197,7 +193,7 @@ class OS_Application_Plugins_Navigation extends Zend_Controller_Plugin_Abstract
 				'resource' => strtolower( $request->getModuleName().':'.$request->getControllerName() ),
 				'privilege' => strtolower( $request->getActionName() ),
 				'id' => 0,
-				'miid' => 0,
+				'mid' => 0,
 				'visible' => false,
 				'active' => true,
 			);

@@ -37,9 +37,9 @@ class Acl_ResourceController extends Zend_Controller_Action
     {
     	$translate = Zend_Registry::get('Zend_Translate');
     	try {
-    		$mdlResource = new Acl_Model_Resource();
-    		 
-    		$registeredList = $mdlResource->getRegisteredList();
+    		$mdlResource = Acl_Model_ResourceMapper::getInstance();
+
+    		$registeredList = $mdlResource->getAll();
     		#print_r($registeredList);
     		#die();
     		 
@@ -59,35 +59,28 @@ class Acl_ResourceController extends Zend_Controller_Action
     		foreach ( $resourcesAvailable as $rsa ) {
     			$isRegistered = false;
     			foreach ($registeredList as $rsRegistered) {
-    				$rsTemp = $rsRegistered->module.'-'.$rsRegistered->controller.'-'.$rsRegistered->actioncontroller;
+    				$rsTemp = $rsRegistered->getModule().'-'.$rsRegistered->getController().'-'.$rsRegistered->getActioncontroller();
     				if ( strcasecmp($rsa, $rsTemp) == 0 ) {
     					$isRegistered = true;
     				}
     			}
     			if ( ! $isRegistered ) {
     				$arrResource = explode('-', $rsa);
-    				$resource = $mdlResource->createRow();
-    				$resource->module = $arrResource[0];
-    				$resource->controller = $arrResource[1];
-    				$resource->actioncontroller = $arrResource[2];
-    				$resource->save();
+    				$resource = new Acl_Model_Resource();
+    				$resource->setModule($arrResource[0]);
+    				$resource->setController($arrResource[1]);
+    				$resource->setActioncontroller($arrResource[2]);
+    				$mdlResource->save($resource);
     			}
     		}
     		
-    		/* @var $cache Zend_Cache_Backend_File */
-    		$cache = Zend_Registry::get('cacheACL');
-    		$mdlRole = new Acl_Model_Role();
-    		$roles = $mdlRole->getRoles();
-    		foreach( $roles as $role ) {
-    		    if ( $cache->test('cacheACL_'.$role->id) ) {
-    		        $cache->remove('cacheACL_'.$role->id);
-    		    }
-    		}
-    		
-    		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("ACL_RESOURCES_SYNCD") ) );
+    		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Resources are synchronized") ) );
     		$this->redirect('resources');
     	} catch (Exception $e) {
-    		$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
+    	    Zend_Debug::dump($e->getMessage());
+    	    Zend_Debug::dump($e->getTraceAsString());
+    	    die();
+    		$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
     		$this->redirect('resources');
     	}
     	return;
@@ -99,39 +92,8 @@ class Acl_ResourceController extends Zend_Controller_Action
     public function listAction()
     {
         try {
-            /*
-            $dir = new DirectoryIterator(APPLICATION_PATH.'/modules/');
-            
-            foreach ($dir as $fileinfo) {
-                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
-                    $moduleController_dir = new DirectoryIterator(APPLICATION_PATH.'/modules/'.$fileinfo->getFilename().'/controllers/');
-                    Zend_Debug::dump($fileinfo->getFilename(), 'Module Dir');
-                    foreach ($moduleController_dir as $moduleControllerDir) {
-                        if ( !$fileinfo->isDot() && $moduleControllerDir->isFile() ){
-                            $controller = ucfirst($fileinfo->getFilename()).'_'.$moduleControllerDir->getFilename();
-                            $controller = str_replace('.php', '', $controller);
-                            #Zend_Debug::dump($moduleControllerDir->getFilename(),'Controller in '.$moduleControllerDir);
-                            $class_exists = class_exists($controller);
-                            if ( $class_exists ) {
-                                $class_methods = get_class_methods($controller);
-                                Zend_Debug::dump($controller, 'Controller');
-                                Zend_Debug::dump($class_methods, 'Methods');
-                            } else {
-                                Zend_Debug::dump($class_exists, 'Controller '.$controller.' doesnt exist');
-                            }
-                        }
-                    }
-                } 
-            }
-            */
-            #Zend_Debug::dump(APPLICATION_PATH.'modules/');
-        
-            #$s = new System_WidgetController(null, null);
-            #var_dump($s);
-            
-        	$mdlResource = new Acl_Model_Resource();
-        	$adapter = $mdlResource->getList();
-        	$paginator = Zend_Paginator::factory($adapter);
+        	$mdlResource = Acl_Model_ResourceMapper::getInstance();
+        	$paginator = Zend_Paginator::factory($mdlResource->getAll());
         	$paginator->setItemCountPerPage(20);
         	$pageNumber = $this->getRequest()->getParam('page',1);
         	$paginator->setCurrentPageNumber($pageNumber);
@@ -151,16 +113,15 @@ class Acl_ResourceController extends Zend_Controller_Action
     	$translate = Zend_Registry::get('Zend_Translate');
         try {
         	$id = $this->getRequest()->getParam( "id" );
-			$mdlResource = new Acl_Model_Resource();
-			$resource = $mdlResource->find( $id )->current();
-			if ( !$resource ) {
-				throw new Zend_Exception($translate->translate("LBL_ROW_NOT_FOUND"));
-			}
-			$resource->delete();
-			$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("LBL_CHANGES_SAVED") ) );
+			$mdlResource = Acl_Model_ResourceMapper::getInstance();
+			$resource = new Acl_Model_Resource();
+			$mdlResource->find($id, $resource);
+			$mdlResource->remove($resource);
+			
+			$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The resource was deleted") ) );
 			$this->redirect('resources');
         } catch (Exception $e) {
-        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
+        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('resources');
         }
         return;

@@ -12,6 +12,7 @@ if ( $this->pageCount )
 {
 	$params = Zend_Controller_Front::getInstance()->getRequest()->getParams();
 }
+$extraParams = isset($this->params) ? $this->params : '';
 ?>
 
 <div class="pagination pagination-centered">
@@ -21,20 +22,19 @@ if ( $this->pageCount )
 	<!-- Previous page link -->
 	<?php if ( isset($this->previous) ): ?>
 	<li>
-		<a href="<?php echo $this->url( array_merge($params, array('page' => $this->previous)), 'pagination', true ) ?>"><?php echo $this->translate('LBL_PREVIOUS') ?></a>
+		<a href="<?php echo $this->baseUrl($this->route.'/page/'.$this->previous.$extraParams) ?>"><?php echo $this->translate('Previous') ?></a>
 	</li>
 	<?php else: ?>
 	<li class="disabled">
-		<span><?php echo $this->translate('LBL_PREVIOUS') ?></span>
+		<span><?php echo $this->translate('Previous') ?></span>
 	</li>
 	<?php endif; ?>
 	
 	<!-- Numbered page link -->
 	<?php foreach ( $this->pagesInRange as $page ): ?>
-		
 		<?php if ( $page != $this->current ): ?>
 		<li>
-			<a href="<?php echo $this->url( array_merge($params, array('page' => $page)), 'pagination', true ) ?>"><?php echo $page ?></a>
+			<a href="<?php echo $this->baseUrl($this->route.'/page/'.$page.$extraParams) ?>"><?php echo $page ?></a>
 		</li>
 		<?php else: ?>
 		<li class="active">
@@ -47,11 +47,11 @@ if ( $this->pageCount )
 	<!-- Previous page link -->
 	<?php if ( isset($this->next) ): ?>
 	<li>
-		<a href="<?php echo $this->url( array_merge($params, array('page' => $this->next)), 'pagination', true ) ?>"><?php echo $this->translate('LBL_NEXT') ?></a>
+		<a href="<?php echo $this->baseUrl($this->route.'/page/'.$this->next.$extraParams) ?>"><?php echo $this->translate('Next') ?></a>
 	</li>
 	<?php else: ?>
 	<li class="disabled">
-		<span><?php echo $this->translate('LBL_NEXT') ?></span>
+		<span><?php echo $this->translate('Next') ?></span>
 	</li> 
 	<?php endif; ?>
 	

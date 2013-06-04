@@ -10,136 +10,65 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class Acl_Model_Resource extends Zend_Db_Table_Abstract  
+class Acl_Model_Resource extends OS_Entity  
 {
 
-    /**
-     * 
-     * @var string
+	protected $_module;
+	protected $_controller;
+	protected $_actioncontroller;
+	/**
+     * @return the $_module
      */
-	protected $_name = 'acl_resource';
+    public function getModule ()
+    {
+        return $this->_module;
+    }
 
 	/**
-	 * 
-	 * @var array
-	 */
-	protected $_dependentTables = array ( 'Acl_Model_Permission', 'menu_Model_Item', 'System_Model_Widget' );
+     * @return the $_controller
+     */
+    public function getController ()
+    {
+        return $this->_controller;
+    }
 
 	/**
-	 * renames the table by adding the prefix defined in the global configuration parameters
-	 */
-	function __construct() {
-		$this->_name = Zend_Registry::get('tablePrefix').$this->_name;
-		parent::__construct();
-	}
-	
-	/**
-	 * Returns a resource list available for a specific role including all childs roles
-	 * @param Zend_Db_Table_Row_Abstract $role
-	 * @return Zend_Db_Table_Rowset_Abstract instance of | array
-	 */
-	public function getResourcesByRole( Zend_Db_Table_Row_Abstract $role ) 
-	{
-		$select = $this->select()
-					->setIntegrityCheck(false)
-					->from( array('sr'=> $this->_name), array('id', 'module', 'controller', 'actioncontroller') )
-					->distinct()
-					->joinInner( array('arrd' => Zend_Registry::get('tablePrefix').'acl_role_resource'), 'arrd.resource_id = sr.id', '' )
-					->joinInner( array('arp' => Zend_Registry::get('tablePrefix').'acl_role_parents'), sprintf('arrd.role_id = arp.role_id and ( arp.role_id = %u OR arp.parent_id = %u)', $role->id, $role->id), '' );
-		$rows = $this->fetchAll( $select );
-		#echo $select->__toString();
-		if ( $rows->count() > 0 ) return $rows;
-		return null;
-	}
-	
-	/**
-	 * Returns all resources registered order by module / controller asc
-	 * @return Zend_Db_Table_Rowset_Abstract instance of | array
-	 */
-	public function getRegisteredList( ) 
-	{
-		$select = $this->select();
-		$rows = $this->fetchAll( $select, array('module'=>'asc', 'controller'=>'asc') );
-		if ( $rows->count() > 0 ) return $rows;
-		return array();
-	}
-	
-	/**
-	 * 
-	 * @param Zend_Db_Table_Row_Abstract $module
-	 * @return Zend_Db_Table_Rowset_Abstract|multitype:
-	 */
-	public function getByModule( Zend_Db_Table_Row_Abstract $module )
-	{
-	    $select = $this->select()->where('module=?', $module->module);
-	    $rows = $this->fetchAll( $select );
-	    return $rows;
-	}
-	
-	# para rol_resource_detail
-	/*
-	 * 
-	 * 	insert into owlcms_acl_role_resource_detail ( role_id, resource_id )
-		select 1, rs.id from owlcms_sys_resource rs where id not in ( 3, 12, 20, 26, 59, 60 )
-		
-		insert into owlcms_acl_role_resource_detail ( role_id, resource_id )
-		select 3, rs.id from owlcms_sys_resource rs where id in ( 3, 12, 20, 26, 59, 60 )
-	*/
-	
-	/**
-	 * Returns all resources registered  
-	 * @return Zend_Paginator_Adapter_DbTableSelect instance of
-	 */
-	public function getList() 
-	{
-		$select = $this->select();
-		return $this->fetchAll($select);
-	}
-	
-	/**
-	 * Return all registered module 
-	 * @return Zend_Db_Table_Rowset_Abstract
-	 */
-	function getModules()
-	{
-		$rows = array();
-		$frontendOptions = array('lifetime'=>60*60*24, 'automatic_serialization'=>true);
-		$backendOptions = array('cache_dir'=> APPLICATION_CACHE_PATH );
-		$cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
-		
-		if ( $cache->test('acl_getModules') ) {
-			$rows = $cache->load('acl_getModules');
-		} else {
-			$select = $this->select( )
-				->distinct()
-				->from( array('sr'=> $this->_name), 'module' );
-			$rows = $this->fetchAll($select);
-			$cache->save($rows, 'acl_getModules');
-		}
-	    return $rows;
-	} 
+     * @return the $_actioncontroller
+     */
+    public function getActioncontroller ()
+    {
+        return $this->_actioncontroller;
+    }
 
 	/**
-	 * Return a resource by module, controller and action
-	 * @param string $module
-	 * @param string $controller
-	 * @param string $action
-	 * @return Ambigous <Zend_Db_Table_Row_Abstract, NULL, unknown>
-	 */
-	function getIdByDetail( $module, $controller, $action )
-	{
-		$select = $this->select()
-			->where( 'module=?', $module)
-			->where( 'controller=?', $controller)
-			->where( 'actioncontroller=?', $action)
-			->limit(1);
-		;
-		#echo $select->__toString();
-		$row = $this->fetchRow($select);
-		#if ( !$row ) return null;
-		#return $row;
-		return $row;
-	}
+     * @param field_type $module
+     */
+    public function setModule ($module)
+    {
+        $this->_module = $module;
+        return $this;
+    }
+
+	/**
+     * @param field_type $controller
+     */
+    public function setController ($controller)
+    {
+        $this->_controller = $controller;
+        return $this;
+    }
+
+	/**
+     * @param field_type $actioncontroller
+     */
+    public function setActioncontroller ($actioncontroller)
+    {
+        $this->_actioncontroller = $actioncontroller;
+        return $this;
+    }
+
+	
+	
 
 }
 

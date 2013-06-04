@@ -12,7 +12,7 @@
 		<!-- content header -->
 		<div class="accordion-heading">
 			<h4 class="accordion-toggle">
-    			<?php echo $this->translate("SYSTEM_SKINS") ?>
+    			<?php echo $this->translate("Skins") ?>
 			</h4>
 		</div>
 		<!-- content body -->
@@ -24,20 +24,24 @@
             			<table class="table table-bordered table-hover table-striped">
             				<thead>
             				<tr>
-            					<th><?php echo $this->translate("SYSTEM_SKIN") ?></th>
-            					<th><?php echo $this->translate("LBL_AUTHOR") ?></th>
-            					<th><?php echo $this->translate("LBL_LICENSE") ?></th>
-            					<th><?php echo $this->translate("SYSTEM_SKIN_IS_SELECTED") ?></th>
+            					<th><?php echo $this->translate("Name") ?></th>
+            					<th><?php echo $this->translate("Author") ?></th>
+            					<th><?php echo $this->translate("License") ?></th>
+            					<th><?php echo $this->translate("Selected") ?></th>
             					<th>#</th>
             				</tr>
             				</thead>
             				<tbody>
-            				<?php echo $this->partialLoop('partials/_row_skin.phtml', $this->skins); ?>
+            				<?php 
+                    		  echo $this->partialLoop()
+                        		  ->setObjectKey('skin')
+                        		  ->partialLoop('partials/_row_skin.phtml', $this->skins) 
+                    		?>
             				</tbody>
             			</table>
-            			<?php echo $this->paginationControl( $this->skins, 'Sliding', 'pagination-control.phtml' ); ?>
+            			<?php echo $this->paginationControl( $this->skins, 'Sliding', 'pagination-control.phtml', array('route'=>'skins') ); ?>
             		<?php else : ?>
-            		<p class="muted"><?php echo $this->translate("LBL_NO_ITEMS_REGISTERED_YET") ?></p>
+            		<p class="muted"><?php echo $this->translate("Empty list") ?></p>
             		<?php endif; ?>
             	</div>	
 			

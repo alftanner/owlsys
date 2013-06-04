@@ -54,31 +54,16 @@ class Acl_Form_Login extends Twitter_Bootstrap_Form_Horizontal
         $this->addElement($txtPassword);
         
         #$token = new Zend_Form_Element_Hash('token');
-        $token = $this->createElement('hash', 'csrflogintoken');
+        $token = $this->createElement('hash', 'tok');
         $token->setSalt( md5( uniqid( rand(), TRUE ) ) );
         $token->setTimeout( 300 );
         $token->setDecorators( array('ViewHelper') );
         $this->addElement($token);
         
-        $submitOptions = array( 
-        	'buttonType' => Twitter_Bootstrap_Form_Element_Button::BUTTON_SUCCESS,
-        	'type' => 'submit',
-       		'buttonType'    => 'success',
-        ); 
-        $btnSubmit = new Twitter_Bootstrap_Form_Element_Button('submit', $submitOptions);
-        #$btnSubmit = $this->createElement('submit', 'submit');
-        $btnSubmit->setLabel('ACL_LOGIN');
+        $btnSubmit = $this->createElement('submit', 'submit');
+        $btnSubmit->setLabel('LBL_SUBMIT');
         $btnSubmit->removeDecorator('Label');
-        $btnSubmit->setDecorators(array(
-        	array('FieldSize'),
-        	array('ViewHelper'),
-        	array('Addon'),
-        	array('ElementErrors'),
-        	array('Description', array('tag' => 'p', 'class' => 'help-block')),
-        	array('HtmlTag', array('tag' => 'div', 'class' => 'controls')),
-        	array('Wrapper')
-        ));
-        $btnSubmit->removeDecorator('Label');
+        $btnSubmit->setAttrib('class', 'btn btn-info');
         $this->addElement($btnSubmit);
         
     }

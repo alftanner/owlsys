@@ -6,32 +6,34 @@
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+/* @var $account Acl_Model_Account */
+$account = $this->account;
 ?>
 <tr>
-	<td><?php echo $this->email ?></td>
-	<td class="center"><?php echo $this->role ?></td>
-	<td class="center"><?php echo $this->registerdate ?></td>
-	<td class="center"><?php echo $this->lastvisitdate ?></td>
+	<td><?php echo $account->getEmail() ?></td>
+	<td class="center"><?php echo $account->getRole()->getName() ?></td>
+	<td class="center"><?php echo $account->getRegisterDate() ?></td>
+	<td class="center"><?php echo $account->getLastVisitDate() ?></td>
 	<td class="center">
-		<?php if ( $this->block ): ?>
-		<a href='<?=$this->baseUrl('account-block/'.$this->id)?>' class="label label-important">
-			<?php echo $this->translate("ACL_BLOCKED") ?>
+		<?php if ( $account->getIsBlocked() ): ?>
+		<a href='<?=$this->baseUrl('account-block/'.$account->getId())?>' class="btn btn-mini btn-danger">
+			<?php echo $this->translate("Blocked") ?>
 		</a>
 		<?php else: ?>
-		<a href='<?=$this->baseUrl('account-block/'.$this->id)?>' class="label label-success">
-			<?php echo $this->translate("ACL_UNBLOCKED") ?>
+		<a href='<?=$this->baseUrl('account-block/'.$account->getId())?>' class="btn btn-mini btn-success">
+			<?php echo $this->translate("Unblocked") ?>
 		</a>
 		<?php endif; ?>
 	</td>
 	<td class="center">
-		<a href='<?=$this->baseUrl('account-update/'.$this->id)?>' class="btn btn-mini btn-warning">
+		<a href='<?=$this->baseUrl('account-update/'.$account->getId())?>' class="btn btn-mini btn-warning">
 		    <i class="icon-edit icon-white"></i>
 		</a>
-		<?php if ( $this->id > 1 ) : ?>
-		<a href='<?=$this->baseUrl('account-delete/'.$this->id)?>' class="btn btn-mini xdialog">
+		<?php if ( $account->getId() > 1 ) : ?>
+		<a href='<?=$this->baseUrl('account-delete/'.$account->getId())?>' class="btn btn-mini xdialog">
 		    <i class="icon-trash"></i>
 		</a>
 		<?php endif; ?>
 	</td>
-	<td class="center"><?php echo $this->id ?></td>
+	<td class="center"><?php echo $this->partialCounter ?></td>
 </tr>

@@ -1,5 +1,5 @@
 <?php
-class OS_Application_Plugins_Ids extends Zend_Controller_Plugin_Abstract
+class OS_Plugins_Ids extends Zend_Controller_Plugin_Abstract
 {
 
     function preDispatch(Zend_Controller_Request_Abstract $request)

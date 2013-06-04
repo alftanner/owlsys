@@ -22,9 +22,9 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
      * @var array
      */
     public $defaultFormFields = array( 
-    	'id', 'menu_id', 'title', 'description', 'id_alias', 
-    	'parent_id', 'wtype', 'published', 'external', 'mid', 
-    	'resource_id', 'mod', 'csrf_token', 'token', 'isvisible', 'css_class'
+    	'id', 'menu', 'title', 'description', 'route', 
+    	'parent', 'wtype', 'published', 'external', 'mid', 
+    	'resource', 'mod', 'token', 'isvisible', 'css_class'
     );
 
     /**
@@ -40,10 +40,11 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
     	$this->setMethod('post');
 		$id = $this->createElement('hidden', 'id')
 			->setOrder(1)
+			->setRequired(true)
 			->setDecorators(array('ViewHelper'));
 		$this->addElement($id);
 		
-		$menuId = $this->createElement('hidden', 'menu_id')
+		$menuId = $this->createElement('hidden', 'menu')
 			->setOrder(2)
 			->setRequired(TRUE)
 			->setDecorators(array('ViewHelper'));
@@ -51,7 +52,7 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
 		
 		$txtTitle = $this->createElement('text', 'title')
 			->setOrder(3)
-			->setLabel( 'LBL_TITLE' )
+			->setLabel( 'Title' )
 			->setRequired(TRUE)
 			->addFilter('StripTags')
 			->setAttrib('size',40)
@@ -60,27 +61,26 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
 		
 		$txtDescription = $this->createElement('text', 'description')
 			->setOrder(4)
-			->setLabel( 'LBL_DESCRIPTION' )
-			->setRequired(FALSE)
+			->setLabel( 'Description' )
 			->addFilter('StripTags')
 			->setAttrib('size',40)
 			->setAttrib('maxlength',150)
 			->addValidator( new Zend_Validate_LessThan(150) );
 		$this->addElement($txtDescription);
 		
-		$txtAlias = $this->createElement('text', 'id_alias')
+		$txtAlias = $this->createElement('text', 'route')
 			->setOrder(5)
-			->setLabel( 'MENU_ITEM_ID_ALIAS' )
-			#->setRequired(TRUE)
+			->setLabel( 'Route' )
+			->setRequired(TRUE)
 			->addFilter('StripTags')
 			->setAttrib('size',40)
 			->addValidator( new Zend_Validate_LessThan(50) );
 			#->addValidator( new Zend_Validate_Alnum() );
 		$this->addElement($txtAlias);
 		
-		$cbParent = $this->createElement('select', 'parent_id')
+		$cbParent = $this->createElement('select', 'parent')
 			->setOrder(6)
-			->setLabel( "MENU_ITEM_PARENT" )
+			->setLabel( "Parent" )
 			->setRequired(true);
 		$this->addElement($cbParent);
 		
@@ -95,28 +95,30 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
 		
 		$rbPublished = $this->createElement("radio", "published")
 			->setOrder(8)
-        	->setLabel("LBL_PUBLISHED")
+        	->setLabel("Published")
         	->setValue(1)
-        	->setMultiOptions( array( "LBL_NO", "LBL_YES") );
+        	->setRequired(true)
+        	->setMultiOptions( array( "No", "Yes") );
         $this->addElement($rbPublished);
         
         $rbVisible = $this->createElement("radio", "isvisible")
 	        ->setOrder(9)
-	        ->setLabel("LBL_VISIBLE")
+	        ->setLabel("Visible")
 	        ->setValue(1)
-	        ->setMultiOptions( array( "LBL_NO", "LBL_YES") );
+	        ->setRequired(true)
+	        ->setMultiOptions( array( "No", "Yes") );
         $this->addElement($rbVisible);
         
         $txtCssClass = $this->createElement('text', 'css_class')
-        ->setOrder(10)
-        ->setLabel( 'LBL_CSS_CLASS' )
-        		->setAttrib('maxlength',50)
-        		->addValidator( new Zend_Validate_LessThan(50) );
+            ->setOrder(10)
+            ->setLabel( 'Class' )
+    		->setAttrib('maxlength',50)
+    		->addValidator( new Zend_Validate_LessThan(50) );
         $this->addElement($txtCssClass);
-        
         
         $hExternal = $this->createElement("hidden", "external")
         	->setValue(0)
+        	->setRequired(true)
         	->setOrder(99995)
         	->setDecorators( array('ViewHelper') )
         ;
@@ -124,12 +126,14 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
         
         $mId = $this->createElement("hidden", "mid")
         	->setOrder(99996)
+        	->setRequired(true)
         	->setDecorators( array('ViewHelper') )
         ;
         $this->addElement( $mId );
         
-        $hResource = $this->createElement("hidden", "resource_id")
+        $hResource = $this->createElement("hidden", "resource")
         	->setOrder(99997)
+        	->setRequired(true)
         	->setDecorators( array('ViewHelper') )
         ;
         $this->addElement( $hResource );
@@ -137,17 +141,20 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
         $hMod = $this->createElement("hidden", "mod")
         	->setDecorators( array('ViewHelper') )
         	->setOrder(99998)
+        	->setRequired(true)
         ;
         $this->addElement( $hMod );
         
         $token = new Zend_Form_Element_Hash('token');
         $token->setSalt( md5( uniqid( rand(), TRUE ) ) );
         $token->setTimeout( 300 );
+        $token->setRequired(true);
         $token->setDecorators( array('ViewHelper') );
         $this->addElement($token);
         
         $btnSubmit = $this->createElement('submit', 'submit');
-        $btnSubmit->setLabel('LBL_SUBMIT');
+        $btnSubmit->setOrder(99999);
+        $btnSubmit->setLabel('Submit');
         $btnSubmit->removeDecorator('Label');
         $btnSubmit->setAttrib('class', 'btn btn-info');
         $this->addElement($btnSubmit);

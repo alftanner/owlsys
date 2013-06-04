@@ -18,8 +18,10 @@ class menu_Plugin_Router extends Zend_Controller_Plugin_Abstract
 		$frontController = Zend_Controller_Front::getInstance();
 		$router = $frontController->getRouter();
 		$options = array();
+// menu
 		$options['module'] = 'menu';
 		$options['controller'] = 'menu';
+		$options['page'] = 1;
 		
 		$options['action'] = 'list';
 		$route = new Zend_Controller_Router_Route( 'menus', $options );
@@ -41,22 +43,23 @@ class menu_Plugin_Router extends Zend_Controller_Plugin_Abstract
 		$options['action'] = 'delete';
 		$route = new Zend_Controller_Router_Route( 'menu-delete/:id', $options );
 		$router->addRoute('menu-delete/:id', $route);
-		
+// item
 		$options['controller'] = 'item';
 		$options['action'] = 'list';
 		$options['menu'] = 0;
 		$route = new Zend_Controller_Router_Route( 'menu-items/:menu', $options );
 		$router->addRoute('menu-items/:menu', $route);
 		
+		$route = new Zend_Controller_Router_Route( 'menu-items/page/:page/:menu', $options );
+		$router->addRoute('menu-items/page/:page/:menu', $route);
+		
 		$options['action'] = 'add';
 		$options['mod'] = null;
 		$options['mid'] = 0;
-		$options['menu_id'] = 0;
-		$route = new Zend_Controller_Router_Route( 'menu-item-add/:mod/:mid/:menu_id', $options );
-		$router->addRoute('menu-item-add/:mod/:mid/:menu_id', $route);
+		$route = new Zend_Controller_Router_Route( 'menu-item-add/:mod/:mid/:menu', $options );
+		$router->addRoute('menu-item-add/:mod/:mid/:menu', $route);
 		
 		$options['action'] = 'publish';
-		$options['id'] = 0;
 		$route = new Zend_Controller_Router_Route( 'menu-item-publish/:id', $options );
 		$router->addRoute('menu-item-publish/:id', $route);
 		

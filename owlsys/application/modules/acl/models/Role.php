@@ -10,83 +10,47 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class Acl_Model_Role extends Zend_Db_Table_Abstract  
+class Acl_Model_Role extends OS_Entity  
 {
-	/**
-	 * 
-	 * @var string
-	 */
-	protected $_name = 'acl_role';
-	/**
-	 * 
-	 * @var array
-	 */
-	protected $_dependentTables = array ( 'Acl_Model_Role', 'Acl_Model_Permission', 'Acl_Model_Account' );
-	/**
-	 * 
-	 * @var array
-	 */
-	protected $_referenceMap = array ( 
-		'Parent' => array(
-			'columns'			=> array ( 'parent_id' ),
-			'refTableClass'	=> 'Acl_Model_Role',
-			'refColumns'		=> array ( 'id' ),
-			'onDelete'		=> self::CASCADE,
-			'onUpdate'		=> self::RESTRICT
-		),
-		
-	);
+	protected $_name;
+	protected $_layout;
 	
 	/**
-	 * renames the table by adding the prefix defined in the global configuration parameters
-	 */
-	function __construct() {
-		$this->_name = Zend_Registry::get('tablePrefix').$this->_name;
-		parent::__construct();
-	}
-	
-	/**
-	 * Returns a recordet order by parent, role and priority
-	 * @return Zend_Db_Table_Rowset_Abstract
-	 */
-	public function getList() {
-		$select = $this->select()
-						->setIntegrityCheck(false)
-						->from( array('ro' => $this->_name), array('id', 'name', 'priority') )
-						->joinInner( array('rop' => $this->_name), 'ro.parent_id = rop.id', array('name AS parent_name') )
-						->order('rop.id ASC')
-						->order('ro.priority ASC')
-						#->order('rop.name DESC')
-						;
-		return $this->fetchAll($select);
-	}
+     * @return the $_name
+     */
+    public function getName ()
+    {
+        return $this->_name;
+    }
 
 	/**
-	 * Returns a recordset of roles
-	 * @param int $menuId
-	 * @return Zend_Db_Table_Rowset_Abstract
-	 */
-	public function getRoles () 
-	{
-		$select = $this->select();
-		$items = $this->fetchAll($select);
-		if ( $items->count() > 0 )
-			return $items;
-		else return null;
-	}
+     * @return System_Model_Layout $_layout
+     */
+    public function getLayout ()
+    {
+        return $this->_layout;
+    }
+
+	/**
+     * @param field_type $name
+     */
+    public function setName ($name)
+    {
+        $this->_name = $name;
+        return $this;
+    }
+
+	/**
+     * @param System_Model_Layout $layout
+     */
+    public function setLayout ($layout)
+    {
+        $this->_layout = $layout;
+        return $this;
+    }
+
 	
-	public function find($id)
-	{
-	    $frontendOptions = array('lifetime'=>60*60*24, 'automatic_serialization'=>true);
-	    $backendOptions = array('cache_dir'=> APPLICATION_CACHE_PATH );
-	    $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
-	    $row = null;
-	    if ( $cache->test('role_'.$id) ) {
-	        $row = $cache->load('role_'.$id);
-	    } else {
-	        $row = parent::find($id)->current();
-	        $cache->save($row, 'role_'.$row->id);
-	    }
-	    return $row;
-	}
+	
+
+	
 }

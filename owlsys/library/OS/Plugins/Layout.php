@@ -9,7 +9,7 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class OS_Application_Plugins_Layout extends Zend_Controller_Plugin_Abstract
+class OS_Plugins_Layout extends Zend_Controller_Plugin_Abstract
 {
 	
     /**
@@ -17,43 +17,40 @@ class OS_Application_Plugins_Layout extends Zend_Controller_Plugin_Abstract
      * @see Zend_Controller_Plugin_Abstract::preDispatch()
      */
 	public function preDispatch( Zend_Controller_Request_Abstract $request)
-	#function dispatchLoopStartup($request)
 	{
 		try {
-			$boostrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
-			$userAgent = $boostrap->getResource('useragent');
-			$device = $userAgent->getDevice();
 			
 			$module 	= strtolower( $this->getRequest()->getModuleName() );
 			$controller = strtolower ( $this->_request->getControllerName () );
 			$action 	= strtolower ( $this->_request->getActionName () );
 			
-			$role = null;
 			$auth = Zend_Auth::getInstance();
 			
-			#Zend_Debug::dump( $auth->hasIdentity() );
-			$mdlRole = new Acl_Model_Role();
+			$mdlRoleMapper = Acl_Model_RoleMapper::getInstance();
+			$layoutMapper = System_Model_LayoutMapper::getInstance();
+			$mdlSkinMapper = System_Model_SkinMapper::getInstance();
+			$role = new Acl_Model_Role();
+			$layout = new System_Model_Layout();
+			$skin = new System_Model_Skin();
+			
 			if ( $auth->hasIdentity() ) {
 				$identity = $auth->getIdentity();
-				$role = $mdlRole->find( intval($identity->role_id) );
-			} else $role = $mdlRole->find( 3 );
+				$mdlRoleMapper->find( intval($identity->role_id), $role );
+			} else $mdlRoleMapper->find( 3, $role );
 			
-			if ( (int) $device->getFeature('is_desktop') == 1 ) {
-				$layout = $role->desktop_layout;
-			} else {
-				$layout = $role->mobile_layout;
-			}
+			$layoutMapper->find($role->getLayout()->getId(), $layout);
 			
-			$mdlSkin = new System_Model_Skin();
-			$skin = $mdlSkin->getSkinSelected();
-			$skinName = is_null($skin) ? 'default' : strtolower($skin->name);
+			$mdlSkinMapper->getSkinSelected($skin);
+			$skinName = strtolower($skin->getName());
 			
 			$layoutPath = Zend_Layout::getMvcInstance()->getLayoutPath();
 			
 			Zend_Layout::getMvcInstance()->setLayoutPath( APPLICATION_PATH.'/layouts/scripts/'.$skinName );
-			Zend_Layout::getMvcInstance()->setLayout( $layout );
+			Zend_Layout::getMvcInstance()->setLayout( $layout->getName() );
 			
 		} catch (Exception $e) {
+		    
+		    //Zend_Debug::dump($e->getTraceAsString());
 			$layout = "frontend";
 			
 			Zend_Layout::getMvcInstance()->setLayoutPath( APPLICATION_PATH.'/layouts/scripts/default' );

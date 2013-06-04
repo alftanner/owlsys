@@ -19,11 +19,16 @@ class System_Plugin_Router extends Zend_Controller_Plugin_Abstract
 		$router = $frontController->getRouter();
 		$options = array();
 		$options['module'] = 'system';
-		$options['controller'] = 'widget';
 		
+// widget
+		$options['controller'] = 'widget';
+		$options['page'] = 1;
 		$options['action'] = 'list';
 		$route = new Zend_Controller_Router_Route( 'widgets', $options );
 		$router->addRoute('widgets', $route);
+		
+		$route = new Zend_Controller_Router_Route( 'widgets/page/:page', $options );
+		$router->addRoute('widgets/page/:page', $route);
 		
 		$options['action'] = 'choose';
 		$route = new Zend_Controller_Router_Route( 'widget-choose', $options );
@@ -53,15 +58,20 @@ class System_Plugin_Router extends Zend_Controller_Plugin_Abstract
 		$route = new Zend_Controller_Router_Route( 'widget-move/:id/:direction', $options );
 		$router->addRoute('widget-move/:id/:direction', $route);
 		
+// skin
 		$options['controller'] = 'skin';
 		$options['action'] = 'list';
-		$route = new Zend_Controller_Router_Route( 'skins', $options );
-		$router->addRoute('skins', $route);
+		$route = new Zend_Controller_Router_Route( 'skins-list', $options );
+		$router->addRoute('skins-list', $route);
+		
+		$route = new Zend_Controller_Router_Route( 'skins/page/:page', $options );
+		$router->addRoute('skins/page/:page', $route);
 		
 		$options['action'] = 'select';
 		$route = new Zend_Controller_Router_Route( 'skin-select/:id', $options );
 		$router->addRoute('skin-select/:id', $route);
 		
+// extensions (index)
 		$options['controller'] = 'index';
 		$options['action'] = 'extension';
 		$route = new Zend_Controller_Router_Route( 'extensions', $options );

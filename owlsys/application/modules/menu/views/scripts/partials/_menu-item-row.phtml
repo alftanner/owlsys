@@ -6,53 +6,55 @@
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+/* @var $menuItem menu_Model_Item */
+$menuItem = $this->menuItem;
 ?>
 <tr>
 	<td class="field">
-		<span class="text-info"><?php echo $this->title ?></span>
-		<?php if ( strlen($this->description) > 0 ) : ?>
+		<span class="text-info"><?php echo $menuItem->getTitle() ?></span>
+		<?php if ( strlen($menuItem->getDescription()) > 0 ) : ?>
 			<br />
-			<span class="muted"><?php echo $this->description ?></span>
+			<span class="muted"><?php echo $menuItem->getDescription() ?></span>
 			<br />
 		<?php endif; ?>
 	</td>
 	<td class="center">
-		<?php echo $this->module ?>
+		<?php echo $menuItem->getResource()->getModule() ?>
 	</td>
 	<td class="center">
-		<?php echo $this->controller ?>
+		<?php echo $menuItem->getResource()->getController() ?>
 	</td>
 	<td class="center">
-		<?php echo $this->actioncontroller ?>
+		<?php echo $menuItem->getResource()->getActioncontroller() ?>
 	</td>
 	<td class="center">
-		<?php echo $this->titleParent ?>
+		<?php echo $menuItem->getParent()->getTitle() ?>
 	</td>
 	<td class="center">
-		<?php echo $this->wtype ?>
+		<?php echo $menuItem->getWtype() ?>
 	</td>
 	<td class="center">
-		<?php echo $this->id_alias ?>
+		<?php echo $menuItem->getRoute() ?>
 	</td>
 	<td class="center">
-		<?php if ( $this->published ): ?>
-			<a href='<?=$this->baseUrl('menu-item-publish/'.$this->id)?>' class="label label-success">
-			<?php echo $this->translate("LBL_PUBLISHED") ?>
+		<?php if ( $menuItem->getIsPublished() == 1 ): ?>
+			<a href='<?=$this->baseUrl('menu-item-publish/'.$menuItem->getId())?>' class="btn btn-mini btn-success">
+			<i class="icon-ok-circle icon-white"></i>
 			</a>
 		<?php else: ?>
-			<a href='<?=$this->baseUrl('menu-item-publish/'.$this->id)?>' class="badge badge-important">
-			<?php echo $this->translate("LBL_UNPUBLISHED") ?>
+			<a href='<?=$this->baseUrl('menu-item-publish/'.$menuItem->getId())?>' class="btn btn-mini btn-danger">
+			<i class="icon-remove-circle icon-white"></i>
 			</a>
 		<?php endif; ?>
 	</td>
 	<td class=''>
 	    <div class="btn-group">
-    		<a href='<?=$this->baseUrl('menu-item-update/'.$this->id)?>' class="btn btn-mini"><i class="icon-edit"></i></a>
-    		<a href='<?=$this->baseUrl('menu-item-move/up/'.$this->id)?>' class="btn btn-mini"><i class="icon-chevron-up"></i></a>
-    		<a href='<?=$this->baseUrl('menu-item-move/down/'.$this->id)?>' class="btn btn-mini"><i class="icon-chevron-down"></i></a>
-    		<a href='<?=$this->baseUrl('menu-item-delete/'.$this->id)?>' class="btn btn-mini xdialog"><i class="icon-trash"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-update/'.$menuItem->getId())?>' class="btn btn-mini"><i class="icon-edit"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-move/up/'.$menuItem->getId())?>' class="btn btn-mini"><i class="icon-chevron-up"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-move/down/'.$menuItem->getId())?>' class="btn btn-mini"><i class="icon-chevron-down"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-delete/'.$menuItem->getId())?>' class="btn btn-mini xdialog"><i class="icon-trash"></i></a>
 		</div>
 	</td>
-	<td class="center"><?php echo $this->ordering ?></td>
-	<td class="center"><?php echo $this->id ?></td>
+	<td class="center"><?php echo $menuItem->getOrdering() ?></td>
+	<td class="center"><?php echo $this->partialCounter ?></td>
 </tr>

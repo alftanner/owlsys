@@ -13,7 +13,7 @@
 		<!-- content header -->
 		<div class="accordion-heading">
 			<h4 class="accordion-toggle">
-    			<?php echo $this->translate("ACL_MANAGE_RESOURCES") ?>
+    			<?php echo $this->translate("Resources") ?>
 			</h4>
 		</div>
 		<!-- content body -->
@@ -21,9 +21,9 @@
 			<div class="accordion-inner">
 				
 				<p>
-            		<a href='<?php echo $this->baseUrl('resource-sync') ?>' class="btn">
+            		<a href='<?php echo $this->baseUrl('resources-sync') ?>' class="btn btn-small">
             			<i class="icon-refresh"></i>
-            			<?php echo $this->translate("ACL_SYNC_RESOURCES") ?>
+            			<?php echo $this->translate("Sync resources") ?>
             		</a>
             	</p>
             	<div>
@@ -32,22 +32,26 @@
             		?>
             			<table class="table table-bordered table-hover table-striped">
             				<thead>
-            					<tr>
-            						<th><?php echo $this->translate("ACL_MODULE") ?></th>
-            						<th><?php echo $this->translate("ACL_CONTROLLER") ?></th>
-            						<th><?php echo $this->translate("ACL_ACTION") ?></th>
-            						<th><?php echo $this->translate("LBL_DELETE") ?></th>
+            					<tr>   
+            						<th><?php echo $this->translate("Module") ?></th>
+            						<th><?php echo $this->translate("Controller") ?></th>
+            						<th><?php echo $this->translate("Action Controller") ?></th>
+            						<th>&nbsp;</th>
             						<th>#</th>
             					</tr>
             				</thead>
             				<tbody>
-            				<?php echo $this->partialLoop('partials/_row_resource.phtml', $this->resources); ?>
+            				<?php 
+                    		  echo $this->partialLoop()
+                        		  ->setObjectKey('resource')
+                        		  ->partialLoop('partials/_row_resource.phtml', $this->resources) 
+                    		?>
             				</tbody>
             			</table>
             		<?php else : ?>
-            		<p class="muted"><?php echo $this->translate("LBL_NO_ITEMS_REGISTERED_YET") ?></p>
+            		<p class="muted"><?php echo $this->translate("No registered items") ?></p>
             		<?php endif; ?>
-            		<?php echo $this->paginationControl( $this->resources, 'Sliding', 'pagination-control.phtml' ); ?>
+            		<?php echo $this->paginationControl( $this->resources, 'Sliding', 'pagination-control.phtml', array('route'=>'resources') ); ?>
             	</div>
             	
 			</div>
@@ -59,7 +63,7 @@
 $(document).ready(function() {
 	$('.xdialog').click(function(e){
 		e.preventDefault();
-		$(this).xdialog({q:'Do you really want to remove it?'});
+		$(this).xdialog({q:'<?php echo $this->translate("Do you really want to remove it?") ?>'});
 	});
 });
 </script>

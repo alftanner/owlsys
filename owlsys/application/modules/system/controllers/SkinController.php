@@ -17,7 +17,7 @@ class System_SkinController extends Zend_Controller_Action
     {
     	$translate = Zend_Registry::get('Zend_Translate');
         try {
-        	$mdlSkin = new System_Model_Skin();
+        	$mdlSkin = System_Model_SkinMapper::getInstance();
         	$adapter = $mdlSkin->getList();
         	$paginator = Zend_Paginator::factory($adapter);
         	$paginator->setItemCountPerPage(10);
@@ -36,22 +36,25 @@ class System_SkinController extends Zend_Controller_Action
     	try {
     		 $id = $this->getRequest()->getParam('id', 0);
     		 
-    		 $mdlSkin = new System_Model_Skin();
-    		 $skin = $mdlSkin->find( $id )->current();
-    		 if ( !$skin ) throw new Exception($translate->translate("SYSTEM_SKIN_NOT_FOUND"));
+    		 $mdlSkin = System_Model_SkinMapper::getInstance();
+    		 $skin = new System_Model_Skin();
+    		 $skinSelected = new System_Model_Skin();
+    		 $mdlSkin->find($id, $skin);
     		 
-    		 $skinSelected = $mdlSkin->getSkinSelected();
-    		 $skinSelected->isselected = 0;
-    		 $skinSelected->save();
+    		 $adapter = $mdlSkin->getAdapter();
+    		 $adapter->beginTransaction();
+    		 $mdlSkin->getSkinSelected($skinSelected);
+    		 $skinSelected->setIsSelected(0);
+    		 $mdlSkin->save($skinSelected);
     		 
-    		 $skin->isselected = 1;
-    		 $skin->save();
-    		 
-    		 $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("LBL_CHANGES_SAVED") ) );
-    		 $this->redirect('skins');
+    		 $skin->setIsSelected(0);
+    		 $mdlSkin->save($skin);
+    		 $adapter->commit();
+    		 $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("LBL_CHANGES_SAVED") ) );
+    		 $this->redirect('skins-list');
     		 
     	} catch (Exception $e) {
-    		$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
+    		$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('skins');
     	}
     	return;

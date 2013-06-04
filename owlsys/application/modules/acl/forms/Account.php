@@ -46,12 +46,9 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
                 array(new Zend_Filter_StringToLower(),
                     new Zend_Filter_StringTrim()))
             ->addValidator(new Zend_Validate_EmailAddress());
-        $txtEmail->addValidator(
-                new Zend_Validate_Db_NoRecordExists(
-                        array('table' => 'os_acl_account','field' => 'email')));
         $this->addElement($txtEmail);
         
-        $txtEmailAlternative = $this->createElement('text', 'email_alternative')
+        $txtEmailAlternative = $this->createElement('text', 'emailAlternative')
             ->setLabel("ACL_EMAIL_ALTERNATIVE")
             ->setRequired(TRUE)
             ->setAttrib('size', 40)
@@ -59,10 +56,6 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
                 array(new Zend_Filter_StringToLower(),
                     new Zend_Filter_StringTrim()))
             ->addValidator(new Zend_Validate_EmailAddress());
-        $txtEmailAlternative->addValidator(
-                new Zend_Validate_Db_NoRecordExists(
-                        array('table' => 'os_acl_account',
-                            'field' => 'email_alternative')));
         $this->addElement($txtEmailAlternative);
         
         $txtPassword = $this->createElement('password', 'password')
@@ -80,16 +73,14 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
             ->addValidator(new Zend_Validate_StringLength(array('min' => '6')));
         $this->addElement($txtPassword2);
         
-        $mdlRole = new Acl_Model_Role();
-        $roles = $mdlRole->getRoles();
-        $cbRole = $this->createElement("select", "role_id")
+        $mdlRole = Acl_Model_RoleMapper::getInstance();
+        $roles = $mdlRole->getList();
+        $cbRole = $this->createElement("select", "role")
             ->setLabel("ACL_ROLE")
             ->setRequired(TRUE);
         // >addMultiOption ( 0, "LABEL_SELECT_ROLE" );
-        if ($roles->count() > 0) {
-            foreach ($roles as $role) {
-                $cbRole->addMultiOption($role->id, $role->name);
-            }
+        foreach ($roles as $role) {
+            $cbRole->addMultiOption($role->id, $role->name);
         }
         $this->addElement($cbRole);
         
@@ -99,25 +90,14 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         
         $token = new Zend_Form_Element_Hash('token');
         $token->setSalt(md5(uniqid(rand(), TRUE)));
-        $token->setTimeout(60);
+        $token->setTimeout(300);
         $token->setDecorators(array('ViewHelper'));
         $this->addElement($token);
         
-        $submitOptions = array(
-            'buttonType' => Twitter_Bootstrap_Form_Element_Button::BUTTON_LINK,
-            'type' => 'submit','buttonType' => 'default');
-        $btnSubmit = new Twitter_Bootstrap_Form_Element_Button('submit', 
-                $submitOptions);
-        $btnSubmit->setLabel('LBL_SAVE');
+        $btnSubmit = $this->createElement('submit', 'submit');
+        $btnSubmit->setLabel('LBL_SUBMIT');
         $btnSubmit->removeDecorator('Label');
-        $btnSubmit->setDecorators(
-                array(array('FieldSize'),array('ViewHelper'),array('Addon'),
-                    array('ElementErrors'),
-                    array('Description',
-                        array('tag' => 'p','class' => 'help-block')),
-                    array('HtmlTag',array('tag' => 'div','class' => 'controls')),
-                    array('Wrapper')));
-        $btnSubmit->removeDecorator('Label');
+        $btnSubmit->setAttrib('class', 'btn btn-info');
         $this->addElement($btnSubmit);
     }
 }

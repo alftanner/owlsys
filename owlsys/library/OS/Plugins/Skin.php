@@ -9,7 +9,7 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class OS_Application_Plugins_Skin extends Zend_Controller_Plugin_Abstract
+class OS_Plugins_Skin extends Zend_Controller_Plugin_Abstract
 {
 	
     /**
@@ -25,15 +25,17 @@ class OS_Application_Plugins_Skin extends Zend_Controller_Plugin_Abstract
 			$userAgent = $boostrap->getResource('useragent');
 			$device = $userAgent->getDevice();
 			
-			$mdlSkin = new System_Model_Skin();
-			$skin = $mdlSkin->getSkinSelected();
-			$skinName = is_null($skin) ? 'default' : strtolower($skin->name);
+			$mdlSkinMapper = System_Model_SkinMapper::getInstance();
+			$skin = new System_Model_Skin();
+			$mdlSkinMapper->getSkinSelected($skin);
+			$skinName = strtolower($skin->getName());
+			//Zend_Debug::dump($skin);
 			$vr = Zend_Controller_Action_HelperBroker::getStaticHelper('Layout');
 			$view = $vr->getView();
 			$skinData = new Zend_Config_Xml('./skins/'.$skinName.'/skin.xml');
 			
 			# css files
-			$stylesheet = ( (int) $device->getFeature('is_desktop') == 1 ) ? $skinData->files->stylesheet : $skinData->files->stylesheetMobile;
+			$stylesheet = $skinData->files->stylesheet;
 			$view->headLink()->prependStylesheet($view->baseUrl().'/skins/'.$skinName.'/css/'.$stylesheet);
 			$view->headLink()->headLink( array('rel' => 'favicon', 'href' => $view->baseUrl().'/skins/'.$skinName.'/favicon.ico'), 'PREPEND');
 			

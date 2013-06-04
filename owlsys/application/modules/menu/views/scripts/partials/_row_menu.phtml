@@ -6,30 +6,32 @@
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+/* @var $menu menu_Model_Menu */
+$menu = $this->menu;
 ?>
 <tr>
-	<td class="field"><?php echo $this->name ?></td>
+	<td class="field"><?php echo $menu->getName() ?></td>
 	<td class="center">
-		<?php if ( $this->published ): ?>
-			<a href='<?=$this->baseUrl('menu-publish/'.$this->id)?>' class="label label-success">
-				<?php echo $this->translate("LBL_PUBLISHED") ?>
+		<?php if ( $menu->getIsPublished() ): ?>
+			<a href='<?=$this->baseUrl('menu-publish/'.$menu->getId())?>' class="btn btn-mini btn-success">
+				<i class="icon-ok-circle icon-white"></i>
 			</a>
 		<?php else: ?>
-			<a href='<?=$this->baseUrl('menu-publish/'.$this->id)?>' class="label label-important">
-				<?php echo $this->translate("LBL_UNPUBLISHED") ?>
+			<a href='<?=$this->baseUrl('menu-publish/'.$menu->getId())?>' class="btn btn-mini btn-danger">
+				<i class="icon-remove-circle icon-white"></i>
 			</a>
 		<?php endif; ?>
 	</td>
 	<td class="center">
-		<a href='<?=$this->baseUrl('menu-items/'.$this->id)?>' class="btn btn-mini"><?php echo $this->translate("MENU_MANAGE_MENU_ITEMS") ?></a>
+		<a href='<?=$this->baseUrl('menu-items/'.$menu->getId())?>' class="btn btn-mini"><?php echo $this->translate("Manage menu items") ?></a>
 	</td>
 	<td class="center">
-		<a href='<?=$this->baseUrl('menu-update/'.$this->id)?>' title="<?php echo $this->translate("LBL_UPDATE") ?>" class="btn btn-mini">
+		<a href='<?=$this->baseUrl('menu-update/'.$menu->getId())?>' title="<?php echo $this->translate("Edit") ?>" class="btn btn-mini">
 		    <i class="icon-edit"></i>
 		</a>
-		<a href='<?=$this->baseUrl('menu-delete/'.$this->id)?>' title="<?php echo $this->translate("LBL_DELETE") ?>" class="btn btn-mini xdialog">
+		<a href='<?=$this->baseUrl('menu-delete/'.$menu->getId())?>' title="<?php echo $this->translate("Remove") ?>" class="btn btn-mini xdialog">
 		    <i class="icon-trash"></i>
 		</a>
 	</td>
-	<td class="center"><?php echo $this->id ?></td>
+	<td class="center"><?php echo $this->partialCounter ?></td>
 </tr>

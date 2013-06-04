@@ -48,29 +48,12 @@ class Acl_Form_ManageResources extends Twitter_Bootstrap_Form_Horizontal
         $token->setDecorators( array('ViewHelper') );
         $this->addElement($token);
         
-        $submitOptions = array( 
-        	'buttonType' => Twitter_Bootstrap_Form_Element_Button::BUTTON_LINK,
-        	'type' => 'submit',
-        	'buttonType'    => 'default',
-        ); 
-        $btnSubmit = new Twitter_Bootstrap_Form_Element_Button('submit', $submitOptions);
-        $btnSubmit->setLabel('LBL_SAVE');
+        $btnSubmit = $this->createElement('submit', 'submit');
+        $btnSubmit->setLabel('LBL_SUBMIT');
         $btnSubmit->removeDecorator('Label');
-        $btnSubmit->setDecorators(array(
-        		array('FieldSize'),
-        		array('ViewHelper'),
-        		array('Addon'),
-        		array('ElementErrors'),
-        		array('Description', array('tag' => 'p', 'class' => 'help-block')),
-        		array('HtmlTag', array('tag' => 'div', 'class' => 'controls')),
-        		array('Wrapper')
-        ));
-        $btnSubmit->removeDecorator('Label');
+        $btnSubmit->setAttrib('class', 'btn btn-info');
         $this->addElement($btnSubmit);
         
-        #$this->clearDecorators();
-        #$this->addDecorator('HtmlTag', array('tag'=>'ul'));
-        #$this->addDecorator('form');
     }
 
 
