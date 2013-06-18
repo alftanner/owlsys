@@ -71,7 +71,8 @@ class System_Model_DbTable_Widgetdetail extends Zend_Db_Table_Abstract
             $select->order( 'wgt.position ASC' );
             $select->order( 'wgt.ordering ASC' );
             $rows = $this->fetchAll($select);
-//             Zend_Debug::dump($select->__toString());
+//             echo $select->__toString();
+//             die();
 //             $cache->save($rows, $cacheId);
 //         }
         return $rows;

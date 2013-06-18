@@ -96,6 +96,7 @@ class Acl_RoleController extends Zend_Controller_Action
 				}
 			} else {
 				$frmRole->populate( $role->toArray() );
+				$frmRole->populate(  array('layout'=>$role->getLayout()->getId()) );
 			}
 	        $this->view->frmRole = $frmRole;
         } catch (Exception $e) {

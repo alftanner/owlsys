@@ -1,0 +1,11 @@
+<?php if ( $this->identity ) : ?>
+	<?php echo $this->translate("LBL_WELCOME").'! ' ?> &nbsp;
+	<a href='<?php echo $this->baseUrl('account-update') ?>'>
+		<?php echo $this->identity->fullname ?>
+	</a>
+    &nbsp;
+	<a href='<?php echo $this->baseUrl('logout') ?>'>
+	    <i class="icon-off"></i>
+	</a>
+<?php else: ?>
+<?php endif; ?>

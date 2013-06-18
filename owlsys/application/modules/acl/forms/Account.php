@@ -26,7 +26,7 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         $this->setMethod(Zend_Form::METHOD_POST);
         
         $txtFullname = $this->createElement('text', 'fullname')
-            ->setLabel("LBL_FULLNAME")
+            ->setLabel("Fullname")
             ->setRequired(true)
             ->setAttrib('size', 40)
             ->addFilters(
@@ -39,7 +39,7 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         $this->addElement($txtFullname);
         
         $txtEmail = $this->createElement('text', 'email')
-            ->setLabel("ACL_EMAIL")
+            ->setLabel("Email")
             ->setRequired(TRUE)
             ->setAttrib('size', 40)
             ->addFilters(
@@ -49,7 +49,7 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         $this->addElement($txtEmail);
         
         $txtEmailAlternative = $this->createElement('text', 'emailAlternative')
-            ->setLabel("ACL_EMAIL_ALTERNATIVE")
+            ->setLabel("Email alternative")
             ->setRequired(TRUE)
             ->setAttrib('size', 40)
             ->addFilters(
@@ -59,14 +59,14 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         $this->addElement($txtEmailAlternative);
         
         $txtPassword = $this->createElement('password', 'password')
-            ->setLabel('ACL_PASSWORD')
+            ->setLabel('Password')
             ->setRequired(TRUE)
             ->setAttrib('size', 40)
             ->addValidator(new Zend_Validate_StringLength(array('min' => '6')));
         $this->addElement($txtPassword);
         
         $txtPassword2 = $this->createElement('password', 'password2')
-            ->setLabel('ACL_REPEAT_PASSWORD')
+            ->setLabel('Repeat password')
             ->setRequired(TRUE)
             ->setAttrib('size', 40)
             ->addValidator('Identical', false, array('password'))
@@ -76,7 +76,7 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         $mdlRole = Acl_Model_RoleMapper::getInstance();
         $roles = $mdlRole->getList();
         $cbRole = $this->createElement("select", "role")
-            ->setLabel("ACL_ROLE")
+            ->setLabel("Role")
             ->setRequired(TRUE);
         // >addMultiOption ( 0, "LABEL_SELECT_ROLE" );
         foreach ($roles as $role) {
@@ -95,7 +95,7 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
         $this->addElement($token);
         
         $btnSubmit = $this->createElement('submit', 'submit');
-        $btnSubmit->setLabel('LBL_SUBMIT');
+        $btnSubmit->setLabel('Submit');
         $btnSubmit->removeDecorator('Label');
         $btnSubmit->setAttrib('class', 'btn btn-info');
         $this->addElement($btnSubmit);

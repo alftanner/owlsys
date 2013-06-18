@@ -218,22 +218,14 @@ class Menu_MenuController extends Zend_Controller_Action
             $this->view->menuItemSelected = $menuItemSelected;
             $this->view->menuId = $menuId;
             $menu = $navigation->menu();
+            
             $css = "navigation menu-".$menuId.' ';
             if ( array_key_exists('css', $params) ) {
                 $css .= trim($params['css'])." ";
             } 
-            /*
-            if ( array_key_exists('dropdownmultilevel', $params) ) {
-                if ( trim($params['dropdownmultilevel']) == 1 ) $css .= " horizontal-dropdown-multilevel ";
-                $this->view->dropdownmultilevel = trim($params['dropdownmultilevel']);
-            }*/
             $menu->setUlClass( $css );
-            #if ( array_key_exists('css', $params) ) $this->view->menuSelected = $menuSelected;
             echo $menu->renderMenu($menuSelected);
             
-            #$translate = Zend_Registry::get('Zend_Translate');
-            #$this->_helper->flashMessenger->addMessage( array('type'=>'success', 'message'=>$translate->translate("MENU_MENU_CREATED_SUCCESSFULLY"), 'header'=>'') );
-            #Zend_Debug::dump( $navigation->menu()->setUlClass('clase')->renderMenu($menuSelected) );
         } catch (Exception $e) {
             echo $e->getMessage();
         }

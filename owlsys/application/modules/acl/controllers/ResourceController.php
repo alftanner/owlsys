@@ -38,7 +38,8 @@ class Acl_ResourceController extends Zend_Controller_Action
     	$translate = Zend_Registry::get('Zend_Translate');
     	try {
     		$mdlResource = Acl_Model_ResourceMapper::getInstance();
-
+    		$mdlRole = Acl_Model_RoleMapper::getInstance();
+    		
     		$registeredList = $mdlResource->getAll();
     		#print_r($registeredList);
     		#die();
@@ -74,12 +75,26 @@ class Acl_ResourceController extends Zend_Controller_Action
     			}
     		}
     		
+    		$roleList = $mdlRole->getList();
+    		foreach ( $roleList as $role ) {
+    		    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+                $cache = Zend_Registry::get('cache');
+                $cacheId = 'role_find_'.$role->getId();
+                if ( $cache->test($cacheId) ) {
+                    $cache->remove($cacheId);
+                }
+                $cacheId = 'cacheACL_'.$role->getId();
+                if ( $cache->test($cacheId) ) {
+                    $cache->remove($cacheId);
+                }
+    		}
+    		
     		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Resources are synchronized") ) );
     		$this->redirect('resources');
     	} catch (Exception $e) {
-    	    Zend_Debug::dump($e->getMessage());
-    	    Zend_Debug::dump($e->getTraceAsString());
-    	    die();
+//     	    Zend_Debug::dump($e->getMessage());
+//     	    Zend_Debug::dump($e->getTraceAsString());
+//     	    die();
     		$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
     		$this->redirect('resources');
     	}

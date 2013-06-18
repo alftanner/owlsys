@@ -68,7 +68,9 @@ class Acl_Model_DbTable_Resource extends Zend_Db_Table_Abstract
             ->where( 'controller=?', $resource->getController())
             ->where( 'actioncontroller=?', $resource->getActioncontroller())
             ->limit(1);
+//         Zend_Debug::dump($select->__toString());
         $row = $this->fetchRow($select);
+//         Zend_Debug::dump($row->toArray());
 		return $row;
 	}
 

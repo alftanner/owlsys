@@ -116,6 +116,7 @@ class Menu_ItemController extends Zend_Controller_Action
     		$frmMenuItem->getElement('mod')->setValue( strval($module) );
     		$frmMenuItem->getElement('menu')->setValue( $menuId );
     		$frmMenuItem->getElement('resource')->setValue( $resource->id );
+    		$frmMenuItem->getElement('route')->setValue( $element->menu_type );
     		
     		$cbParentItem = $frmMenuItem->getElement('parent');
     		$mdlMenuItem = menu_Model_ItemMapper::getInstance();
@@ -214,9 +215,9 @@ class Menu_ItemController extends Zend_Controller_Action
         	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The item was moved") ) );
         	$this->redirect('menu-items/'.$menuItem->getMenu()->getId());
         } catch (Exception $e) {
-            Zend_Debug::dump($e->getMessage());
-    	    Zend_Debug::dump($e->getTraceAsString());
-    	    die();
+//             Zend_Debug::dump($e->getMessage());
+//     	    Zend_Debug::dump($e->getTraceAsString());
+//     	    die();
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('menus');
         }
@@ -339,9 +340,9 @@ class Menu_ItemController extends Zend_Controller_Action
         	$this->view->frmMenuItem = $frmMenuItem;
 			
         } catch (Exception $e) {
-            Zend_Debug::dump($e->getMessage());
-    	    Zend_Debug::dump($e->getTraceAsString());
-    	    die();
+//             Zend_Debug::dump($e->getMessage());
+//     	    Zend_Debug::dump($e->getTraceAsString());
+//     	    die();
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('menu-items/'.$menu->getId());
         }

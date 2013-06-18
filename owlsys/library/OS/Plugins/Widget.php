@@ -37,10 +37,6 @@ class OS_Plugins_Widget extends Zend_Controller_Plugin_Abstract
                 $mdlRoleMapper->find( 3, $role );
             }
 			
-			$mdlWidget = new System_Model_Widget();
-			$mdlResource = new Acl_Model_Resource();
-			$mdlWidgetDetail = new System_Model_Widgetdetail();
-            
             $hookXml = APPLICATION_PATH . '/configs/hooks.xml';
             $sxeHook = new SimpleXMLElement($hookXml, null, true);
             
@@ -61,15 +57,19 @@ class OS_Plugins_Widget extends Zend_Controller_Plugin_Abstract
                 $privilege = strtolower($widget->getResource()->getActioncontroller());
                 if ( $acl->isAllowed($role->getId(), $resource, $privilege) ) {
                     $hookContent .= ($widget->getShowtitle() == 1) ? "<h3>".$widget->getTitle()."</h3>" : "";
-                    $hookContent .= $viewHelperAction->action($widget->getResource()->getActioncontroller(), $widget->getResource()->getController(), $widget->getResource()->getModule(), $params);
+                    $hookContent .= $viewHelperAction->action(
+                            $widget->getResource()->getActioncontroller(), 
+                            $widget->getResource()->getController(), 
+                            $widget->getResource()->getModule(), 
+                            $params);
                 }
                 Zend_Layout::getMvcInstance()->assign($widget->getPosition(), $hookContent);
             }
             
         } catch (Exception $e) {
-//             Zend_Debug::dump($e->getMessage());
-//             Zend_Debug::dump($e->getTraceAsString()); 
-//                 die();
+            Zend_Debug::dump($e->getMessage());
+            Zend_Debug::dump($e->getTraceAsString()); 
+            die();
             try {
 		        $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'plugins.log');
 		        $logger = new Zend_Log($writer);

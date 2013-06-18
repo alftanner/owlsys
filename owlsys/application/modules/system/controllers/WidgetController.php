@@ -182,7 +182,7 @@ class System_WidgetController extends Zend_Controller_Action
 			        {
 			            if ( !in_array($wvk, $defaultFormFields) )
 			            {
-			                $params[] = array($wvk=>$wv);
+			                $params[$wvk] = $wv;
 			            }
 			        }
 			        
@@ -193,7 +193,9 @@ class System_WidgetController extends Zend_Controller_Action
 			        $widget->setWid($frmWidget->getValue('wid'));
 			        $widget->setResource($resource);
 			        $widget->setParams( Zend_Json::encode($params) );
-			        
+// 			        Zend_Debug::dump($resource->toArray());
+// 			        Zend_Debug::dump($widget->toArray());
+// 			        die();
 			        $mdlWidget->save($widget);
 			        
 			        if ( $frmWidget->getElement('renderfor')->getValue() == 0 )
@@ -220,6 +222,9 @@ class System_WidgetController extends Zend_Controller_Action
 			}
 
         } catch (Exception $e) {
+//             Zend_Debug::dump($e->getMessage());
+//             Zend_Debug::dump($e->getTraceAsString());
+//             die();
             $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
             $this->redirect('widgets');
         }
@@ -320,8 +325,10 @@ class System_WidgetController extends Zend_Controller_Action
 			}
 			
 			$params = Zend_Json::decode($widget->params);
+// 			Zend_Debug::dump($params);
+			$frmWidget->populate( $params );
 			foreach ( $params as $param ) {
-			    $frmWidget->populate( $param );
+// 			    $frmWidget->populate( $param );
 			}
 			
 			if ( $this->getRequest()->isPost() )
@@ -339,14 +346,17 @@ class System_WidgetController extends Zend_Controller_Action
 			        {
 			            if ( !in_array($wvk, $defaultFormFields) )
 			            {
-			                $params[] = array($wvk=>$wv);
+			                $params[$wvk] = $wv;
 			            }
 			        }
-			        
+			        $widget->setPosition($frmWidget->getValue('position'));
 			        $widget->setIsPublished($frmWidget->getValue('published'));
 			        $widget->setTitle($frmWidget->getValue('title'));
 			        $widget->setShowtitle($frmWidget->getValue('showtitle'));
-			        $widget->setParams( Zend_Json::encode($params) );
+			        $widget->setParams( json_encode($params) );
+// 			        Zend_Debug::dump( $params );
+// 			        Zend_Debug::dump($widget->toArray());
+// 			        die();
 			        
 			        $mdlWidget->save($widget);
 			        $mdlWidgetDetail->delete($widget);
@@ -368,44 +378,6 @@ class System_WidgetController extends Zend_Controller_Action
 			            }
 			        }
 			        
-			        // old
-// 			        $defaultFormFields = array('id', 'wid', 'mod', 'position', 'title', 'published', 'menuitem', 'token', 'widget_id', 'showtitle');
-// 			        $widget->title = $frmWidget->getElement('title')->getValue();
-// 			        $widget->published = $frmWidget->getElement('published')->getValue();
-// 			        $widget->position = $frmWidget->getElement('position')->getValue();
-// 			        $widget->showtitle = $frmWidget->getElement('showtitle')->getValue();
-			        
-// 			        $frmWidgetValues = $frmWidget->getValues();
-// 			        $params = array();
-// 			        foreach ( $frmWidgetValues as $wvk => $wv )
-// 			        {
-// 			        	if ( !in_array($wvk, $defaultFormFields) )
-// 			        	{
-// 			        	    $params[$wvk] = $wv; 
-// 			        	}
-// 			        }
-// 			        $widget->params = Zend_Json::encode($params);
-			        
-// 			        $widget->save();
-			        
-// 			        $menuItemsWidget = $widget->findDependentRowset('System_Model_Widgetdetail', 'Widget');
-// 			        foreach ( $menuItemsWidget as $miw ) $miw->delete();
-			        
-// 			        if ( $frmWidget->getElement('renderfor')->getValue() == 0 )
-// 			        {
-// 			        	$widgetDetail = $mdlWidgetDetail->createRow();
-// 			        	$widgetDetail->widget_id = $widget->id;
-// 			        	$widgetDetail->menuitem_id = null;
-// 			        	$widgetDetail->save();
-// 			        } else {
-// 			        	foreach ( $frmWidget->getValue('menuitem') as $mi )
-// 			        	{
-// 			        		$widgetDetail = $mdlWidgetDetail->createRow();
-// 			        		$widgetDetail->widget_id = $widget->id;
-// 			        		$widgetDetail->menuitem_id = $mi;
-// 			        		$widgetDetail->save();
-// 			        	}
-// 			        }
 			        $adapter->commit();
 			        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
 			        $this->redirect('widgets');
@@ -416,9 +388,9 @@ class System_WidgetController extends Zend_Controller_Action
 			$this->view->widget = $element;
             
         } catch (Exception $e) {
-            Zend_Debug::dump($e->getMessage());
-            Zend_Debug::dump($e->getTraceAsString());
-            die();
+//             Zend_Debug::dump($e->getMessage());
+//             Zend_Debug::dump($e->getTraceAsString());
+//             die();
             $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
             $this->redirect('widgets');
         } 

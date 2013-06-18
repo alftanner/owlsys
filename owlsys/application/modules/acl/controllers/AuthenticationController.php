@@ -60,28 +60,11 @@ class Acl_AuthenticationController extends Zend_Controller_Action
 					    if ( $role < 3 ) {
 					        // is root or super administrator
 					    }
-					    $this->redirect('login');
 					} else {
 						throw new Exception( $translate->translate("ACL_ACCESS_DENIED") );
 					}
 				} else {
-					/*$msgs = "";
-					$ErrorMsgsForm = $frmLogin->getMessages();
-					foreach ( $ErrorMsgsForm as $errorMsg ) {
-						foreach ( $errorMsg as $key => $value ) {
-							$msgs .= $value."<br>";
-						}
-					}
-					throw new Exception($msgs);*/
-					/*
-					 * /!\ Warning
-					 * si se lanza una excepcion aca entonces los widgets tendran problemas cuando esta accion sea usada como widget
-					 * este form de login deberia apuntar a una nueva accion llamada validate o algo similar 
-					 * toda funcion usada como widget que traiga consigo un form debe tener como action una funcion distinta para evitar
-					 * este problema.
-					 * /!\ To do
-					 * Anybody wants to take this enhacement-issue?
-					 * */
+				    // invalid form data
 				}
 			} 
 			

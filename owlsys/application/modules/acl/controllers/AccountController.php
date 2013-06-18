@@ -108,7 +108,7 @@ class Acl_AccountController extends Zend_Controller_Action
 			$identity = $auth->getIdentity();
 			if ( $identity->role_id != 1 ) {
 				$id = $identity->id;
-				$frmAccount->removeElement('role_id');
+				$frmAccount->removeElement('role');
 				$frmAccount->removeElement('id');
 			} else {
 				$id = $this->getRequest()->getParam( "id", $identity->id );
