@@ -112,6 +112,7 @@ class Acl_ResourceController extends Zend_Controller_Action
         	$paginator->setItemCountPerPage(20);
         	$pageNumber = $this->getRequest()->getParam('page',1);
         	$paginator->setCurrentPageNumber($pageNumber);
+        	$paginator->setCacheEnabled(true);
         	$this->view->resources = $paginator;
         } catch (Exception $e) {
         	echo $e->getMessage();

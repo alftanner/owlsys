@@ -124,23 +124,23 @@ class Acl_AccountController extends Zend_Controller_Action
 			$frmAccount->setAction( $this->_request->getBaseUrl() . "/account-update/".$account->getId() );
 			$this->view->frmAccount = $frmAccount;
 			
-			$frmAccount->getElement('email')->addValidator(
-			        new Zend_Validate_Db_NoRecordExists(array(
-			                'table' => 'os_acl_account',
-			                'field'=>'email',
-			                'exclude'=>array('field'=>'id','value'=>$account->getId())
-			        ))
-			);
-			$frmAccount->getElement('emailAlternative')->addValidator(
-			        new Zend_Validate_Db_NoRecordExists(array(
-			                'table' => 'os_acl_account',
-			                'field'=>'email_alternative',
-			                'exclude'=>array('field'=>'id','value'=>$account->getId())
-			        ))
-			);
-	
 			if ( $this->getRequest()->isPost() )
 			{
+				$frmAccount->getElement('email')->addValidator(
+						new Zend_Validate_Db_NoRecordExists(array(
+								'table' => 'os_acl_account',
+								'field'=>'email',
+								'exclude'=>array('field'=>'id','value'=>$account->getId())
+						))
+				);
+				$frmAccount->getElement('emailAlternative')->addValidator(
+						new Zend_Validate_Db_NoRecordExists(array(
+								'table' => 'os_acl_account',
+								'field'=>'email_alternative',
+								'exclude'=>array('field'=>'id','value'=>$account->getId())
+						))
+				);
+				
 				if ( $frmAccount->isValid( $_POST ) )
 				{
 					$oldPassword = $account->getPassword();
@@ -178,6 +178,7 @@ class Acl_AccountController extends Zend_Controller_Action
         	$paginator->setItemCountPerPage(10);
         	$pageNumber = $this->getRequest()->getParam('page',1);
         	$paginator->setCurrentPageNumber($pageNumber);
+        	$paginator->setCacheEnabled(true);
         	$this->view->accounts = $paginator;
         } catch (Exception $e) {
         	echo $e->getMessage();

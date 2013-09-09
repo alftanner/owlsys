@@ -118,5 +118,26 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		
 	}
 	
+	/**
+	 * @link http://framework.zend.com/manual/1.12/en/zend.db.table.html#zend.db.table.metadata.caching
+	 */
+	public function _initMetadaCache()
+	{
+		$frontendOptions = array('automatic_serialization'=>true);
+		$backendOptions = array('cache_dir' => APPLICATION_CACHE_PATH);
+		$cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+		Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
+	}
+	
+	/**
+	 * @link http://framework.zend.com/manual/1.12/en/zend.paginator.advanced.html#zend.paginator.advanced.caching
+	 */
+	public function _initPaginatorCache()
+	{
+		$frontendOptions = array('automatic_serialization'=>true,'lifetime'=>3600);
+		$backendOptions = array('cache_dir' => APPLICATION_CACHE_PATH);
+		$cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+		Zend_Paginator::setCache($cache);
+	}
 	
 }
