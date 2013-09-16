@@ -253,7 +253,7 @@ class Acl_AccountController extends Zend_Controller_Action
             
             $frmAccount->removeElement('fullname');
             $frmAccount->removeElement('email_alternative');
-            $frmAccount->removeElement('role_id');
+            $frmAccount->removeElement('role');
             $frmAccount->getElement('email')->removeValidator('Db_NoRecordExists');
             $frmAccount->getElement('submit')->setLabel('Send');
             $change = intval($this->getRequest()->getParam('change', 0));
