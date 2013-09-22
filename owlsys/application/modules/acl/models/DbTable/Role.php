@@ -29,12 +29,12 @@ class Acl_Model_DbTable_Role extends Zend_Db_Table_Abstract
     public function getList() {
         $prefix = Zend_Registry::get('tablePrefix');
         /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
-//         $cache = Zend_Registry::get('cache');
-//         $cacheId = 'role_getList';
-//         $rows = array();
-//         if ( $cache->test($cacheId) ) {
-//             $row = $cache->load($cacheId);
-//         } else {
+        $cache = Zend_Registry::get('cache');
+        $cacheId = 'role_getList';
+        $rows = array();
+        if ( $cache->test($cacheId) ) {
+            $rows = $cache->load($cacheId);
+        } else {
             $select = $this->select()
                 ->setIntegrityCheck(false)
                 ->from( array('r'=>$this->_name), array('id','name','layout_id') )
@@ -42,26 +42,11 @@ class Acl_Model_DbTable_Role extends Zend_Db_Table_Abstract
             ;
             //Zend_Debug::dump($select->__toString());
             $rows = $this->fetchAll($select);
-//             $cache->save($rows, $cacheId); 
-//         }
+            $cache->save($rows, $cacheId); 
+        }
         return $rows;
     }
     
-    public function find($id)
-    {
-        $row = null;
-        /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
-        $cache = Zend_Registry::get('cache');
-        $cacheId = 'role_find_'.$id;
-        if ( $cache->test($cacheId) ) {
-            $row = $cache->load($cacheId);
-        } else {
-            $row = parent::find($id)->current();
-            $cache->save($row, $cacheId);
-        }
-        return $row;
-    }
-
     public function remove(Acl_Model_Role $role)
     {
         $select = $this->select()

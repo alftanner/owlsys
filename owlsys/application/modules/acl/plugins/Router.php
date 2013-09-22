@@ -45,14 +45,10 @@ class Acl_Plugin_Router extends Zend_Controller_Plugin_Abstract
 	    $route = new Zend_Controller_Router_Route( 'account-new', $options );
 	    $router->addRoute('account-new', $route);
 	    
-	    $options['action'] = 'edit';
 	    $options['id'] = null;
-	    $route = new Zend_Controller_Router_Route( 'account-edit/:id', $options );
-	    $router->addRoute('account-edit/:id', $route);
-	    
 	    $options['action'] = 'update';
-	    $route = new Zend_Controller_Router_Route( 'account-update/:id', $options );
-	    $router->addRoute('account-update/:id', $route);
+	    $route = new Zend_Controller_Router_Route( 'account/update/:id', $options );
+	    $router->addRoute('account/update/:id', $route);
 	    
 	    $options['action'] = 'block';
 	    $route = new Zend_Controller_Router_Route( 'account-block/:id', $options );

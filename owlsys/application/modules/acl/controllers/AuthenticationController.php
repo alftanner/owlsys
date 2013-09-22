@@ -60,6 +60,7 @@ class Acl_AuthenticationController extends Zend_Controller_Action
 					    if ( $role < 3 ) {
 					        // is root or super administrator
 					    }
+					    $this->redirect('login');
 					} else {
 						throw new Exception( $translate->translate("ACL_ACCESS_DENIED") );
 					}

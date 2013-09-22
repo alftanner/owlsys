@@ -62,7 +62,7 @@ class Acl_Model_RoleMapper extends OS_Mapper
     public function find($id, Acl_Model_Role $role)
     {
         $translate = Zend_Registry::get('Zend_Translate');
-        $result = $this->getDbTable()->find($id);
+        $result = $this->getDbTable()->find($id)->current();
         if (0 == count($result)) {
             throw new Zend_Exception($translate->translate("Row not found"));
         }

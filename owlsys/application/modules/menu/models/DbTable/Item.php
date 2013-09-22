@@ -135,11 +135,11 @@ class menu_Model_DbTable_Item extends Zend_Db_Table_Abstract
     public function getChildren(menu_Model_Item $menuItem) 
     {
         /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
-//         $cache = Zend_Registry::get('cache');
-//         $cacheId = 'menu_getChildren_'.$menuItem->getId();
-//         if ( $cache->test($cacheId) ) {
-//             $rows = $cache->load($cacheId);
-//         } else {
+        $cache = Zend_Registry::get('cache');
+        $cacheId = 'menu_getChildren_'.$menuItem->getId();
+        if ( $cache->test($cacheId) ) {
+            $rows = $cache->load($cacheId);
+        } else {
             $prefix = Zend_Registry::get('tablePrefix');
             $select = $this->select()
                 ->setIntegrityCheck(false)
@@ -149,8 +149,8 @@ class menu_Model_DbTable_Item extends Zend_Db_Table_Abstract
                 ->where('it.isVisible=1')
             ;
             $rows = $this->fetchAll($select);
-//             $cache->save($rows, $cacheId);
-//         }
+            $cache->save($rows, $cacheId);
+        }
         return $rows;
     }
     
@@ -188,6 +188,12 @@ class menu_Model_DbTable_Item extends Zend_Db_Table_Abstract
      */
     public function getRegisteredRoutes()
     {
+      /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+      $cache = Zend_Registry::get('cache');
+      $cacheId = 'menu_getRegisteredRoutes';
+      if ( $cache->test($cacheId) ) {
+        $rows = $cache->load($cacheId);
+      } else {
         $prefix = Zend_Registry::get('tablePrefix');
         $select = $this->select()
             ->setIntegrityCheck(false)
@@ -197,6 +203,8 @@ class menu_Model_DbTable_Item extends Zend_Db_Table_Abstract
         ;
         //Zend_Debug::dump($select->__toString());
         $rows = $this->fetchAll($select);
+        $cache->save($rows, $cacheId);
+      }
         return $rows;
     }
 

@@ -10,12 +10,12 @@
 <?php if ( $this->identity ) : ?>
 	<?php echo $this->translate("LBL_WELCOME").'! ' ?> &nbsp;
 	<?php if( $this->identity->id < 3 ): ?> 
-	<a href='<?php echo $this->baseUrl() ?>/update-account/'>
+	<a href='<?php echo $this->baseUrl('account/update') ?>'>
 		<?php echo $this->identity->fullname ?>
 	</a>
 	<?php endif; ?>
     &nbsp;
-	<a href='<?php echo $this->baseUrl() ?>/logout/'>
+	<a href='<?php echo $this->baseUrl('logout') ?>'>
 	    <i class="icon-off"></i>
 		<?php #echo $this->translate("ACL_LOGOUT") ?>
 	</a>

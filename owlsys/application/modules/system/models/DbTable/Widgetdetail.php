@@ -52,13 +52,13 @@ class System_Model_DbTable_Widgetdetail extends Zend_Db_Table_Abstract
     {
         $rows = array();
         $prefix = Zend_Registry::get('tablePrefix');
-//         /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
-//         $cache = Zend_Registry::get('cache');
-//         $cacheId = 'system_getWidgetsByHooksAndItemId_'.$itemId;
+        /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+        $cache = Zend_Registry::get('cache');
+        $cacheId = 'system_getWidgetsByHooksAndItemId_'.$itemId;
          
-//         if ( $cache->test($cacheId) ) {
-//             $rows = $cache->load($cacheId);
-//         } else {
+        if ( $cache->test($cacheId) ) {
+            $rows = $cache->load($cacheId);
+        } else {
             $select = $this->select();
             $select->setIntegrityCheck(false);
             $select->from( array('wgt' => $prefix.'widget'), array('id AS widget_id', 'position', 'title', 'ordering', 'params', 'resource_id', 'wid', 'showtitle') );
@@ -73,8 +73,8 @@ class System_Model_DbTable_Widgetdetail extends Zend_Db_Table_Abstract
             $rows = $this->fetchAll($select);
 //             echo $select->__toString();
 //             die();
-//             $cache->save($rows, $cacheId);
-//         }
+            $cache->save($rows, $cacheId);
+        }
         return $rows;
     }
 

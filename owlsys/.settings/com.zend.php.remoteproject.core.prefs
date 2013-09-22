@@ -4,4 +4,4 @@ SelectedHostGUID=8177e090-b499-42fa-a12e-23fb76d16c79
 UploadFolder=owlsys
 eclipse.preferences.version=1
 isLocalProjectEnabled=false
-isRemoteProjectEnabled=false
+isRemoteProjectEnabled=true

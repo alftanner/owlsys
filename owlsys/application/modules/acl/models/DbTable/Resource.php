@@ -29,9 +29,18 @@ class Acl_Model_DbTable_Resource extends Zend_Db_Table_Abstract
      */
     public function getByModule( Acl_Model_Resource $resource )
     {
+      /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+      $cache = Zend_Registry::get('cache');
+      $cacheId = 'acl_getByModule_'.$resource->getModule();
+      $rows = array();
+      if ( $cache->test($cacheId) ) {
+        $rows = $cache->load($cacheId);
+      } else {
         $select = $this->select()->where('module=?', $resource->getModule());
         $rows = $this->fetchAll( $select );
-        return $rows;
+        $cache->save($rows, $cacheId);
+      }
+      return $rows;
     }
     
     /**
@@ -63,15 +72,24 @@ class Acl_Model_DbTable_Resource extends Zend_Db_Table_Abstract
      */
     public function getIdByDetail( Acl_Model_Resource $resource )
     {
+      /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+      $cache = Zend_Registry::get('cache');
+      $cacheId = 'acl_getIdByDetail_'.$resource->getId();
+      $row = null;
+      if ( $cache->test($cacheId) ) {
+        $row = $cache->load($cacheId);
+      } else {
         $select = $this->select()
-            ->where( 'module=?', $resource->getModule())
-            ->where( 'controller=?', $resource->getController())
-            ->where( 'actioncontroller=?', $resource->getActioncontroller())
-            ->limit(1);
-//         Zend_Debug::dump($select->__toString());
+          ->where( 'module=?', $resource->getModule())
+          ->where( 'controller=?', $resource->getController())
+          ->where( 'actioncontroller=?', $resource->getActioncontroller())
+          ->limit(1);
+        //         Zend_Debug::dump($select->__toString());
         $row = $this->fetchRow($select);
-//         Zend_Debug::dump($row->toArray());
-		return $row;
+        $cache->save($row, $cacheId);
+        //         Zend_Debug::dump($row->toArray());
+      }
+      return $row;
 	}
 
 	public function remove(Acl_Model_Resource $resource)

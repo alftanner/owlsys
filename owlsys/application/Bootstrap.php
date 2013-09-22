@@ -139,5 +139,34 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
 		Zend_Paginator::setCache($cache);
 	}
-	
+
+	/**
+	 * @see http://www.websitefactors.co.uk/zend-framework/2011/05/firebug-console-log-for-php-using-zend-framework/
+	 * @see http://www.christophdorn.com/Blog/2008/09/02/firephp-and-zend-framework-16/
+	 */
+	public function _initFirebugLog()
+	{
+	  $logger = new Zend_Log();
+	  $writer = new Zend_Log_Writer_Firebug();
+	  $logger->addWriter($writer);
+	  Zend_Registry::set('logger',$logger);
+	   
+	  $configArray = $this->getOptions();
+	  $config = new Zend_Config($configArray);
+	  $resource = $this->bootstrap('multidb')->getResource('multidb');
+	  $databases = $config->resources->multidb;
+	  foreach ($databases as $name => $adapter)
+	  {
+	    $db = $resource->getDb($name);
+	    break;
+	  }
+	  $profiler = new Zend_Db_Profiler_Firebug('All DB Queries');
+	  $profiler->setEnabled(true);
+	  $db->setProfiler($profiler);
+	  /*
+	   * Use this on controller, view or models to send a firebug log
+	  * $logger = Zend_Registry::get('logger');
+	  * $logger->log('This is a log message!', Zend_Log::INFO);
+	  * */
+	}
 }

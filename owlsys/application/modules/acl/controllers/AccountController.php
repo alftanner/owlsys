@@ -99,6 +99,7 @@ class Acl_AccountController extends Zend_Controller_Action
     {
     	$translate = Zend_Registry::get('Zend_Translate');
     	$id = null;
+    	$response = $this->getResponse();
     	try {
     		$frmAccount = new Acl_Form_Account();
 			$frmAccount->getElement('password')->setRequired(false);
@@ -120,8 +121,9 @@ class Acl_AccountController extends Zend_Controller_Action
 			
 			$id = $account->getId();
 			
-			$frmAccount->populate( $account->toArray() );
-			$frmAccount->setAction( $this->_request->getBaseUrl() . "/account-update/".$account->getId() );
+			$frmAccount->populate($account->toArray() );
+			$frmAccount->populate( array('role'=>$account->getRole()->getId()) );
+			$frmAccount->setAction( $this->_request->getBaseUrl() . "/account/update/".$account->getId() );
 			$this->view->frmAccount = $frmAccount;
 			
 			if ( $this->getRequest()->isPost() )
@@ -161,8 +163,11 @@ class Acl_AccountController extends Zend_Controller_Action
 			} 
 			
     	} catch (Exception $e) {
-    		$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
-    		$this->redirect('account-update/'.$id);
+    		$response->appendBody("<div class='span12'>");
+        	$response->appendBody($e->getMessage());
+        	$response->appendBody("</div>");
+        	$response->setHttpResponseCode(404);
+        	$this->_helper->viewRenderer->setNoRender(true);
     	}
     }
 
@@ -199,11 +204,9 @@ class Acl_AccountController extends Zend_Controller_Action
 	        if ( $id == 1 ) {
 	        	throw new Exception( $translate->translate("ACL_DEFAULT_ACCOUNT_COULD_NOT_BE_DROPPED") );
 	        }
-			$mdlAccount = new Acl_Model_Account();
-			$account = $mdlAccount->find( $id )->current();
-			if ( !$account ) {
-				throw new Exception( $translate->translate("LBL_ROW_NOT_FOUND") );
-			}
+			$account = new Acl_Model_Account();
+			$mdlAccount = Acl_Model_AccountMapper::getInstance();
+			$account = $mdlAccount->find($id, $account);
 			$account->delete();
 			$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("LBL_MENU_DELETED_SUCCESSFULLY") ) );
 			$this->redirect('accounts');
