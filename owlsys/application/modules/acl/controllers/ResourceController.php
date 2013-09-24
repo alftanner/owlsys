@@ -37,12 +37,10 @@ class Acl_ResourceController extends Zend_Controller_Action
     {
     	$translate = Zend_Registry::get('Zend_Translate');
     	try {
-    		$mdlResource = Acl_Model_ResourceMapper::getInstance();
-    		$mdlRole = Acl_Model_RoleMapper::getInstance();
+    		$mdlResource = new Acl_Model_Resource();
+    		$mdlRole = new Acl_Model_Role();
     		
     		$registeredList = $mdlResource->getAll();
-    		#print_r($registeredList);
-    		#die();
     		 
     		$resourcesAvailable = array();
     		$sxe = new SimpleXMLElement( APPLICATION_PATH.'/../.zfproject.xml', null, true);
@@ -60,18 +58,18 @@ class Acl_ResourceController extends Zend_Controller_Action
     		foreach ( $resourcesAvailable as $rsa ) {
     			$isRegistered = false;
     			foreach ($registeredList as $rsRegistered) {
-    				$rsTemp = $rsRegistered->getModule().'-'.$rsRegistered->getController().'-'.$rsRegistered->getActioncontroller();
+    				$rsTemp = $rsRegistered->module.'-'.$rsRegistered->controller.'-'.$rsRegistered->actioncontroller;
     				if ( strcasecmp($rsa, $rsTemp) == 0 ) {
     					$isRegistered = true;
     				}
     			}
     			if ( ! $isRegistered ) {
     				$arrResource = explode('-', $rsa);
-    				$resource = new Acl_Model_Resource();
-    				$resource->setModule($arrResource[0]);
-    				$resource->setController($arrResource[1]);
-    				$resource->setActioncontroller($arrResource[2]);
-    				$mdlResource->save($resource);
+    				$resource = $mdlResource->createRow();
+    				$resource->module = $arrResource[0];
+    				$resource->controller = $arrResource[1];
+    				$resource->actioncontroller = $arrResource[2];
+    				$resource->save();
     			}
     		}
     		
@@ -79,11 +77,11 @@ class Acl_ResourceController extends Zend_Controller_Action
     		foreach ( $roleList as $role ) {
     		    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
                 $cache = Zend_Registry::get('cache');
-                $cacheId = 'role_find_'.$role->getId();
+                $cacheId = 'role_find_'.$role->id;
                 if ( $cache->test($cacheId) ) {
                     $cache->remove($cacheId);
                 }
-                $cacheId = 'cacheACL_'.$role->getId();
+                $cacheId = 'cacheACL_'.$role->id;
                 if ( $cache->test($cacheId) ) {
                     $cache->remove($cacheId);
                 }
@@ -107,7 +105,7 @@ class Acl_ResourceController extends Zend_Controller_Action
     public function listAction()
     {
         try {
-        	$mdlResource = Acl_Model_ResourceMapper::getInstance();
+        	$mdlResource = new Acl_Model_Resource();
         	$paginator = Zend_Paginator::factory($mdlResource->getAll());
         	$paginator->setItemCountPerPage(20);
         	$pageNumber = $this->getRequest()->getParam('page',1);
@@ -129,10 +127,9 @@ class Acl_ResourceController extends Zend_Controller_Action
     	$translate = Zend_Registry::get('Zend_Translate');
         try {
         	$id = $this->getRequest()->getParam( "id" );
-			$mdlResource = Acl_Model_ResourceMapper::getInstance();
-			$resource = new Acl_Model_Resource();
-			$mdlResource->find($id, $resource);
-			$mdlResource->remove($resource);
+			$mdlResource = new Acl_Model_Resource();
+			$resource = $mdlResource->find($id)->current();
+			$resource->delete();
 			
 			$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The resource was deleted") ) );
 			$this->redirect('resources');

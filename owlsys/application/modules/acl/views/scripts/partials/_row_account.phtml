@@ -10,27 +10,27 @@
 $account = $this->account;
 ?>
 <tr>
-	<td><?php echo $account->getEmail() ?></td>
-	<td class="center"><?php echo $account->getRole()->getName() ?></td>
-	<td class="center"><?php echo $account->getRegisterDate() ?></td>
-	<td class="center"><?php echo $account->getLastVisitDate() ?></td>
+	<td><?php echo $account->email ?></td>
+	<td class="center"><?php echo $account->role ?></td>
+	<td class="center"><?php echo $account->registerdate ?></td>
+	<td class="center"><?php echo $account->lastvisitdate ?></td>
 	<td class="center">
-		<?php if ( $account->getIsBlocked() ): ?>
-		<a href='<?=$this->baseUrl('account-block/'.$account->getId())?>' class="btn btn-mini btn-danger">
+		<?php if ( $account->isBlocked ): ?>
+		<a href='<?=$this->baseUrl('account-block/'.$account->id)?>' class="btn btn-mini btn-danger">
 			<?php echo $this->translate("Blocked") ?>
 		</a>
 		<?php else: ?>
-		<a href='<?=$this->baseUrl('account-block/'.$account->getId())?>' class="btn btn-mini btn-success">
+		<a href='<?=$this->baseUrl('account-block/'.$account->id)?>' class="btn btn-mini btn-success">
 			<?php echo $this->translate("Unblocked") ?>
 		</a>
 		<?php endif; ?>
 	</td>
 	<td class="center">
-		<a href='<?=$this->baseUrl('account/update/'.$account->getId())?>' class="btn btn-mini btn-warning">
+		<a href='<?=$this->baseUrl('account/update/'.$account->id)?>' class="btn btn-mini btn-warning">
 		    <i class="icon-edit icon-white"></i>
 		</a>
-		<?php if ( $account->getId() > 1 ) : ?>
-		<a href='<?=$this->baseUrl('account-delete/'.$account->getId())?>' class="btn btn-mini xdialog">
+		<?php if ( $account->id > 1 ) : ?>
+		<a href='<?=$this->baseUrl('account-delete/'.$account->id)?>' class="btn btn-mini xdialog">
 		    <i class="icon-trash"></i>
 		</a>
 		<?php endif; ?>

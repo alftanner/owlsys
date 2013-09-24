@@ -49,12 +49,15 @@ class Acl_AuthenticationController extends Zend_Controller_Action
 	        if ( $this->getRequest()->isPost() )
 			{
 				if ( $frmLogin->isValid( $this->getRequest()->getParams() ) ) {
-					$mdlAccountMapper = Acl_Model_AccountMapper::getInstance();
-					$account = new Acl_Model_Account();
-					$account->setEmail( $frmLogin->getValue('email') );
-					$account->setPassword( $frmLogin->getValue('password') );
-					
-					if ( $mdlAccountMapper->login($account) ) {
+					$mdlAccount = new Acl_Model_Account();
+					$account = $mdlAccount->createRow();
+					$account->email = $frmLogin->getValue('email');
+					$account->password = $frmLogin->getValue('password');
+					$accountToValidate = $mdlAccount->getByEmail( $frmLogin->getValue('email') );
+					if ( !$accountToValidate ) {
+					  throw new Exception( $translate->translate("ACL_ACCESS_DENIED") );
+					}
+					if ( $mdlAccount->login($account, $accountToValidate) ) {
 					    $role_id = $auth->getInstance()->getIdentity()->role_id;
 					    // custom redirector here
 					    if ( $role < 3 ) {

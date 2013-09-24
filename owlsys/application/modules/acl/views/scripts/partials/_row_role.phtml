@@ -10,26 +10,26 @@
 $role = $this->role;
 ?>
 <tr>
-	<td class="field"><?php echo $role->getName() ?></td>
-	<td class="center"><?php echo $role->getLayout()->getName() ?></td>
+	<td class="field"><?php echo $role->name ?></td>
+	<td class="center"><?php echo $role->layout_name ?></td>
 	<td class="center">
 		<?php #if ( $this->id != 1 ) : ?>
-		<a href='<?=$this->baseUrl('permissions-manager/'.$role->getId())?>' class="btn btn-mini">
+		<a href='<?=$this->baseUrl('permissions-manager/'.$role->id)?>' class="btn btn-mini">
 		    <i class="icon-list"></i>
 			<?php echo $this->translate("Privileges") ?>
 		</a>
 		<?php #endif; ?>
 	</td>
 	<td class="center">
-		<?php if ( $role->getId() > 1 ) : ?>
+		<?php if ( $role->id > 1 ) : ?>
 		 
-		<a href='<?=$this->baseUrl('role-update/'.$role->getId())?>' class="btn btn-mini">
+		<a href='<?=$this->baseUrl('role-update/'.$role->id)?>' class="btn btn-mini">
 			<i class="icon-edit"></i>
 			<?php echo $this->translate('Edit') ?>
 		</a>
 		<?php endif; ?>
-		<?php if ( $role->getId() > 3 ) : ?>
-		<a href='<?=$this->baseUrl('role-delete/'.$role->getId())?>' class="btn btn-mini xdialog">
+		<?php if ( $role->id > 3 ) : ?>
+		<a href='<?=$this->baseUrl('role-delete/'.$role->id)?>' class="btn btn-mini xdialog">
 			<i class="icon-trash"></i>
 		</a>
 		<?php endif; ?>

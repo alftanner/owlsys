@@ -10,171 +10,87 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class Acl_Model_Account extends OS_Entity {
-	
-    protected $_email;
-    protected $_password;
-    protected $_registerDate;
-    protected $_lastVisitDate;
-    protected $_isBlocked;
-    protected $_role;
-    protected $_fullname;
-    protected $_emailAlternative;
-    protected $_recoverpwdtoken;
-
-	/**
-     * @return the $_email
-     */
-    public function getEmail ()
-    {
-        return $this->_email;
+class Acl_Model_Account extends Zend_Db_Table_Abstract
+{
+  protected $_name = 'acl_account';
+  
+  protected $_referenceMap = array(
+      'refRole' => array(
+          'columns'       => array('role_id'),
+          'refTableClass' => 'Acl_Model_DbTable_Role',
+          'refColumns'    => array('id')
+      )
+  );
+  
+  function __construct ()
+  {
+    $this->_name = Zend_Registry::get('tablePrefix') . $this->_name;
+    parent::__construct();
+  }
+  
+  /**
+   * Login function authentication system
+   */
+  public function login( $account, $accountToValidate ) {
+    // set up the auth adapter
+    $db = $this->getAdapter();
+    $authAdapter = new Zend_Auth_Adapter_DbTable($db);
+    $authAdapter->setTableName( $this->_name )
+      ->setIdentityColumn('email')
+      ->setCredentialColumn('password')
+      ->setCredentialTreatment('isBlocked = 0');
+    $authAdapter->setIdentity( $account->email );
+    $authAdapter->setCredential( crypt($account->password, $accountToValidate->password) );
+    $result = $authAdapter->authenticate();
+    Zend_Session::regenerateId();
+    if ($result->isValid()) {
+      $auth = Zend_Auth::getInstance();
+      $storage = $auth->getStorage();
+      $storage->write( $authAdapter->getResultRowObject( array('id', 'email', 'registerdate', 'lastvisitdate', 'role_id', 'fullname', 'email_alternative') ) );
+      $account = $this->find( $authAdapter->getResultRowObject()->id )->current();
+      #$account = $this->createRow( $account->toArray() );
+      $account->lastvisitdate = Zend_Date::now()->toString('YYYY-MM-dd HH:mm:ss');
+      $account->save();
+      return true;
     }
-
-	/**
-     * @return the $_password
-     */
-    public function getPassword ()
-    {
-        return $this->_password;
+    return false;
+  }
+  
+  /**
+   * Return a list of accounts
+   * @return Zend_Db_Table_Rowset_Abstract
+   */
+  public function getList() {
+    $prefix = Zend_Registry::get('tablePrefix');
+    $select = $this->select()
+      ->setIntegrityCheck(false)
+      ->from( array('aa' => $this->_name), array('id', 'email', 'registerdate', 'lastvisitdate', 'isBlocked', ) )
+      ->joinInner( array('ro' => $prefix.'acl_role'), 'aa.role_id = ro.id', array('name AS role', 'id AS roleId') );
+    $rows = $this->fetchAll($select);
+    return $rows;
+  }
+  
+  /**
+   * Filter a row by email
+   * @param string $email
+   * @return Ambigous <Zend_Db_Table_Row_Abstract, NULL, unknown>
+   */
+  public function getByEmail($email)
+  {
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = preg_replace("/[^A-Za-z0-9]/", '_', $email);
+    $row = null;
+    if ( $cache->test($cacheId) ) {
+      $row = $cache->load($cacheId);
+    } else {
+      $select = $this->select();
+      $select->where('email=?', $email);
+      $select->limit(1);
+      $row = $this->fetchRow($select);
+      $cache->save($row, $cacheId);
     }
-
-	/**
-     * @return the $_registerDate
-     */
-    public function getRegisterDate ()
-    {
-        return $this->_registerDate;
-    }
-
-	/**
-     * @return the $_lastVisitDate
-     */
-    public function getLastVisitDate ()
-    {
-        return $this->_lastVisitDate;
-    }
-
-	/**
-     * @return the $_isBlocked
-     */
-    public function getIsBlocked ()
-    {
-        return $this->_isBlocked;
-    }
-
-	/**
-     * @return Acl_Model_Role $_role
-     */
-    public function getRole ()
-    {
-        return $this->_role;
-    }
-
-	/**
-     * @return the $_fullname
-     */
-    public function getFullname ()
-    {
-        return $this->_fullname;
-    }
-
-	/**
-     * @return the $_emailAlternative
-     */
-    public function getEmailAlternative ()
-    {
-        return $this->_emailAlternative;
-    }
-
-	/**
-     * @return the $_recoverpwdtoken
-     */
-    public function getRecoverpwdtoken ()
-    {
-        return $this->_recoverpwdtoken;
-    }
-
-
-	/**
-     * @param field_type $email
-     */
-    public function setEmail ($email)
-    {
-        $this->_email = $email;
-        return $this;
-    }
-
-	/**
-     * @param field_type $password
-     */
-    public function setPassword ($password)
-    {
-        $this->_password = $password;
-        return $this;
-    }
-
-	/**
-     * @param field_type $registerDate
-     */
-    public function setRegisterDate ($registerDate)
-    {
-        $this->_registerDate = $registerDate;
-        return $this;
-    }
-
-	/**
-     * @param field_type $lastVisitDate
-     */
-    public function setLastVisitDate ($lastVisitDate)
-    {
-        $this->_lastVisitDate = $lastVisitDate;
-        return $this;
-    }
-
-	/**
-     * @param field_type $isBlocked
-     */
-    public function setIsBlocked ($isBlocked)
-    {
-        $this->_isBlocked = $isBlocked;
-        return $this;
-    }
-
-	/**
-     * @param Acl_Model_Role $role
-     */
-    public function setRole ($role)
-    {
-        $this->_role = $role;
-        return $this;
-    }
-
-	/**
-     * @param field_type $fullname
-     */
-    public function setFullname ($fullname)
-    {
-        $this->_fullname = $fullname;
-        return $this;
-    }
-
-	/**
-     * @param field_type $emailAlternative
-     */
-    public function setEmailAlternative ($emailAlternative)
-    {
-        $this->_emailAlternative = $emailAlternative;
-        return $this;
-    }
-
-	/**
-     * @param field_type $recoverpwdtoken
-     */
-    public function setRecoverpwdtoken ($recoverpwdtoken)
-    {
-        $this->_recoverpwdtoken = $recoverpwdtoken;
-        return $this;
-    }
-
+    return $row;
+  }  
 }
 

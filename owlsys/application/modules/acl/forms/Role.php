@@ -31,13 +31,13 @@ class Acl_Form_Role extends Twitter_Bootstrap_Form_Horizontal
 					->addValidator( new Zend_Validate_NotEmpty() );
 		$this->addElement($txtName);
 
-        $mdlLayout = System_Model_LayoutMapper::getInstance();
+        $mdlLayout = new System_Model_Layout();
         $layouts = $mdlLayout->getAll();
-        $cbLayout = $this->createElement("select", "layout");
+        $cbLayout = $this->createElement("select", "layout_id");
         $cbLayout->setLabel('Layout');
         $cbLayout->setRequired(true);
         foreach ( $layouts as $layout ) {
-        	$cbLayout->addMultiOption( $layout->getId(), $layout->getName() );
+        	$cbLayout->addMultiOption( $layout->id, $layout->name );
         }
         $this->addElement( $cbLayout );
         

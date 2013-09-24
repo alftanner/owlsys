@@ -26,27 +26,25 @@ class OS_Plugins_Layout extends Zend_Controller_Plugin_Abstract
 			
 			$auth = Zend_Auth::getInstance();
 			
-			$mdlRoleMapper = Acl_Model_RoleMapper::getInstance();
-			$layoutMapper = System_Model_LayoutMapper::getInstance();
-			$mdlSkinMapper = System_Model_SkinMapper::getInstance();
-			$role = new Acl_Model_Role();
-			$layout = new System_Model_Layout();
-			$skin = new System_Model_Skin();
+			$mdlRole = new Acl_Model_Role();
+			$mdlLayout = new System_Model_Layout();
+			$mdlSkin = new System_Model_Skin();
 			
+			$role = null;
 			if ( $auth->hasIdentity() ) {
 				$identity = $auth->getIdentity();
-				$mdlRoleMapper->find( intval($identity->role_id), $role );
-			} else $mdlRoleMapper->find( 3, $role );
+				$role = $mdlRole->find( intval($identity->role_id) )->current();
+			} else $role = $mdlRole->find( 3 )->current();
 			
-			$layoutMapper->find($role->getLayout()->getId(), $layout);
+			$layout = $mdlLayout->find($role->layout_id)->current();
 			
-			$mdlSkinMapper->getSkinSelected($skin);
-			$skinName = strtolower($skin->getName());
+			$skin = $mdlSkin->getSkinSelected();
+			$skinName = strtolower($skin->name);
 			
 			$layoutPath = Zend_Layout::getMvcInstance()->getLayoutPath();
 			
 			Zend_Layout::getMvcInstance()->setLayoutPath( APPLICATION_PATH.'/layouts/scripts/'.$skinName );
-			Zend_Layout::getMvcInstance()->setLayout( $layout->getName() );
+			Zend_Layout::getMvcInstance()->setLayout( $layout->name );
 			
 		} catch (Exception $e) {
 		    

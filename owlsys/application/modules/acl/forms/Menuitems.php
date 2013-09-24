@@ -59,7 +59,7 @@ class Acl_Form_Menuitems extends menu_Form_Item
 	        ->addValidator( new Zend_Validate_LessThan(250) )
         ;
         $this->addElement( $txtFooterMessage );*/
-        $this->getElement('id_alias')->setValue('login');
+        $this->getElement('route')->setValue('login');
     }
 
 }

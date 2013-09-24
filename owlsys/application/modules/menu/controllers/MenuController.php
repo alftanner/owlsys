@@ -51,23 +51,17 @@ class Menu_MenuController extends Zend_Controller_Action
         try {
             $translate = Zend_Registry::get('Zend_Translate');
             $frmMenu = new menu_Form_Menu();
+            $mdlMenu = new menu_Model_Menu();
+            
             if ( $this->getRequest()->isPost() )
             {
             	if ( $frmMenu->isValid( $this->getRequest()->getParams() ) )
             	{
-            		$mdlMenu = menu_Model_MenuMapper::getInstance();
-            		$menu = new menu_Model_Menu();
-            		$menu->setIsPublished($frmMenu->getValue('isPublished'));
-            		$menu->setName($frmMenu->getValue('name'));
-            		$mdlMenu->save($menu);
-            		
+            		$menu = $mdlMenu->createRow($frmMenu->getValues());
+            		$menu->save();
             		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("New menu added") ) );
             		$this->redirect('menus');
             	}
-            } else {
-            	/*$fields = array();
-            	foreach ( $frmMenu->getElements() as $element ) $fields[] = $element->getName();
-            	$frmMenu->addDisplayGroup( $fields, 'form', array( 'legend' => "MENU_ADD_MENU", ) );*/
             }
             $frmMenu->setAction( $this->_request->getBaseUrl() . '/menu-create' );
             $this->view->form = $frmMenu;
@@ -90,18 +84,17 @@ class Menu_MenuController extends Zend_Controller_Action
             $translate = Zend_Registry::get('Zend_Translate');
             $id = $this->getRequest()->getParam("id");
             $frmMenu = new menu_Form_Menu();
-            $mdlMenu = menu_Model_MenuMapper::getInstance();
-            $menu = new menu_Model_Menu();
-            $mdlMenu->find($id, $menu);
+            $mdlMenu = new menu_Model_Menu();
+            $menu = $mdlMenu->find($id)->current();
             
             if ( $this->getRequest()->isPost() )
             {
             	if ( $frmMenu->isValid( $_POST ) )
             	{
-            		$menu->setOptions( $frmMenu->getValues() );
-            		$mdlMenu->save($menu);
-            		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
-            		$this->redirect('menus');
+            	  $menu->setFromArray($frmMenu->getValues());
+            	  $menu->save();
+            	  $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
+            	  $this->redirect('menus');
             	}
             }
             
@@ -125,11 +118,9 @@ class Menu_MenuController extends Zend_Controller_Action
         try {
             $translate = Zend_Registry::get('Zend_Translate');
             $id = $this->getRequest()->getParam("id");
-            $mdlMenu = menu_Model_MenuMapper::getInstance();
-            $menu = new menu_Model_Menu();
-            $mdlMenu->find($id, $menu);
-            
-            $mdlMenu->remove($menu);
+            $mdlMenu = new menu_Model_Menu();
+            $menu = $mdlMenu->find($id)->current();
+            $menu->delete();
             $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The menu was deleted") ) );
             $this->redirect('menus');
         } catch (Exception $e) {
@@ -147,8 +138,8 @@ class Menu_MenuController extends Zend_Controller_Action
     public function listAction()
     {
         try {
-            $mdlMenu = new menu_Model_MenuMapper();
-            $paginator = Zend_Paginator::factory($mdlMenu->getList());
+            $mdlMenu = new menu_Model_Menu();
+            $paginator = Zend_Paginator::factory($mdlMenu->getMenus());
             $paginator->setItemCountPerPage(10);
             $pageNumber = $this->getRequest()->getParam('page',1);
             $paginator->setCurrentPageNumber($pageNumber);
@@ -170,18 +161,16 @@ class Menu_MenuController extends Zend_Controller_Action
         try {
             $translate = Zend_Registry::get('Zend_Translate');
             $id = $this->getRequest()->getParam( "id" );
-            $mdlMenu = menu_Model_MenuMapper::getInstance();
-            $menu = new menu_Model_Menu();
-            $mdlMenu->find($id, $menu);
+            $mdlMenu = new menu_Model_Menu();
+            $menu = $mdlMenu->find($id)->current();
             
-            if ( $menu->getIsPublished() == 1 ) {
-            	$menu->setIsPublished(0);
+            if ( $menu->isPublished == 1 ) {
+            	$menu->isPublished = 0;
             }else {
-            	$menu->setIsPublished(1);
+            	$menu->isPublished = 1;
             }
+            $menu->save();
             $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
-            
-            $mdlMenu->save($menu);
             $this->redirect('menus');
         } catch (Exception $e) {
             $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );

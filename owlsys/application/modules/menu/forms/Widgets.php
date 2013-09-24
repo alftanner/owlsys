@@ -53,8 +53,8 @@ class Menu_Form_Widgets extends System_Form_Widget
 	        ->setRequired(true)
         ;
         
-        $mdlMenu = menu_Model_MenuMapper::getInstance();
-        $menuList = $mdlMenu->getList();
+        $mdlMenu = new menu_Model_Menu();
+        $menuList = $mdlMenu->getMenus();
         foreach ( $menuList as $menu )
         {
         	$cbMenu->addMultiOption( $menu->id, $menu->name );
@@ -131,8 +131,8 @@ class Menu_Form_Widgets extends System_Form_Widget
 	    	->setRequired(true)
     	;
     
-    	$mdlMenu = menu_Model_MenuMapper::getInstance();
-    	$menuList = $mdlMenu->getList();
+    	$mdlMenu = new menu_Model_Menu();
+    	$menuList = $mdlMenu->getMenus();
     	foreach ( $menuList as $menu )
     	{
     		$cbMenu->addMultiOption( $menu->id, $menu->name );

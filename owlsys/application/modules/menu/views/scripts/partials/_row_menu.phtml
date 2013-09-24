@@ -10,26 +10,26 @@
 $menu = $this->menu;
 ?>
 <tr>
-	<td class="field"><?php echo $menu->getName() ?></td>
+	<td class="field"><?php echo $menu->name ?></td>
 	<td class="center">
-		<?php if ( $menu->getIsPublished() ): ?>
-			<a href='<?=$this->baseUrl('menu-publish/'.$menu->getId())?>' class="btn btn-mini btn-success">
+		<?php if ( $menu->isPublished ): ?>
+			<a href='<?=$this->baseUrl('menu-publish/'.$menu->id)?>' class="btn btn-mini btn-success">
 				<i class="icon-ok-circle icon-white"></i>
 			</a>
 		<?php else: ?>
-			<a href='<?=$this->baseUrl('menu-publish/'.$menu->getId())?>' class="btn btn-mini btn-danger">
+			<a href='<?=$this->baseUrl('menu-publish/'.$menu->id)?>' class="btn btn-mini btn-danger">
 				<i class="icon-remove-circle icon-white"></i>
 			</a>
 		<?php endif; ?>
 	</td>
 	<td class="center">
-		<a href='<?=$this->baseUrl('menu-items/'.$menu->getId())?>' class="btn btn-mini"><?php echo $this->translate("Manage menu items") ?></a>
+		<a href='<?=$this->baseUrl('menu-items/'.$menu->id)?>' class="btn btn-mini"><?php echo $this->translate("Manage menu items") ?></a>
 	</td>
 	<td class="center">
-		<a href='<?=$this->baseUrl('menu-update/'.$menu->getId())?>' title="<?php echo $this->translate("Edit") ?>" class="btn btn-mini">
+		<a href='<?=$this->baseUrl('menu-update/'.$menu->id)?>' title="<?php echo $this->translate("Edit") ?>" class="btn btn-mini">
 		    <i class="icon-edit"></i>
 		</a>
-		<a href='<?=$this->baseUrl('menu-delete/'.$menu->getId())?>' title="<?php echo $this->translate("Remove") ?>" class="btn btn-mini xdialog">
+		<a href='<?=$this->baseUrl('menu-delete/'.$menu->id)?>' title="<?php echo $this->translate("Remove") ?>" class="btn btn-mini xdialog">
 		    <i class="icon-trash"></i>
 		</a>
 	</td>

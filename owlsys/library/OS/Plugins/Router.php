@@ -5,19 +5,19 @@ class OS_Plugins_Router extends Zend_Controller_Plugin_Abstract
 	{
 	    try {
 	        
-	        $mdlMenuItemMapper = menu_Model_ItemMapper::getInstance();
+	        $mdlMenuItem = new menu_Model_Item();
 	        
-	        $menuItems = $mdlMenuItemMapper->getRegisteredRoutes();
+	        $menuItems = $mdlMenuItem->getRegisteredRoutes();
 	        foreach ( $menuItems as $menuItem ) {
 	            $route = new Zend_Controller_Router_Route(
-	                    $menuItem->getRoute(),
+	                    $menuItem->route,
 	                    array(
-	                            'module'     => $menuItem->getResource()->getModule(),
-	                            'controller' => $menuItem->getResource()->getController(),
-	                            'action'     => $menuItem->getResource()->getActioncontroller(),
+	                            'module'     => $menuItem->module,
+	                            'controller' => $menuItem->controller,
+	                            'action'     => $menuItem->actioncontroller,
 	                    )
 	            );
-	            Zend_Controller_Front::getInstance()->getRouter()->addRoute($menuItem->getRoute(), $route);
+	            Zend_Controller_Front::getInstance()->getRouter()->addRoute($menuItem->route, $route);
 	        }
 
 	    } catch (Exception $e) {

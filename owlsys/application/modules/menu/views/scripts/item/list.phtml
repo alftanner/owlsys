@@ -20,7 +20,7 @@
 				
 				<p>
         			<!--  <a href='<?php echo $this->baseUrl() ?>/menu/item/add/menu/<?php echo $this->menu->id ?>'> -->
-        			<a href='<?php echo $this->baseUrl('menu-item-choose/'.$this->menu->getId()) ?>' class="btn btn-small">
+        			<a href='<?php echo $this->baseUrl('menu-item-choose/'.$this->menu->id) ?>' class="btn btn-small">
         				<i class="icon-plus"></i>
         				<?php echo $this->translate("New menu item") ?>
         			</a>
@@ -51,7 +51,7 @@
                 		?>
             			</tbody>
             		</table>
-            		<?php echo $this->paginationControl( $this->items, 'Sliding', 'pagination-control.phtml', array('route'=>'menu-items', 'params'=>'/'.$this->menu->getId()) ); ?>
+            		<?php echo $this->paginationControl( $this->items, 'Sliding', 'pagination-control.phtml', array('route'=>'menu-items', 'params'=>'/'.$this->menu->id) ); ?>
             		<?php else : ?>
             		<p class="muted"><?php echo $this->translate("No registered items") ?></p>
             		<?php endif; ?>

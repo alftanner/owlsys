@@ -19,7 +19,7 @@
 		<datecreated>-</datecreated>
 		<module>acl</module>
 		<controller>account</controller>
-		<action>add</action>
+		<action>create</action>
 		<version>1.0</version>
 		<menu_type>account-add</menu_type>
 	</menu>
@@ -41,7 +41,7 @@
 		<datecreated>-</datecreated>
 		<module>acl</module>
 		<controller>role</controller>
-		<action>add</action>
+		<action>create</action>
 		<version>1.0</version>
 		<menu_type>role-add</menu_type>
 	</menu>

@@ -24,23 +24,21 @@ class OS_Plugins_Acl extends Zend_Controller_Plugin_Abstract
 		    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
 		    $cache = Zend_Registry::get('cache');
 		    
-		    $role = new Acl_Model_Role();
+		    $roleId = 3;
 		    
 		    // fetch the current user
 		    $auth = Zend_Auth::getInstance();
 		    if ( $auth->hasIdentity() ) {
 		        $identity = $auth->getIdentity();
-		        $role->setId($identity->role_id);
+		        $roleId = $identity->role_id;
 		        // get an instance of Zend_Session_Namespace used by Zend_Auth
                 #$authns = new Zend_Session_Namespace($auth->getStorage()->getNamespace());
                 // set an expiration on the Zend_Auth namespace where identity is held
                 #$authns->setExpirationSeconds(60 * 30);  // expire auth storage after 30 min 
-		    } else {
-		        $role->setId(3); # guess
 		    }
 		    
 		    $cacheACL = false;
-		    $cacheId = 'cacheACL_'.$role->getId();
+		    $cacheId = 'cacheACL_'.$roleId;
 		    if ( $cache->test($cacheId) ) {
 		        $cacheACL = $cache->load($cacheId);
 		    }
@@ -49,35 +47,40 @@ class OS_Plugins_Acl extends Zend_Controller_Plugin_Abstract
 		    
     			// set up acl
     			$acl = new Zend_Acl();
-    			$mdlRoleMapper = Acl_Model_RoleMapper::getInstance();
-    			$mdlResourceMapper = Acl_Model_ResourceMapper::getInstance();
-    			$mdlPermissionMapper = Acl_Model_PermissionMapper::getInstance();
+    			$mdlRole = new Acl_Model_Role();
+    			$mdlResource = new Acl_Model_Resource();
+    			$mdlPermission = new Acl_Model_Permission();
     			
+    			$acl->addRole(new Zend_Acl_Role($roleId));
     			
-    			$acl->addRole(new Zend_Acl_Role($role->getId()));
-    			$mdlRoleMapper->find($role->getId(), $role);
+    			$role = $mdlRole->find($roleId)->current();
     	        // getting resources
-    	        $resources = $mdlResourceMapper->getAll();
+    	        $resources = $mdlResource->getAll();
     	        // getting permissions
-    	        $allowedResources = $mdlPermissionMapper->getAllowedByRole($role);
+    	        $allowedResources = $mdlPermission->getAllowedByRole($role);
+    	        $allowedResourcesTemp = array();
+    	        foreach ( $allowedResources as $ar ) {
+    	          $allowedResourcesTemp[] = $ar->resource_id;
+    	        }
+    	        $allowedResources = $allowedResourcesTemp;
     	        // add resources
 	        	foreach ( $resources as $resource ) {
-	        		$resourceName = strtolower($resource->getModule().':'.$resource->getController());
+	        		$resourceName = strtolower($resource->module.':'.$resource->controller);
 	        		if ( !$acl->has( new Zend_Acl_Resource($resourceName) ) ) {
 	        			$acl->addResource( new Zend_Acl_Resource($resourceName) );
 	        		}
-	        		if ( $role->getId() == 1 ) {
-	        		    $acl->allow($role->getId(), $resourceName, $resource->getActioncontroller());
+	        		if ( $role->id == 1 ) {
+	        		    $acl->allow($role->id, $resourceName, $resource->actioncontroller);
 	        		} else {
-    	        		if ( in_array($resource->getId(), $allowedResources) ) {
-    	        		    $acl->allow($role->getId(), $resourceName, $resource->getActioncontroller());
+    	        		if ( in_array($resource->id, $allowedResources) ) {
+    	        		    $acl->allow($role->id, $resourceName, $resource->actioncontroller);
     	        		} else {
-    	        		    $acl->deny($role->getId(), $resourceName, $resource->getActioncontroller());
+    	        		    $acl->deny($role->id, $resourceName, $resource->actioncontroller);
     	        		}
 	        		}
 	        	}
 	        	
-    	        $cache->save($acl, 'cacheACL_'.$role->getId());
+    	        $cache->save($acl, 'cacheACL_'.$role->id);
     	        Zend_Registry::set('ZendACL', $acl);
 		    } else {
 		        Zend_Registry::set('ZendACL', $cacheACL);
@@ -85,9 +88,9 @@ class OS_Plugins_Acl extends Zend_Controller_Plugin_Abstract
 		    Zend_Registry::set('cacheACL', $cache);
 		    
 		} catch (Exception $e) {
-// 		    Zend_Debug::dump($e->getMessage());
-// 		    Zend_Debug::dump($e->getTraceAsString());
-// 		    die();
+		    Zend_Debug::dump($e->getMessage());
+		    Zend_Debug::dump($e->getTraceAsString());
+		    die();
 		    try {
 		        $writer = new Zend_Log_Writer_Stream(APPLICATION_LOG_PATH . 'plugins.log');
 		        $logger = new Zend_Log($writer);

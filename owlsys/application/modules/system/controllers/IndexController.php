@@ -44,13 +44,13 @@ class System_IndexController extends Zend_Controller_Action
         // action body
         try {
         	$translate = Zend_Registry::get('Zend_Translate');
-        	$mdlResource = Acl_Model_ResourceMapper::getInstance();
+        	$mdlResource = new Acl_Model_Resource();
         	$resources = $mdlResource->getAll();
         	
         	$modules = array();
         	foreach ( $resources as $resource ) {
-        	    if ( !in_array($resource->getModule(), $modules) ) {
-        	        $modules[] = $resource->getModule();
+        	    if ( !in_array($resource->module, $modules) ) {
+        	        $modules[] = $resource->module;
         	    }
         	}
         	

@@ -1,100 +1,44 @@
 <?php
 
-class System_Model_Skin extends OS_Entity
+class System_Model_Skin extends Zend_Db_Table_Abstract
 {
-
-    protected $_name;
-    protected $_description;
-    protected $_isSelected;
-    protected $_author;
-    protected $_license;
-	/**
-     * @return the $_name
-     */
-    public function getName ()
-    {
-        return $this->_name;
+  protected $_name = 'skin';
+  
+  function __construct() {
+    $this->_name = Zend_Registry::get('tablePrefix').$this->_name;
+    parent::__construct();
+  }
+  
+  public function getSkinSelected()
+  {
+    $row = null;
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'system_getSkinSelected';
+    if ( $cache->test($cacheId) ) {
+      $row = $cache->load($cacheId);
+    } else {
+      $select = $this->select()->where('isselected=1')->limit(1);
+      $row = $this->fetchRow($select);
+      $cache->save($row, $cacheId);
     }
-
-	/**
-     * @return the $_description
-     */
-    public function getDescription ()
-    {
-        return $this->_description;
+    return $row;
+  }
+  
+  public function getList()
+  {
+    $rows = array();
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'system_getList';
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $select = $this->select();
+      $rows = $this->fetchAll($select);
+      $cache->save($rows, $cacheId);
     }
-
-	/**
-     * @return the $_isSelected
-     */
-    public function getIsSelected ()
-    {
-        return $this->_isSelected;
-    }
-
-	/**
-     * @return the $_author
-     */
-    public function getAuthor ()
-    {
-        return $this->_author;
-    }
-
-	/**
-     * @return the $_license
-     */
-    public function getLicense ()
-    {
-        return $this->_license;
-    }
-
-	/**
-     * @param field_type $_name
-     */
-    public function setName ($_name)
-    {
-        $this->_name = $_name;
-        return $this;
-    }
-
-	/**
-     * @param field_type $_description
-     */
-    public function setDescription ($_description)
-    {
-        $this->_description = $_description;
-        return $this;
-    }
-
-	/**
-     * @param field_type $_isSelected
-     */
-    public function setIsSelected ($_isSelected)
-    {
-        $this->_isSelected = $_isSelected;
-        return $this;
-    }
-
-	/**
-     * @param field_type $_author
-     */
-    public function setAuthor ($_author)
-    {
-        $this->_author = $_author;
-        return $this;
-    }
-
-	/**
-     * @param field_type $_license
-     */
-    public function setLicense ($_license)
-    {
-        $this->_license = $_license;
-        return $this;
-    }
-
-    
-    
-	
+    return $rows;
+  }	
 }
 

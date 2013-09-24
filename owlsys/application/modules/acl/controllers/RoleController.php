@@ -46,14 +46,15 @@ class Acl_RoleController extends Zend_Controller_Action
 			{
 				if ( $frmRole->isValid( $this->getRequest()->getParams() ) )
 				{
-					$childRoles = $frmRole->getValue("childrole_id" );
-					$mdlRole = Acl_Model_RoleMapper::getInstance();
-					$role = new Acl_Model_Role();
-					$layout = new System_Model_Layout();
-					$layout->setId( $frmRole->getValue('layout') );
-					$role->setLayout($layout);
-					$role->setName($frmRole->getValue("name" ));
-					$mdlRole->save($role);
+					$mdlRole = new Acl_Model_Role();
+					$role = $mdlRole->createRow( $frmRole->getValues() );
+					$role->save();
+					/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+					$cache = Zend_Registry::get('cache');
+					$cacheId = 'role_getList';
+					if ( $cache->test($cacheId) ) {
+					  $cache->remove($cacheId);
+					}
 					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("LBL_CHANGES_SAVED") ) );
 					$this->redirect('roles');
 				}
@@ -73,10 +74,9 @@ class Acl_RoleController extends Zend_Controller_Action
     {
     	$translate = Zend_Registry::get('Zend_Translate');
         try {
-	        $mdlRole = Acl_Model_RoleMapper::getInstance();
-	        $role = new Acl_Model_Role();
+	        $mdlRole = new Acl_Model_Role();
 	        $id = $this->getRequest()->getParam( "id", 0 );
-	        $mdlRole->find($id, $role);
+	        $role = $mdlRole->find($id)->current();
 	        
 	        $frmRole = new Acl_Form_Role();
 	        $action = $this->_request->getBaseUrl() . "/role-update/".$role->id;
@@ -86,17 +86,19 @@ class Acl_RoleController extends Zend_Controller_Action
 			{
 				if ( $frmRole->isValid( $this->getRequest()->getParams() ) )
 				{
-					$role->setOptions( $frmRole->getValues() );
-					$layout = new System_Model_Layout();
-					$layout->setId( $frmRole->getValue('layout') );
-					$role->setLayout($layout);
-					$mdlRole->save($role);
+					$role->setFromArray( $frmRole->getValues() );
+					$role->save();
+					/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+					$cache = Zend_Registry::get('cache');
+					$cacheId = 'role_getList';
+					if ( $cache->test($cacheId) ) {
+					  $cache->remove($cacheId);
+					}
 					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The role was updated") ) );
 					$this->redirect('roles');
 				}
 			} else {
 				$frmRole->populate( $role->toArray() );
-				$frmRole->populate(  array('layout'=>$role->getLayout()->getId()) );
 			}
 	        $this->view->frmRole = $frmRole;
         } catch (Exception $e) {
@@ -112,11 +114,12 @@ class Acl_RoleController extends Zend_Controller_Action
     public function listAction()
     {
         try {
-            $mdlRole = Acl_Model_RoleMapper::getInstance();
+            $mdlRole = new Acl_Model_Role();
         	$paginator = Zend_Paginator::factory($mdlRole->getList());
         	$paginator->setItemCountPerPage(10);
         	$pageNumber = $this->getRequest()->getParam('page',1);
         	$paginator->setCurrentPageNumber($pageNumber);
+        	$paginator->setCacheEnabled(true);
         	$this->view->roles = $paginator;
         } catch (Exception $e) {
         	echo $e->getMessage();
@@ -133,11 +136,16 @@ class Acl_RoleController extends Zend_Controller_Action
     	$translate = Zend_Registry::get('Zend_Translate');
         try {
 	        $id = $this->getRequest()->getParam( 'id' );
-	        $mdlRole = Acl_Model_RoleMapper::getInstance();
-	        $role = new Acl_Model_Role();
+	        $mdlRole = new Acl_Model_Role();
 	        $id = $this->getRequest()->getParam( "id", 0 );
-	        $mdlRole->find($id, $role);
-	        $mdlRole->remove($role);
+	        $role = $mdlRole->find($id)->current();
+	        $role->delete();
+	        /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+	        $cache = Zend_Registry::get('cache');
+	        $cacheId = 'role_getList';
+	        if ( $cache->test($cacheId) ) {
+	          $cache->remove($cacheId);
+	        }
 	        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The role was deleted") ) );
 	        $this->redirect('roles');
         } catch (Exception $e) {

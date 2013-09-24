@@ -76,6 +76,10 @@
               <actionMethod actionName="manage"/>
               <actionMethod actionName="update"/>
             </controllerFile>
+            <controllerFile controllerName="Widget">
+           	  <actionMethod actionName="index"/>
+              <actionMethod actionName="status"/>
+            </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false">
             <formFile formName="Role"/>
@@ -173,6 +177,12 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Account">
                 <viewScriptFile forActionName="resetpassword"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Widget">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Widget">
+                <viewScriptFile forActionName="status"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>

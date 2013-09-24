@@ -67,19 +67,13 @@ class Acl_AccountController extends Zend_Controller_Action
 			{
 				if ( $frmAccount->isValid( $_POST ) )
 				{
-				    $mdlAccount = Acl_Model_AccountMapper::getInstance();
-					$account = new Acl_Model_Account();
-					$role = new Acl_Model_Role();
-					$account->setOptions( $frmAccount->getValues() );
-					$account->setIsBlocked(0);
-					$role->setId( $frmAccount->getValue('role') );
-					$account->setRole($role);
+				    $mdlAccount = new Acl_Model_Account();
+					$account = $mdlAccount->createRow( $frmAccount->getValues() );
+					$account->isBlocked = 0;
 					$salt = hash('SHA512',md5(uniqid(rand(), TRUE)).time());
-					$account->setPassword( crypt($account->password, '$6$5000$'.$salt.'$') );
-					$account->setRegisterDate( Zend_Date::now()->toString('Y-M-d H-m-s') );
-// 					Zend_Debug::dump($account->toArray());
-// 					die();
-					$mdlAccount->save($account);
+					$account->password = crypt($account->password, '$6$5000$'.$salt.'$') ;
+					$account->registerdate = Zend_Date::now()->toString('Y-M-d H-m-s') ;
+					$account->save();
 					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("New account added") ) );
 					$this->redirect('accounts');
 				} 
@@ -115,15 +109,12 @@ class Acl_AccountController extends Zend_Controller_Action
 				$id = $this->getRequest()->getParam( "id", $identity->id );
 			}
 			
-			$mdlAccount = Acl_Model_AccountMapper::getInstance();
-			$account = new Acl_Model_Account();
-			$mdlAccount->find($id, $account);
+			$mdlAccount = new Acl_Model_Account();
+			$account = $mdlAccount->find($id)->current();
 			
-			$id = $account->getId();
-			
-			$frmAccount->populate($account->toArray() );
-			$frmAccount->populate( array('role'=>$account->getRole()->getId()) );
-			$frmAccount->setAction( $this->_request->getBaseUrl() . "/account/update/".$account->getId() );
+			$frmAccount->populate( $account->toArray() );
+			$frmAccount->populate( array('role'=>$account->role_id) );
+			$frmAccount->setAction( $this->_request->getBaseUrl() . "/account/update/".$account->id );
 			$this->view->frmAccount = $frmAccount;
 			
 			if ( $this->getRequest()->isPost() )
@@ -132,31 +123,28 @@ class Acl_AccountController extends Zend_Controller_Action
 						new Zend_Validate_Db_NoRecordExists(array(
 								'table' => 'os_acl_account',
 								'field'=>'email',
-								'exclude'=>array('field'=>'id','value'=>$account->getId())
+								'exclude'=>array('field'=>'id','value'=>$account->id)
 						))
 				);
 				$frmAccount->getElement('emailAlternative')->addValidator(
 						new Zend_Validate_Db_NoRecordExists(array(
 								'table' => 'os_acl_account',
 								'field'=>'email_alternative',
-								'exclude'=>array('field'=>'id','value'=>$account->getId())
+								'exclude'=>array('field'=>'id','value'=>$account->id)
 						))
 				);
 				
 				if ( $frmAccount->isValid( $_POST ) )
 				{
-					$oldPassword = $account->getPassword();
-					$account->setOptions( $frmAccount->getValues() );
+					$oldPassword = $account->password;
+					$account->setFromArray( $frmAccount->getValues() );
 					$password = $this->getRequest()->getParam('password');
 					if ( strlen($password) > 0 ) {
 					    $salt = hash('SHA512',md5(uniqid(rand(), TRUE)).time());
-					    $account->setPassword(crypt($account->password, '$6$5000$'.$salt.'$'));
+					    $account->password = crypt($account->password, '$6$5000$'.$salt.'$');
 					}
-					else $account->setPassword($oldPassword);
-					$role = new Acl_Model_Role();
-					$role->setId( $frmAccount->getValue('role') );
-					$account->setRole($role);
-					$mdlAccount->save($account);
+					else $account->password = $oldPassword;
+					$account->save();
 					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Account updated") ) );
 					$this->redirect('accounts'); 
 				}
@@ -177,18 +165,23 @@ class Acl_AccountController extends Zend_Controller_Action
      */
     public function listAction()
     {
-        try {
-        	$mdlAccount = Acl_Model_AccountMapper::getInstance();
-        	$paginator = Zend_Paginator::factory($mdlAccount->getList());
-        	$paginator->setItemCountPerPage(10);
-        	$pageNumber = $this->getRequest()->getParam('page',1);
-        	$paginator->setCurrentPageNumber($pageNumber);
-        	$paginator->setCacheEnabled(true);
-        	$this->view->accounts = $paginator;
-        } catch (Exception $e) {
-        	echo $e->getMessage();
-        }
-        return;
+      $response = $this->getResponse();
+      try {
+      	$mdlAccount = new Acl_Model_Account();
+      	$paginator = Zend_Paginator::factory($mdlAccount->getList());
+      	$paginator->setItemCountPerPage(10);
+      	$pageNumber = $this->getRequest()->getParam('page',1);
+      	$paginator->setCurrentPageNumber($pageNumber);
+      	$paginator->setCacheEnabled(true);
+      	$this->view->accounts = $paginator;
+      } catch (Exception $e) {
+      	$response->appendBody("<div class='span12'>");
+      	$response->appendBody($e->getMessage());
+      	$response->appendBody("</div>");
+      	$response->setHttpResponseCode(404);
+      	$this->_helper->viewRenderer->setNoRender(true);
+      }
+      return;
     }
 
     /**
@@ -198,22 +191,25 @@ class Acl_AccountController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
-    	$translate = Zend_Registry::get('Zend_Translate');
-        try {
-        	$id = $this->getRequest()->getParam( "id" );
-	        if ( $id == 1 ) {
-	        	throw new Exception( $translate->translate("ACL_DEFAULT_ACCOUNT_COULD_NOT_BE_DROPPED") );
-	        }
-			$account = new Acl_Model_Account();
-			$mdlAccount = Acl_Model_AccountMapper::getInstance();
-			$account = $mdlAccount->find($id, $account);
-			$account->delete();
-			$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("LBL_MENU_DELETED_SUCCESSFULLY") ) );
-			$this->redirect('accounts');
-        } catch (Exception $e) {
-        	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
-        	$this->redirect('accounts');
-        }
+      $translate = Zend_Registry::get('Zend_Translate');
+      $response = $this->getResponse();
+      try {
+      	$id = $this->getRequest()->getParam( "id" );
+        if ( $id == 1 ) {
+        	throw new Exception( $translate->translate("ACL_DEFAULT_ACCOUNT_COULD_NOT_BE_DROPPED") );
+      }
+		$mdlAccount = new Acl_Model_Account();
+		$account = $mdlAccount->find($id)->current();
+		$account->delete();
+		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("LBL_MENU_DELETED_SUCCESSFULLY") ) );
+		$this->redirect('accounts');
+      } catch (Exception $e) {
+      	$response->appendBody("<div class='span12'>");
+      	$response->appendBody($e->getMessage());
+      	$response->appendBody("</div>");
+      	$response->setHttpResponseCode(404);
+      	$this->_helper->viewRenderer->setNoRender(true);
+      }
         
     }
 
@@ -224,26 +220,29 @@ class Acl_AccountController extends Zend_Controller_Action
      */
     public function blockAction()
     {
-    	try {
-    		$translate = Zend_Registry::get('Zend_Translate');
-        	$mdlAccount = Acl_Model_AccountMapper::getInstance();
-        	$account = new Acl_Model_Account();
-        	$id = $this->getRequest()->getParam('id', 0);
-        	$mdlAccount->find($id, $account);
-	    	if ( $account->getIsBlocked() == 0 ) 
-			{
-				$account->setIsBlocked(1);
-				$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("ACL_ACCOUNT_BLOCKED_SUCCESSFULLY") ) );
-			} else {
-				$account->setIsBlocked(0);
-				$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("ACL_ACCOUNT_UNBLOCKED_SUCCESSFULLY") ) );
-			}
-			$mdlAccount->save($account);
-        	$this->redirect('accounts');
-    	} catch (Exception $e) {
-    		$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
-        	$this->redirect('accounts');
-    	}
+      $response = $this->getResponse();
+      try {
+  		$translate = Zend_Registry::get('Zend_Translate');
+      	$mdlAccount = new Acl_Model_Account();
+      	$id = $this->getRequest()->getParam('id', 0);
+      	$account = $mdlAccount->find($id)->current();
+    	if ( $account->isBlocked == 0 ) 
+		{
+			$account->isBlocked = 1;
+			$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("ACL_ACCOUNT_BLOCKED_SUCCESSFULLY") ) );
+		} else {
+			$account->isBlocked = 0;
+			$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("ACL_ACCOUNT_UNBLOCKED_SUCCESSFULLY") ) );
+		}
+		$account->save();
+      	$this->redirect('accounts');
+      } catch (Exception $e) {
+        $response->appendBody("<div class='span12'>");
+        $response->appendBody($e->getMessage());
+        $response->appendBody("</div>");
+        $response->setHttpResponseCode(404);
+        $this->_helper->viewRenderer->setNoRender(true);
+      }
     }
 
     public function resetpasswordAction()
@@ -284,7 +283,7 @@ class Acl_AccountController extends Zend_Controller_Action
 			{
 				if ( $frmAccount->isValid( $_POST ) )
 				{
-				    $mdlAccount = Acl_Model_AccountMapper::getInstance();
+				    $mdlAccount = new Acl_Model_Account();
 				    $account = $mdlAccount->getByEmail( $frmAccount->getValue('email') );
 				    if ( $account )
 				    {
@@ -313,14 +312,14 @@ class Acl_AccountController extends Zend_Controller_Action
 				            $this->redirect('changepassword');
 				        } else {
 				            if ( strcasecmp($account->recoverpwdtoken, $frmAccount->getValue('ht')) == 0 ) {
-				                $account->password = crypt($frmAccount->getValue('password'), '$6$5000$'.$salt.'$');
 				                $account->recoverpwdtoken = "";
-				                $mdlAccount->save($account);
+				                $account->password = crypt($frmAccount->getValue('password'), '$6$5000$'.$salt.'$');
+				                $account->save();
 				                $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("ACL_PASSWORD_CHANGED") ) );
 				                $this->redirect('login');
 				            } else {
 				                $account->recoverpwdtoken = "";
-				                $mdlAccount->save($account);
+				                $account->save();
 				                $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $translate->translate("ACL_VALIDATION_CODE_INVALID") ) );
 				                $this->redirect('resetpassword');
 				            }

@@ -10,358 +10,222 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class menu_Model_Item extends OS_Entity
+class menu_Model_Item extends Zend_Db_Table_Abstract
 {
-
-    protected $_route;
-    /**
-     * @var menu_Model_Menu
-     */
-    protected $_menu;
-    /**
-     * @var Acl_Model_Resource
-     */
-    protected $_resource;
-    /**
-     * @var menu_Model_Item
-     */
-    protected $_parent;
-    protected $_ordering;
-    protected $_icon;
-    protected $_wtype;
-    protected $_params;
-    protected $_isPublished;
-    protected $_title;
-    protected $_description;
-    protected $_external;
-    /**
-     * id found for each menu item specified in the xml module file menus.xml
-     * @var number
-     */
-    protected $_mid; 
-    protected $_isVisible;
-    protected $_cssClass;
-    protected $_depth;
-    /**
-     * Menu item children
-     * @var menu_Model_Item[]
-     */
-    protected $_menuItems = array();
-    
-	/**
-     * @return the $_route
-     */
-    public function getRoute ()
-    {
-        return $this->_route;
+  protected $_name = 'menu_item';
+  
+  protected $_dependentTables = array( 'menu_Model_DbTable_Menu', 'System_Model_DbTable_Widgetdetail' );
+  
+  protected $_referenceMap = array(
+      'refMenu' => array(
+          'columns' 			=> array('menu_id'),
+          'refTableClass' 	=> 'menu_Model_DbTable_Menu',
+          'refColumns'		=> array('id'),
+      ),
+      'refParent' => array(
+          'columns' 			=> array('parent_id'),
+          'refTableClass' 	=> 'menu_Model_DbTable_Item',
+          'refColumns'		=> array('id'),
+      ),
+      'refResource' => array(
+          'columns' 			=> array('resource_id'),
+          'refTableClass' 	=> 'Acl_Model_DbTable_Resource',
+          'refColumns'		=> array('id'),
+      ),
+  );
+  
+  /**
+   * renames the table by adding the prefix defined in the global configuration parameters
+  */
+  function __construct() {
+    $this->_name = Zend_Registry::get('tablePrefix').$this->_name;
+    parent::__construct();
+  }
+  
+  /**
+   * Returns a recordset filter by menu order by parent_id and ordering
+   * @param Zend_Db_Table_Row_Abstract $menu
+   * @return Zend_Db_Table_Rowset_Abstract
+   */
+  public function getListByMenu( $menu )
+  {
+    $prefix = Zend_Registry::get('tablePrefix');
+    $items = array();
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    //         $cache = Zend_Registry::get('cache');
+    //         $cacheId = 'menuItem_getListBymenu_'.$menu->getId();
+    //         if ( $cache->test($cacheId) ) {
+    //             $items = $cache->load($cacheId);
+    //         } else {
+    $select = $this->select()
+      ->setIntegrityCheck(false)
+      ->from( array('it'=> $this->_name), array('id', 'ordering', 'icon', 'wtype', 'title', 'route', 'isPublished', 'description') ) # item
+      ->joinLeft( array('itp' => $prefix.'menu_item'), 'it.parent_id = itp.id', array('title AS parent_title', 'id AS parent_id') ) # item parent
+      ->joinInner( array('rs' => $prefix.'acl_resource'), 'rs.id = it.resource_id', array('module', 'controller', 'actioncontroller') ) # resource
+      ->where("it.menu_id = ?", $menu->id, Zend_Db::INT_TYPE)
+      ->order('it.parent_id')
+      ->order('it.ordering ASC')
+    ;
+    $items = $this->fetchAll($select);
+    //             $cache->save($items, $cacheId);
+    //         }
+    return $items;
+  }
+  
+  /**
+   * returns the last position of a contact list according to the category they belong in ascending order
+   * @param Zend_Db_Table_Row_Abstract $menuItem
+   * @return number
+   */
+  public function getLastPosition( $menuItem )
+  {
+    $select = $select = $this->select()
+    ->from($this->_name, 'ordering');
+    if ( $menuItem->parent_id > 0 ) {
+      $select
+        ->where( 'menu_id = ?', $menuItem->menu_id, Zend_Db::INT_TYPE )
+        ->where( 'parent_id = ?', $menuItem->parent_id, Zend_Db::INT_TYPE )
+        ->order( 'ordering DESC' );
+    } else {
+      $select
+        ->where( 'menu_id = ?', $menuItem->menu_id, Zend_Db::INT_TYPE )
+        ->order( 'ordering DESC' );
     }
-
-	/**
-     * @return menu_Model_Menu $_menu
-     */
-    public function getMenu ()
-    {
-        return $this->_menu;
+    $row = $this->fetchRow( $select );
+    if ( $row )
+      return $row->ordering;
+    return 0;
+  }
+  
+  /**
+   * Moves the record position one above
+   * @param Zend_Db_Table_Row_Abstract $menuItem
+   * @return boolean
+   */
+  function moveUp( $menuItem )
+  {
+    $select = $this->select()
+    ->order('ordering DESC')
+    ->where("ordering < ?", $menuItem->ordering, Zend_Db::INT_TYPE)
+    ->where("menu_id = ?", $menuItem->menu_id, Zend_Db::INT_TYPE);
+    $previousItem = $this->fetchRow($select);
+    if ( $previousItem ) {
+      $previousPosition = $previousItem->ordering;
+      $previousItem->ordering = $menuItem->ordering;
+      $previousItem->save();
+      $menuItem->ordering = $previousPosition;
     }
-
-	/**
-     * @return Acl_Model_Resource $_resource
-     */
-    public function getResource ()
-    {
-        return $this->_resource;
+  }
+  
+  /**
+   * Moves the record position one down
+   * @param Zend_Db_Table_Row_Abstract $menuItem
+   * @return boolean
+   */
+  function moveDown( $menuItem )
+  {
+    $select = $this->select()
+      ->order('ordering ASC')
+      ->where("ordering > ?", $menuItem->ordering, Zend_Db::INT_TYPE)
+      ->where("menu_id = ?", $menuItem->menu_id, Zend_Db::INT_TYPE);
+    $nextItem = $this->fetchRow($select);
+    if ( $nextItem ) {
+      $nextPosition = $nextItem->ordering;
+      $nextItem->ordering = $menuItem->ordering;
+      $nextItem->save();
+      $menuItem->ordering = $nextPosition;
     }
-
-	/**
-     * @return menu_Model_Item $_parent
-     */
-    public function getParent ()
-    {
-        return $this->_parent;
+  }
+  
+  /**
+   * Retorna menu items hijos
+   * @param Zend_Db_Table_Row_Abstract $menuItem
+   * @return Zend_Db_Table_Rowset_Abstract
+   */
+  public function getChildren($menuItem)
+  {
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'menu_getChildren_'.$menuItem->id;
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $prefix = Zend_Registry::get('tablePrefix');
+      $select = $this->select()
+        ->setIntegrityCheck(false)
+        ->from( array('it'=>$this->_name) )
+        ->joinInner( array('rs' => $prefix.'acl_resource'), 'rs.id = it.resource_id', array('module', 'controller', 'actioncontroller') ) # resource
+        ->where('it.parent_id=?', $menuItem->id)
+        ->where('it.isVisible=1')
+      ;
+      $rows = $this->fetchAll($select);
+      $cache->save($rows, $cacheId);
     }
-
-	/**
-     * @return the $_ordering
-     */
-    public function getOrdering ()
-    {
-        return $this->_ordering;
+    return $rows;
+  }
+  
+  /**
+   * Retorna los menu items de un menu especifico. (el parent_id=0 limita a que se busque en menuitems que no son hijos)
+   * @param Zend_Db_Table_Row_Abstract $menu
+   * @return Zend_Db_Table_Rowset_Abstract
+   */
+  public function getAllByMenu($menu)
+  {
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'menu_getAllByMenu_'.$menu->id;
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $prefix = Zend_Registry::get('tablePrefix');
+      $select = $this->select()
+        ->setIntegrityCheck(false)
+        ->from( array('it'=>$this->_name) )
+        ->joinInner( array('rs' => $prefix.'acl_resource'), 'rs.id = it.resource_id', array('module', 'controller', 'actioncontroller') ) # resource
+        ->where('IFNULL(it.parent_id,0)=0')
+        ->where('it.menu_id=?', $menu->id, Zend_Db::INT_TYPE)
+      ;
+      //Zend_Debug::dump($select->__toString());
+      $rows = $this->fetchAll($select);
+      $cache->save($rows, $cacheId);
     }
-
-	/**
-     * @return the $_icon
-     */
-    public function getIcon ()
-    {
-        return $this->_icon;
+    return $rows;
+  }
+  
+  /**
+   *
+   * @return Zend_Db_Table_Rowset_Abstract
+   */
+  public function getRegisteredRoutes()
+  {
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'menu_getRegisteredRoutes';
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $prefix = Zend_Registry::get('tablePrefix');
+      $select = $this->select()
+        ->setIntegrityCheck(false)
+        ->from( array('it'=>$this->_name), array('route') )
+        ->joinInner( array('rs' => $prefix.'acl_resource'), 'rs.id = it.resource_id', array('module', 'controller', 'actioncontroller') ) # resource
+        ->where('it.isPublished=1')
+      ;
+      //Zend_Debug::dump($select->__toString());
+      $rows = $this->fetchAll($select);
+      $cache->save($rows, $cacheId);
     }
-
-	/**
-     * @return the $_wtype
-     */
-    public function getWtype ()
-    {
-        return $this->_wtype;
-    }
-
-	/**
-     * @return the $_params
-     */
-    public function getParams ()
-    {
-        return $this->_params;
-    }
-
-	/**
-     * @return the $_isPublished
-     */
-    public function getIsPublished ()
-    {
-        return $this->_isPublished;
-    }
-
-	/**
-     * @return the $_title
-     */
-    public function getTitle ()
-    {
-        return $this->_title;
-    }
-
-	/**
-     * @return the $_description
-     */
-    public function getDescription ()
-    {
-        return $this->_description;
-    }
-
-	/**
-     * @return the $_external
-     */
-    public function getExternal ()
-    {
-        return $this->_external;
-    }
-
-	/**
-     * @return the $_mid
-     */
-    public function getMid ()
-    {
-        return $this->_mid;
-    }
-
-	/**
-     * @return the $_isVisible
-     */
-    public function getIsVisible ()
-    {
-        return $this->_isVisible;
-    }
-
-	/**
-     * @return the $_cssClass
-     */
-    public function getCssClass ()
-    {
-        return $this->_cssClass;
-    }
-
-	/**
-     * @return the $_depth
-     */
-    public function getDepth ()
-    {
-        return $this->_depth;
-    }
-
-	/**
-     * @param field_type $route
-     */
-    public function setRoute ($route)
-    {
-        $this->_route = $route;
-        return $this;
-    }
-
-	/**
-     * @param menu_Model_Menu $menu
-     */
-    public function setMenu ($menu)
-    {
-        $this->_menu = $menu;
-        return $this;
-    }
-
-	/**
-     * @param Acl_Model_Resource $resource
-     */
-    public function setResource ($resource)
-    {
-        $this->_resource = $resource;
-        return $this;
-    }
-
-	/**
-     * @param menu_Model_Item $parent
-     */
-    public function setParent ($parent)
-    {
-        $this->_parent = $parent;
-        return $this;
-    }
-
-	/**
-     * @param field_type $ordering
-     */
-    public function setOrdering ($ordering)
-    {
-        $this->_ordering = $ordering;
-        return $this;
-    }
-
-	/**
-     * @param field_type $icon
-     */
-    public function setIcon ($icon)
-    {
-        $this->_icon = $icon;
-        return $this;
-    }
-
-	/**
-     * @param field_type $wtype
-     */
-    public function setWtype ($wtype)
-    {
-        $this->_wtype = $wtype;
-        return $this;
-    }
-
-	/**
-     * @param field_type $params
-     */
-    public function setParams ($params)
-    {
-        $this->_params = $params;
-        return $this;
-    }
-
-	/**
-     * @param field_type $isPublished
-     */
-    public function setIsPublished ($isPublished)
-    {
-        $this->_isPublished = $isPublished;
-        return $this;
-    }
-
-	/**
-     * @param field_type $title
-     */
-    public function setTitle ($title)
-    {
-        $this->_title = $title;
-        return $this;
-    }
-
-	/**
-     * @param field_type $description
-     */
-    public function setDescription ($description)
-    {
-        $this->_description = $description;
-        return $this;
-    }
-
-	/**
-     * @param field_type $external
-     */
-    public function setExternal ($external)
-    {
-        $this->_external = $external;
-        return $this;
-    }
-
-	/**
-     * @param field_type $mid
-     */
-    public function setMid ($mid)
-    {
-        $this->_mid = $mid;
-        return $this;
-    }
-
-	/**
-     * @param field_type $isVisible
-     */
-    public function setIsVisible ($isVisible)
-    {
-        $this->_isVisible = $isVisible;
-        return $this;
-    }
-
-	/**
-     * @param field_type $cssClass
-     */
-    public function setCssClass ($cssClass)
-    {
-        $this->_cssClass = $cssClass;
-        return $this;
-    }
-
-	/**
-     * @param field_type $depth
-     */
-    public function setDepth ($depth)
-    {
-        $this->_depth = $depth;
-        return $this;
-    }
-	
-	/**
-     * @return the $_menuItems
-     */
-    public function getChildren ()
-    {
-        return $this->_menuItems;
-    }
-
-	/**
-     * @param multitype:menu_Model_Item $children
-     */
-    public function setChildren ($children)
-    {
-        $this->_menuItems = $children;
-        return $this;
-    }
-
-    /**
-     * 
-     * @param menu_Model_Item $menuItem
-     * @return menu_Model_Item
-     */
-    public function addChild(menu_Model_Item $menuItem) 
-    {
-        if ( count($this->_menuItems) == 0 ) {
-            $this->_menuItems[] = $menuItem;
-            return $this;
-        }
-        $bolExists = false;
-        foreach ( $this->_menuItems as $child )
-        {
-            if ( $child->getId() == $menuItem->getId() ) {
-                $bolExists = true;
-                break;
-            }
-        }
-        if ( $bolExists == false ) {
-            $this->_menuItems[] = $menuItem;
-        }
-        return $this;
-    }
-    
-	
+    return $rows;
+  }
+  
+  /**
+   * Remove a menu item
+   * @param Zend_Db_Table_Row_Abstract $menuItem
+   */
+  public function remove($menuItem)
+  {
+    $row = $this->find($menuItem->id)->current();
+    $row->delete();
+  }	
 }
 

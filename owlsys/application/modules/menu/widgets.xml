@@ -34,15 +34,4 @@
 		<version>1.0</version>
 		<widget_type>menubootstrap</widget_type>
 	</widget>
-	<widget id="4">
-		<label>Simple Menu Widget</label>
-		<description>Render a Simple Menu</description>
-		<author>Roger Castañeda</author>
-		<datecreated>-</datecreated>
-		<module>menu</module>
-		<controller>widget</controller>
-		<action>simple</action>
-		<version>1.0</version>
-		<widget_type>menu</widget_type>
-	</widget>
 </widgets>

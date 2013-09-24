@@ -11,50 +11,50 @@ $menuItem = $this->menuItem;
 ?>
 <tr>
 	<td class="field">
-		<span class="text-info"><?php echo $menuItem->getTitle() ?></span>
-		<?php if ( strlen($menuItem->getDescription()) > 0 ) : ?>
+		<span class="text-info"><?php echo $menuItem->title ?></span>
+		<?php if ( strlen($menuItem->description) > 0 ) : ?>
 			<br />
-			<span class="muted"><?php echo $menuItem->getDescription() ?></span>
+			<span class="muted"><?php echo $menuItem->description ?></span>
 			<br />
 		<?php endif; ?>
 	</td>
 	<td class="center">
-		<?php echo $menuItem->getResource()->getModule() ?>
+		<?php echo $menuItem->module ?>
 	</td>
 	<td class="center">
-		<?php echo $menuItem->getResource()->getController() ?>
+		<?php echo $menuItem->controller ?>
 	</td>
 	<td class="center">
-		<?php echo $menuItem->getResource()->getActioncontroller() ?>
+		<?php echo $menuItem->actioncontroller ?>
 	</td>
 	<td class="center">
-		<?php echo $menuItem->getParent()->getTitle() ?>
+		<?php echo $menuItem->parent_title ?>
 	</td>
 	<td class="center">
-		<?php echo $menuItem->getWtype() ?>
+		<?php echo $menuItem->wtype ?>
 	</td>
 	<td class="center">
-		<?php echo $menuItem->getRoute() ?>
+		<?php echo $menuItem->route ?>
 	</td>
 	<td class="center">
-		<?php if ( $menuItem->getIsPublished() == 1 ): ?>
-			<a href='<?=$this->baseUrl('menu-item-publish/'.$menuItem->getId())?>' class="btn btn-mini btn-success">
+		<?php if ( $menuItem->isPublished == 1 ): ?>
+			<a href='<?=$this->baseUrl('menu-item-publish/'.$menuItem->id)?>' class="btn btn-mini btn-success">
 			<i class="icon-ok-circle icon-white"></i>
 			</a>
 		<?php else: ?>
-			<a href='<?=$this->baseUrl('menu-item-publish/'.$menuItem->getId())?>' class="btn btn-mini btn-danger">
+			<a href='<?=$this->baseUrl('menu-item-publish/'.$menuItem->id)?>' class="btn btn-mini btn-danger">
 			<i class="icon-remove-circle icon-white"></i>
 			</a>
 		<?php endif; ?>
 	</td>
 	<td class=''>
 	    <div class="btn-group">
-    		<a href='<?=$this->baseUrl('menu-item-update/'.$menuItem->getId())?>' class="btn btn-mini"><i class="icon-edit"></i></a>
-    		<a href='<?=$this->baseUrl('menu-item-move/up/'.$menuItem->getId())?>' class="btn btn-mini"><i class="icon-chevron-up"></i></a>
-    		<a href='<?=$this->baseUrl('menu-item-move/down/'.$menuItem->getId())?>' class="btn btn-mini"><i class="icon-chevron-down"></i></a>
-    		<a href='<?=$this->baseUrl('menu-item-delete/'.$menuItem->getId())?>' class="btn btn-mini xdialog"><i class="icon-trash"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-update/'.$menuItem->id)?>' class="btn btn-mini"><i class="icon-edit"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-move/up/'.$menuItem->id)?>' class="btn btn-mini"><i class="icon-chevron-up"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-move/down/'.$menuItem->id)?>' class="btn btn-mini"><i class="icon-chevron-down"></i></a>
+    		<a href='<?=$this->baseUrl('menu-item-delete/'.$menuItem->id)?>' class="btn btn-mini xdialog"><i class="icon-trash"></i></a>
 		</div>
 	</td>
-	<td class="center"><?php echo $menuItem->getOrdering() ?></td>
+	<td class="center"><?php echo $menuItem->ordering ?></td>
 	<td class="center"><?php echo $this->partialCounter ?></td>
 </tr>

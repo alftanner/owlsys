@@ -1,63 +1,36 @@
 <?php
 
-class System_Model_Layout extends OS_Entity
-{
+class System_Model_Layout extends Zend_Db_Table_Abstract
+{    
+  protected $_name = 'layout';
+  
+  protected $_dependentTables = array ( 'Acl_Model_DbTable_Role' );
+  
+  function __construct() {
+    $this->_name = Zend_Registry::get('tablePrefix').$this->_name;
+    parent::__construct();
+  }
+  
+  public function getAll()
+  {
+    $select = $this->select();
+    return $this->fetchAll();
+  }
 
-    protected $_name;
-    protected $_description;
-    protected $_isPublished;
-	/**
-     * @return the $_name
-     */
-    public function getName ()
-    {
-        return $this->_name;
+  public function find($id)
+  {
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'layout_find_'.$id;
+    $row = null;
+    if ( $cache->test($cacheId) ) {
+      $row = $cache->load($cacheId);
+    } else {
+      $row = parent::find($id);
+      $cache->save($row, $cacheId);
     }
-
-	/**
-     * @return the $_description
-     */
-    public function getDescription ()
-    {
-        return $this->_description;
-    }
-
-	/**
-     * @return the $_published
-     */
-    public function getIsPublished ()
-    {
-        return $this->_isPublished;
-    }
-
-	/**
-     * @param field_type $name
-     */
-    public function setName ($name)
-    {
-        $this->_name = $name;
-        return $this;
-    }
-
-	/**
-     * @param field_type $description
-     */
-    public function setDescription ($description)
-    {
-        $this->_description = $description;
-        return $this;
-    }
-
-	/**
-     * @param field_type $published
-     */
-    public function setIsPublished ($published)
-    {
-        $this->_isPublished = $published;
-        return $this;
-    }
-    
-
+    return $row;
+  }
 }
 
 

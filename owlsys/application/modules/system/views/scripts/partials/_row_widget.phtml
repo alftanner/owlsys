@@ -11,34 +11,34 @@ $widget = $this->widget;
 ?>
 <tr>
 	<td class="field">
-	    <?php echo $widget->getTitle() ?>
+	    <?php echo $widget->title ?>
 	</td>
-	<td class="center"><?php echo $widget->getPosition() ?></td>
-	<td class="center"><?php echo $widget->getOrdering() ?></td>
-	<td class="field"><?php echo $widget->getResource()->getModule().' / '.$widget->getResource()->getController().' / '.$widget->getResource()->getActioncontroller() ?></td>
+	<td class="center"><?php echo $widget->position ?></td>
+	<td class="center"><?php echo $widget->ordering ?></td>
+	<td class="field"><?php echo $widget->module.' / '.$widget->controller.' / '.$widget->actioncontroller ?></td>
 	<td class="center">
-		<?php if ( $widget->getIsPublished() == 1 ): ?>
-			<a href='<?=$this->baseUrl('widget-publish/'.$widget->getId())?>' class="btn btn-mini btn-success">
+		<?php if ( $widget->isPublished == 1 ): ?>
+			<a href='<?=$this->baseUrl('widget-publish/'.$widget->id)?>' class="btn btn-mini btn-success">
 			 <i class="icon-ok-circle icon-white"></i>
 			</a>
 		<?php else: ?>
-			<a href='<?=$this->baseUrl('widget-publish/'.$widget->getId())?>' class="btn btn-mini btn-danger">
+			<a href='<?=$this->baseUrl('widget-publish/'.$widget->id)?>' class="btn btn-mini btn-danger">
 			 <i class="icon-remove-circle icon-white"></i>
 			</a>
 		<?php endif; ?>
 	</td>
 	<td class='center'>
 	    <div class="btn-group">
-    	    <a href='<?=$this->baseUrl('widget-update/'.$widget->getId())?>' title="<?php echo $this->translate("Edit").' '.$widget->getTitle() ?>" class="btn btn-mini">
+    	    <a href='<?=$this->baseUrl('widget-update/'.$widget->id)?>' title="<?php echo $this->translate("Edit").' '.$widget->title ?>" class="btn btn-mini">
     		    <i class="icon-edit"></i>
     		</a>
-    		<a href='<?=$this->baseUrl('widget-move/'.$widget->getId().'/up')?>' class="btn btn-mini">
+    		<a href='<?=$this->baseUrl('widget-move/'.$widget->id.'/up')?>' class="btn btn-mini">
     		    <i class="icon-chevron-up"></i>
     		</a>
-    		<a href='<?=$this->baseUrl('widget-move/'.$widget->getId().'/down')?>' class="btn btn-mini">
+    		<a href='<?=$this->baseUrl('widget-move/'.$widget->id.'/down')?>' class="btn btn-mini">
     		    <i class="icon-chevron-down"></i>
     		</a>
-    		<a href='<?=$this->baseUrl('widget-delete/'.$widget->getId())?>' class="btn btn-mini xdialog">
+    		<a href='<?=$this->baseUrl('widget-delete/'.$widget->id)?>' class="btn btn-mini xdialog">
     		    <i class="icon-trash"></i>
     		</a>
 		</div>

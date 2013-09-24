@@ -25,12 +25,12 @@ class OS_Plugins_Skin extends Zend_Controller_Plugin_Abstract
 			$userAgent = $boostrap->getResource('useragent');
 			$device = $userAgent->getDevice();
 			
-			$mdlSkinMapper = System_Model_SkinMapper::getInstance();
-			$skin = new System_Model_Skin();
-			$mdlSkinMapper->getSkinSelected($skin);
-			$skinName = strtolower($skin->getName());
+			$mdlSkin = new System_Model_Skin();
+			$skin = $mdlSkin->getSkinSelected();
+			
+			$skinName = strtolower($skin->name);
 			//Zend_Debug::dump($skin);
-			$vr = Zend_Controller_Action_HelperBroker::getStaticHelper('Layout');
+			$vr = Zend_Controller_Action_HelperBroker::getStaticHelper('Layout'); // view renderer
 			$view = $vr->getView();
 			$skinData = new Zend_Config_Xml('./skins/'.$skinName.'/skin.xml');
 			

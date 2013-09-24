@@ -10,71 +10,88 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class Acl_Model_Permission extends OS_Entity 
+class Acl_Model_Permission extends Zend_Db_Table_Abstract
 {
 
-    /**
-     * 
-     * @var Acl_Model_Role
-     */
-    protected $_role;
-    /**
-     * 
-     * @var Acl_Model_Resource
-     */
-    protected $_resource;
-    protected $_isAllowed;
-	/**
-     * @return Acl_Model_Role $_role
-     */
-    public function getRole ()
-    {
-        return $this->_role;
-    }
+  protected $_name = 'acl_permission';
+  
+  protected $_referenceMap = array (
+      'Resource' => array(
+          'columns'		=> array ( 'resource_id' ),
+          'refTableClass'	=> 'Acl_Model_DbTable_Resource',
+          'refColumns'	=> array ( 'id' ),
+      ),
+      'Role' => array(
+          'columns'		=> array ( 'role_id' ),
+          'refTableClass'	=> 'Acl_Model_DbTable_Role',
+          'refColumns'	=> array ( 'id' ),
+      ),
+  );
+  
+  function __construct ()
+  {
+    $this->_name = Zend_Registry::get('tablePrefix') . $this->_name;
+    parent::__construct();
+  }
+  
+  /**
+   * Returns permissions (resources) assigned to a specific role
+   * @param Zend_Db_Table_Row_Abstract $role
+   * @return Ambigous <Zend_Db_Table_Row_Abstract, NULL, unknown>
+   */
+  public function getAllowedByRole( $role )
+  {
+    $select = $this->select()
+      ->setIntegrityCheck(false)
+      ->from( array('p'=>$this->_name), array('resource_id') )
+      ->where("role_id = ?", $role->id, Zend_Db::INT_TYPE)
+      ->where("isAllowed = 1")
+    ;
+    $rows = $this->fetchAll($select);
+//     var_dump($select->__toString());
+//     die();
+    return $rows;
+  }
+  
+  /**
+   *
+   * @param Acl_Model_Role $role
+   * @return Zend_Db_Table_Rowset_Abstract
+   */
+  public function getResourcesByRole($role)
+  {
+    $rows = array();
+    $prefix = Zend_Registry::get('tablePrefix');
+    $select = $this->select()
+      ->setIntegrityCheck(false)
+      ->from( array('r'=>$prefix.'acl_resource'), array('id AS resource_id','module','controller','actioncontroller') )
+      ->joinLeft(array('p'=>$this->_name), 'r.id=p.resource_id AND p.role_id='.$role->id, array('id','isAllowed'))
+    ;
+    $rows = $this->fetchAll($select);
+    return $rows;
+  }
+  
+  /**
+   *
+   * @param Acl_Model_Resource $resource
+   * @return number
+   */
+  public function countByResource( $resource )
+  {
+    $count = 0;
+    $select = $this->select()
+      ->from( $this->_name, new Zend_Db_Expr('COUNT(id) AS total') )
+      ->where('resource_id=?', $resource->id, Zend_Db::INT_TYPE)
+      ->limit(1)
+    ;
+    $count = $this->fetchRow($select)->total;
+    return $count;
+  }
 
-	/**
-     * @return Acl_Model_Resource $_resource
-     */
-    public function getResource ()
-    {
-        return $this->_resource;
-    }
+  public function deleteByRole($role)
+  {
+    $where = $this->getAdapter()->quoteInto('role_id = ?', $role->id);
+    $this->delete($where);
+  }
 
-	/**
-     * @return the $_isAllowed
-     */
-    public function getIsAllowed ()
-    {
-        return $this->_isAllowed;
-    }
-
-	/**
-     * @param Acl_Model_Role $role
-     */
-    public function setRole ($role)
-    {
-        $this->_role = $role;
-        return $this;
-    }
-
-	/**
-     * @param Acl_Model_Resource $resource
-     */
-    public function setResource ($resource)
-    {
-        $this->_resource = $resource;
-        return $this;
-    }
-
-	/**
-     * @param field_type $isAllowed
-     */
-    public function setIsAllowed ($isAllowed)
-    {
-        $this->_isAllowed = $isAllowed;
-        return $this;
-    }
-    
-    
 }
-

@@ -27,7 +27,6 @@ class System_WidgetController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        // action body
     }
 
     /**
@@ -36,12 +35,12 @@ class System_WidgetController extends Zend_Controller_Action
     public function chooseAction()
     {
         try {
-        	$mdlResource = Acl_Model_ResourceMapper::getInstance();
+        	$mdlResource = new Acl_Model_Resource();
         	$resources = $mdlResource->getAll();
         	$modules = array();
         	foreach ( $resources as $resource ) {
-        	    if ( !in_array($resource->getModule(), $modules) ) {
-        	        $modules[] = $resource->getModule();
+        	    if ( !in_array($resource->module, $modules) ) {
+        	        $modules[] = $resource->module;
         	    }
         	}
         	
@@ -72,7 +71,7 @@ class System_WidgetController extends Zend_Controller_Action
     public function listAction()
     {
         try {
-        	$mdlWidget = System_Model_WidgetMapper::getInstance();
+        	$mdlWidget = new System_Model_Widget();
         	$paginator = Zend_Paginator::factory($mdlWidget->getList());
         	$paginator->setItemCountPerPage(10);
         	$pageNumber = $this->getRequest()->getParam('page',1);
@@ -91,6 +90,19 @@ class System_WidgetController extends Zend_Controller_Action
     public function newAction()
     {
         // action body
+      $mdlResource = new Acl_Model_Resource();
+      $mdlMenu = new menu_Model_Menu();
+      $mdlMI = new menu_Model_Item();
+      $mdlWidget = new System_Model_Widget();
+      $mdlWidgetDetail = new System_Model_Widgetdetail();
+      
+      $adapter = $mdlMI->getAdapter();
+      
+      /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+//       $cache = Zend_Registry::get('cache');
+//       Zend_Debug::dump($cache->getTags());
+      
+      
         try {
             $translate = Zend_Registry::get('Zend_Translate');
             $module = $this->getRequest()->getParam('mod');
@@ -110,13 +122,12 @@ class System_WidgetController extends Zend_Controller_Action
 			}
 			if ( !$element ) throw new Exception($translate->translate("SYSTEM_WIDGET_ELEMENT_NOT_FOUND"));
 			
-			$mdlResource = Acl_Model_ResourceMapper::getInstance();
-			$resource = new Acl_Model_Resource();
-			$resource->setModule($module)
-    		  ->setController($element->controller)
-    		  ->setActioncontroller($element->action)
-    		;
-    		$mdlResource->getIdByDetail($resource);
+			
+			$resource = $mdlResource->createRow();
+			$resource->module = $module;
+    		$resource->controller = $element->controller;
+    		$resource->actioncontroller = $element->action;
+    		$resource = $mdlResource->getIdByDetail($resource);
 			
 			if ( !$resource ) throw new Exception($translate->translate("ACL_RESOURCE_NOT_FOUND"));
 			
@@ -135,27 +146,18 @@ class System_WidgetController extends Zend_Controller_Action
 			    $cbPosition->addMultiOption( $hook, $hook );
 			}
 			
-			$mdlMenu = menu_Model_MenuMapper::getInstance();
-			$mdlMI = menu_Model_ItemMapper::getInstance();
-			$menus = $mdlMenu->getList();
+			$menus = $mdlMenu->getMenus();
 			$cbMenuItem = $frmWidget->getElement('menuitem');
-			$menus = $mdlMenu->getByStatus(1);
-			foreach ( $menus as $menu ) {
-			    $mdlMI->getByMenu($menu);
-			    if ( $menu->getChildren() > 0 ) {
-			        foreach ( $menu->getChildren() as $menuItem ) {
-			            /* @var $menuItem menu_Model_Item */
-			            $mdlMI->getMenuItemsRecursively($menuItem);
-			        }
-			    }
-			}
+			
+			$cbMIData = array();
 			foreach ( $menus as $menu )
 			{
 			    $menuItemData = array();
-			    if ( $menu->getChildren() > 0 ) {
-			        foreach ( $menu->getChildren() as $menuItem ) {
-			            $this->_loadMenuItems($menuItem, $menuItemData);
-			        }
+			    $childrenItems = $mdlMI->getAllByMenu($menu);
+			    if ( $childrenItems->count() > 0 ) {
+			      foreach ( $childrenItems as $menuItem ) {
+			        $this->_loadMenuItems($menuItem, $menuItemData);
+		          }
 			    }
 			    $cbMIData[$menu->name] = $menuItemData;
 			    $cbMenuItem->addMultiOptions( $cbMIData );
@@ -172,10 +174,9 @@ class System_WidgetController extends Zend_Controller_Action
 			    if ( $frmWidget->isValid( $this->getRequest()->getParams() ) )
 			    {
 			        $defaultFormFields = array('id', 'wid', 'mod', 'position', 'title', 'published', 'menuitem', 'token', 'showtitle');
-			        $mdlWidget = System_Model_WidgetMapper::getInstance();
-			        $mdlWidgetDetail = System_Model_WidgetdetailMapper::getInstance();
-			        $widget = new System_Model_Widget();
+			        $adapter->beginTransaction();
 			        
+			        $widget = $mdlWidget->createRow();
 			        $frmWidgetValues = $frmWidget->getValues();
 			        $params = array();
 			        foreach ( $frmWidgetValues as $wvk => $wv )
@@ -186,35 +187,35 @@ class System_WidgetController extends Zend_Controller_Action
 			            }
 			        }
 			        
-			        $widget->setIsPublished($frmWidget->getValue('published'));
-			        $widget->setPosition($frmWidget->getValue('position'));
-			        $widget->setTitle($frmWidget->getValue('title'));
-			        $widget->setShowtitle($frmWidget->getValue('showtitle'));
-			        $widget->setWid($frmWidget->getValue('wid'));
-			        $widget->setResource($resource);
-			        $widget->setParams( Zend_Json::encode($params) );
+			        $widget->isPublished = $frmWidget->getValue('published');
+			        $widget->position = $frmWidget->getValue('position');
+			        $widget->title = $frmWidget->getValue('title');
+			        $widget->showtitle = $frmWidget->getValue('showtitle');
+			        $widget->wid = $frmWidget->getValue('wid');
+			        $widget->resource_id = $resource->id;
+			        $widget->params = Zend_Json::encode($params);
+			        
+			        $widget->save();
 // 			        Zend_Debug::dump($resource->toArray());
 // 			        Zend_Debug::dump($widget->toArray());
 // 			        die();
-			        $mdlWidget->save($widget);
 			        
 			        if ( $frmWidget->getElement('renderfor')->getValue() == 0 )
 			        {
-			            $widgetDetail = new System_Model_Widgetdetail();
-			            $widgetDetail->setWidget($widget);
-			            $widgetDetail->setMenuItem(null);
-			            $mdlWidgetDetail->save($widgetDetail);
+			            $widgetDetail = $mdlWidgetDetail->createRow();
+			            $widgetDetail->widget_id = $widget->id;
+			            $widgetDetail->menuitem_id = null;
+			            $widgetDetail->save();
 			        }else {
 				        foreach ( $frmWidget->getValue('menuitem') as $mi )
 				        {
-				            $widgetDetail = new System_Model_Widgetdetail();
-				            $widgetDetail->setWidget($widget);
-				            $menuItem = new menu_Model_Item();
-				            $menuItem->setId($mi);
-				            $widgetDetail->setMenuItem($menuItem);
-				            $mdlWidgetDetail->save($widgetDetail);
+				          $widgetDetail = $mdlWidgetDetail->createRow();
+				          $widgetDetail->widget_id = $widget->id;
+				          $widgetDetail->menuitem_id = $mi;
+				          $widgetDetail->save();
 				        }
 			        }
+			        $adapter->commit();
 			        
 			        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("New widget added") ) );
 			        $this->redirect('widgets');
@@ -222,21 +223,24 @@ class System_WidgetController extends Zend_Controller_Action
 			}
 
         } catch (Exception $e) {
-//             Zend_Debug::dump($e->getMessage());
-//             Zend_Debug::dump($e->getTraceAsString());
-//             die();
+//           $adapter->rollBack();
+            Zend_Debug::dump($e->getMessage(),'Error at '.$e->getLine());
+            Zend_Debug::dump($e->getTraceAsString());
+            die();
             $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
             $this->redirect('widgets');
         }
         return;
     }
     
-    private function _loadMenuItems(menu_Model_Item $menuItem, &$data, $level=0)
+    private function _loadMenuItems($menuItem, &$data, $level=0)
     {
-        $data[$menuItem->getId()] = str_repeat('-', $level).' '.$menuItem->getTitle();
-        if ( count($menuItem->getChildren()) > 0 ) {
-            foreach ( $menuItem->getChildren() as $child )
-                $this->_loadMenuItems($child, $data, $level++);
+        $data[$menuItem->id] = str_repeat('-', $level).' '.$menuItem->title;
+        $mdlMenuItem = new menu_Model_Item ();
+        $children = $mdlMenuItem->getChildren($menuItem);
+        if (count ( $children ) > 0) {
+          foreach ( $children as $child )
+            $this->_loadMenuItems($child, $data, $level++);
         }
     }
 
@@ -246,19 +250,19 @@ class System_WidgetController extends Zend_Controller_Action
      */
     public function updateAction()
     {
+      $mdlWidget = new System_Model_Widget();
+      $mdlResource = new Acl_Model_Resource();
+      $mdlMenu = new menu_Model_Menu();
+      $mdlMI = new menu_Model_Item();
+      $mdlWidgetDetail = new System_Model_Widgetdetail();
+      
         try {
-            $translate = Zend_Registry::get('Zend_Translate');
-            
+          $translate = Zend_Registry::get('Zend_Translate');
             $id = $this->getRequest()->getParam('id', 0);
-            $mdlWidget = System_Model_WidgetMapper::getInstance();
-            $widget = new System_Model_Widget();
-            $mdlWidget->find($id, $widget);
-
-            $mdlResource = Acl_Model_ResourceMapper::getInstance();
-            $resource = new Acl_Model_Resource();
-            $mdlResource->find($widget->getResource()->getId(), $resource);
+            $widget = $mdlWidget->find($id)->current();
+            $resource = $mdlResource->find($widget->resource_id)->current();
             
-            $widgetFile = APPLICATION_PATH.'/modules/'.$resource->getModule().'/widgets.xml';
+            $widgetFile = APPLICATION_PATH.'/modules/'.$resource->module.'/widgets.xml';
             if ( !file_exists( $widgetFile ) ) {
             	throw new Exception($translate->translate("SYSTEM_WIDGET_NOT_FOUND"));
             }
@@ -266,7 +270,7 @@ class System_WidgetController extends Zend_Controller_Action
             $sxe = new SimpleXMLElement($widgetFile, null, true);
             $element = null;
             foreach( $sxe as $widgetElement ) {
-            	if ( $widgetElement['id'] == $widget->getWid() ) {
+            	if ( $widgetElement['id'] == $widget->wid ) {
             		$element = $widgetElement;
             		break;
             	}
@@ -275,6 +279,7 @@ class System_WidgetController extends Zend_Controller_Action
             if ( !$element ) throw new Exception($translate->translate("SYSTEM_WIDGET_ELEMENT_NOT_FOUND"));
             
             $frmWidget = ucfirst( strtolower( strval($element->module) ) ).'_Form_Widgets';
+//             var_dump($frmWidget);die();
             $frmWidget = ( strtolower(strval($element->module)) == 'menu' ) ? 'menu_Form_Widgets' : $frmWidget;
             $frmWidget = new $frmWidget( array('widgetType'=>strtolower(strval($element->widget_type))) );
 			
@@ -285,51 +290,41 @@ class System_WidgetController extends Zend_Controller_Action
 				$cbPosition->addMultiOption( $hook, $hook );
 			}
 			
-            $mdlMenu = menu_Model_MenuMapper::getInstance();
-			$mdlMI = menu_Model_ItemMapper::getInstance();
-			$menus = $mdlMenu->getList();
 			$cbMenuItem = $frmWidget->getElement('menuitem');
 			$menus = $mdlMenu->getByStatus(1);
-			foreach ( $menus as $menu ) {
-			    $mdlMI->getByMenu($menu);
-			    if ( $menu->getChildren() > 0 ) {
-			        foreach ( $menu->getChildren() as $menuItem ) {
-			            /* @var $menuItem menu_Model_Item */
-			            $mdlMI->getMenuItemsRecursively($menuItem);
-			        }
-			    }
-			}
+			
+			$cbMIData = array();
 			foreach ( $menus as $menu )
 			{
-			    $menuItemData = array();
-			    if ( $menu->getChildren() > 0 ) {
-			        foreach ( $menu->getChildren() as $menuItem ) {
-			            $this->_loadMenuItems($menuItem, $menuItemData);
-			        }
+			  $menuItemData = array();
+			  $childrenItems = $mdlMI->getAllByMenu($menu);
+			  if ( $childrenItems->count() > 0 ) {
+			    foreach ( $childrenItems as $menuItem ) {
+			      $this->_loadMenuItems($menuItem, $menuItemData);
 			    }
-			    $cbMIData[$menu->name] = $menuItemData;
-			    $cbMenuItem->addMultiOptions( $cbMIData );
+			  }
+			  $cbMIData[$menu->name] = $menuItemData;
+			  $cbMenuItem->addMultiOptions( $cbMIData );
 			}
 			
 			$frmWidget->setAction( $this->_request->getBaseUrl() . "/widget-update/".$widget->id );
 			$frmWidget->populate( $widget->toArray() );
 			
-			$mdlWidgetDetail = System_Model_WidgetdetailMapper::getInstance();
 			$menuItemsRegistered = $mdlWidgetDetail->getByWidget($widget);
-			if ( $menuItemsRegistered !==  false ) {
-			    $frmWidget->populate( array('menuitem' => $menuItemsRegistered) );
-			    $frmWidget->getElement('renderfor')->setValue(1);
+			if ( $menuItemsRegistered->count() > 0 ) {
+			  $temp = array();
+			  foreach ( $menuItemsRegistered as $mir ) {
+			    $temp[] = $mir->menuitem_id;
+			  }
+              $frmWidget->populate( array('menuitem' => $temp) );!
+              $frmWidget->getElement('renderfor')->setValue(1);
 			} else {
 			    $frmWidget->getElement('renderfor')->setValue(0);
 			    $frmWidget->getElement('menuitem')->setAttrib('disabled', true);
 			}
 			
 			$params = Zend_Json::decode($widget->params);
-// 			Zend_Debug::dump($params);
 			$frmWidget->populate( $params );
-			foreach ( $params as $param ) {
-// 			    $frmWidget->populate( $param );
-			}
 			
 			if ( $this->getRequest()->isPost() )
 			{
@@ -349,32 +344,29 @@ class System_WidgetController extends Zend_Controller_Action
 			                $params[$wvk] = $wv;
 			            }
 			        }
-			        $widget->setPosition($frmWidget->getValue('position'));
-			        $widget->setIsPublished($frmWidget->getValue('published'));
-			        $widget->setTitle($frmWidget->getValue('title'));
-			        $widget->setShowtitle($frmWidget->getValue('showtitle'));
-			        $widget->setParams( json_encode($params) );
-// 			        Zend_Debug::dump( $params );
-// 			        Zend_Debug::dump($widget->toArray());
-// 			        die();
 			        
-			        $mdlWidget->save($widget);
-			        $mdlWidgetDetail->delete($widget);
+			        $widget->isPublished = $frmWidget->getValue('published');
+			        $widget->position = $frmWidget->getValue('position');
+			        $widget->title = $frmWidget->getValue('title');
+			        $widget->showtitle = $frmWidget->getValue('showtitle');
+			        $widget->wid = $frmWidget->getValue('wid');
+			        $widget->params = Zend_Json::encode($params);
+			        
+			        $widget->save();
+			        $mdlWidgetDetail->deleteByWidget($widget);
 			        if ( $frmWidget->getElement('renderfor')->getValue() == 0 )
 			        {
-			            $widgetDetail = new System_Model_Widgetdetail();
-			            $widgetDetail->setWidget($widget);
-			            $widgetDetail->setMenuItem(null);
-			            $mdlWidgetDetail->save($widgetDetail);
+			            $widgetDetail = $mdlWidgetDetail->createRow();
+			            $widgetDetail->widget_id = $widget->id;
+			            $widgetDetail->menuitem_id = null;
+			            $widgetDetail->save();
 			        }else {
 			            foreach ( $frmWidget->getValue('menuitem') as $mi )
 			            {
-			                $widgetDetail = new System_Model_Widgetdetail();
-			                $widgetDetail->setWidget($widget);
-			                $menuItem = new menu_Model_Item();
-			                $menuItem->setId($mi);
-			                $widgetDetail->setMenuItem($menuItem);
-			                $mdlWidgetDetail->save($widgetDetail);
+			                $widgetDetail = $mdlWidgetDetail->createRow();
+			                $widgetDetail->widget_id = $widget->id;
+			                $widgetDetail->menuitem_id = $mi;
+			                $widgetDetail->save();
 			            }
 			        }
 			        
@@ -388,9 +380,9 @@ class System_WidgetController extends Zend_Controller_Action
 			$this->view->widget = $element;
             
         } catch (Exception $e) {
-//             Zend_Debug::dump($e->getMessage());
-//             Zend_Debug::dump($e->getTraceAsString());
-//             die();
+            Zend_Debug::dump($e->getMessage());
+            Zend_Debug::dump($e->getTraceAsString());
+            die();
             $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
             $this->redirect('widgets');
         } 
@@ -407,22 +399,18 @@ class System_WidgetController extends Zend_Controller_Action
         try {
             $translate = Zend_Registry::get('Zend_Translate');
             $id = $this->getRequest()->getParam('id', 0);
-            $mdlWidget = System_Model_WidgetMapper::getInstance();
-            $widget = new System_Model_Widget();
-            $mdlWidget->find($id, $widget);
+            $mdlWidget = new System_Model_Widget();
+            $widget = $mdlWidget->find($id)->current();
             
-            if ( $widget->getIsPublished() == 0 ) {
-                $widget->setIsPublished(1);
+            if ( $widget->isPublished == 0 ) {
+                $widget->isPublished = 1;
         	} else {
-        	    $widget->setIsPublished(0);
+        	    $widget->isPublished = 0;
         	}
-        	$mdlWidget->save($widget);
+        	$widget->save();
         	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
         	$this->redirect('widgets');
         } catch (Exception $e) {
-//             Zend_Debug::dump($e->getMessage());
-//     	    Zend_Debug::dump($e->getTraceAsString());
-//     	    die();
             $this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
             $this->redirect('widgets');
         }
@@ -435,16 +423,20 @@ class System_WidgetController extends Zend_Controller_Action
      */
     public function deleteAction()
     {
+      $mdlWidget = new System_Model_Widget();
+      $adapter = $mdlWidget->getAdapter();
     	try {
         	$translate = Zend_Registry::get('Zend_Translate');
         	$id = $this->getRequest()->getParam('id', 0);
-            $mdlWidget = System_Model_WidgetMapper::getInstance();
-            $widget = new System_Model_Widget();
-            $widget->setId($id);
-        	$mdlWidget->remove($widget);
+            $adapter->beginTransaction();
+            $widget = $mdlWidget->createRow();
+            $widget->id = $id;
+            $widget->delete();
+        	$adapter->commit();
         	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The item was removed.") ) );
         	$this->redirect('widgets');
         } catch (Exception $e) {
+          $adapter->rollBack();
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('widgets');
         }
@@ -461,9 +453,8 @@ class System_WidgetController extends Zend_Controller_Action
         	$translate = Zend_Registry::get('Zend_Translate');
         	$id = $this->_request->getParam( 'id' );
         	$direction = $this->_request->getParam('direction');
-        	$mdlWidget = System_Model_WidgetMapper::getInstance();
-            $widget = new System_Model_Widget();
-            $mdlWidget->find($id, $widget);
+        	$mdlWidget = new System_Model_Widget();
+            $widget = $mdlWidget->find($id)->current();
         	
         	if ( !in_array($direction, array('down', 'up')) ) {
         		throw new Exception($translate->translate("Direction not found"));

@@ -25,16 +25,16 @@ class OS_Plugins_Widget extends Zend_Controller_Plugin_Abstract
             /* @var $acl Zend_Acl */
             $acl = Zend_Registry::get('ZendACL');
             
-            $mdlRoleMapper = Acl_Model_RoleMapper::getInstance();
-            $mdlWidgetMapper = System_Model_WidgetMapper::getInstance();
-            $mdlWidgetDetailMapper = System_Model_WidgetdetailMapper::getInstance();
-            $mdlResourceMapper = Acl_Model_ResourceMapper::getInstance();
-            $role = new Acl_Model_Role();
+            $mdlRole = new Acl_Model_Role();
+            $mdlWidget = new System_Model_Widget();
+            $mdlWidgetDetail = new System_Model_Widgetdetail();
+            $mdlResource = new Acl_Model_Resource();
+            $role = null;
             if ($auth->hasIdentity()) {
                 $identity = $auth->getIdentity();
-                $mdlRoleMapper->find( intval($identity->role_id), $role );
+                $role = $mdlRole->find( intval($identity->role_id) )->current();
             } else {
-                $mdlRoleMapper->find( 3, $role );
+                $role = $mdlRole->find( 3 )->current();
             }
 			
             $hookXml = APPLICATION_PATH . '/configs/hooks.xml';
@@ -45,25 +45,25 @@ class OS_Plugins_Widget extends Zend_Controller_Plugin_Abstract
                 $hooks[] = strval($hook);
             }
             
-            $widgets = $mdlWidgetDetailMapper->getWidgetsByHooksAndItemId($navItem->id, $hooks);
+            $widgets = $mdlWidgetDetail->getWidgetsByHooksAndItemId($navItem->id, $hooks);
             foreach ($widgets as $widget) {
                 $hookContent = '';
                 $params = array();
-                $widgetParams = Zend_Json::decode($widget->getParams());
+                $widgetParams = Zend_Json::decode($widget->params);
                 foreach ( $widgetParams as $strParam => $valParam ) {
                     $params[ $strParam ] = $valParam;
                 }
-                $resource = strtolower($widget->getResource()->getModule().':'.$widget->getResource()->getController());
-                $privilege = strtolower($widget->getResource()->getActioncontroller());
-                if ( $acl->isAllowed($role->getId(), $resource, $privilege) ) {
-                    $hookContent .= ($widget->getShowtitle() == 1) ? "<h3>".$widget->getTitle()."</h3>" : "";
+                $resource = strtolower($widget->module.':'.$widget->controller);
+                $privilege = strtolower($widget->actioncontroller);
+                if ( $acl->isAllowed($role->id, $resource, $privilege) ) {
+                    $hookContent .= ($widget->showtitle == 1) ? "<h3>".$widget->title."</h3>" : "";
                     $hookContent .= $viewHelperAction->action(
-                            $widget->getResource()->getActioncontroller(), 
-                            $widget->getResource()->getController(), 
-                            $widget->getResource()->getModule(), 
+                            $widget->actioncontroller, 
+                            $widget->controller, 
+                            $widget->module, 
                             $params);
                 }
-                Zend_Layout::getMvcInstance()->assign($widget->getPosition(), $hookContent);
+                Zend_Layout::getMvcInstance()->assign($widget->position, $hookContent);
             }
             
         } catch (Exception $e) {

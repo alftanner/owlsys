@@ -10,162 +10,107 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class System_Model_Widget extends OS_Entity
+class System_Model_Widget extends Zend_Db_Table_Abstract
 {
 
-    protected $_position;
-    protected $_title;
-    protected $_isPublished;
-    protected $_ordering;
-    protected $_params;
-    /**
-     * @var Acl_Model_Resource
-     */
-    protected $_resource;
-    /**
-     * Id from xml widget file 
-     * @var number
-     */
-    protected $_wid;
-    protected $_showtitle;
-	/**
-     * @return the $_position
-     */
-    public function getPosition ()
+  protected $_name = 'widget';
+  protected $_dependentTables = array ( 'System_Model_DbTable_Widgetdetail' );
+  
+  protected $_referenceMap = array (
+      'refWidgetResource' => array(
+          'columns'			=> array ( 'resource_id' ),
+          'refTableClass'	=> 'Acl_Model_DbTable_Resource',
+          'refColumns'		=> array ( 'id' ),
+      )
+  );
+  
+  function __construct() {
+    $this->_name = Zend_Registry::get('tablePrefix').$this->_name;
+    parent::__construct();
+  }
+  
+  /**
+   * returns the last position of a contact list according to the category they belong in ascending order
+   * @param Zend_Db_Table_Row_Abstractt $widget
+   * @return number
+   */
+  public function getLastPosition( $widget )
+  {
+    $select = $this->select()
+      ->where('position=?', $widget->position)
+      ->order("ordering DESC")
+      ->limit(1);
+    $row = $this->fetchRow($select);
+    if ( !$row ) return 0;
+    return $row->ordering;
+  }
+  
+  /**
+   * Returns a recordseet of widgets
+   * @return unknown
+   */
+  public function getList()
+  {
+    $rows = array();
+    $select = $this->select()
+      ->setIntegrityCheck(false)
+      ->from( array('wgt' => $this->_name), array('id', 'position', 'title', 'isPublished', 'ordering') )
+      ->joinInner( array('rs' => Zend_Registry::get('tablePrefix').'acl_resource'),
+        'rs.id = wgt.resource_id',
+        array('module', 'controller', 'actioncontroller', 'id AS resource_id') )
+      ->order('wgt.position')
+      ->order('wgt.ordering')
+    ;
+    $rows = $this->fetchAll($select);
+    return $rows;
+  }
+  
+  /**
+   * Moves the record position one above
+   * @param Zend_Db_Table_Row_Abstract $widget
+   */
+  public function moveUp( $widget )
+  {
+    $select = $this->select()
+      ->order('ordering DESC')
+      ->where("ordering < ?", $widget->ordering, Zend_Db::INT_TYPE)
+      ->where("position = ?", $widget->position);
+    $previousItem = $this->fetchRow($select);
+    if ( $previousItem )
     {
-        return $this->_position;
+      $previousPosition = $previousItem->ordering;
+      $previousItem->ordering = $widget->ordering;
+      $previousItem->save();
+      $widget->ordering = $previousPosition;
     }
-
-	/**
-     * @return the $_title
-     */
-    public function getTitle ()
+  }
+  
+  /**
+   * Moves the record position one down
+   * @param Zend_Db_Table_Row_Abstract $widget
+   */
+  public function moveDown($widget )
+  {
+    $select = $this->select()
+      ->order('ordering ASC')
+      ->where("ordering > ?", $widget->ordering, Zend_Db::INT_TYPE)
+      ->where("position = ?", $widget->position);
+    $nextItem = $this->fetchRow($select);
+    if ( $nextItem )
     {
-        return $this->_title;
+      $nextPosition = $nextItem->ordering;
+      $nextItem->ordering = $widget->ordering;
+      $nextItem->save();
+      $widget->ordering = $nextPosition;
     }
-
-	/**
-     * @return the $_isPublished
-     */
-    public function getIsPublished ()
-    {
-        return $this->_isPublished;
-    }
-
-	/**
-     * @return the $_ordering
-     */
-    public function getOrdering ()
-    {
-        return $this->_ordering;
-    }
-
-	/**
-     * @return the $_params
-     */
-    public function getParams ()
-    {
-        return $this->_params;
-    }
-
-	/**
-     * @return Acl_Model_Resource $_resource
-     */
-    public function getResource ()
-    {
-        return $this->_resource;
-    }
-
-	/**
-     * @return the $_wid
-     */
-    public function getWid ()
-    {
-        return $this->_wid;
-    }
-
-	/**
-     * @return the $_showtitle
-     */
-    public function getShowtitle ()
-    {
-        return $this->_showtitle;
-    }
-
-	/**
-     * @param field_type $_position
-     */
-    public function setPosition ($_position)
-    {
-        $this->_position = $_position;
-        return $this;
-    }
-
-	/**
-     * @param field_type $_title
-     */
-    public function setTitle ($_title)
-    {
-        $this->_title = $_title;
-        return $this;
-    }
-
-	/**
-     * @param field_type $_isPublished
-     */
-    public function setIsPublished ($_isPublished)
-    {
-        $this->_isPublished = $_isPublished;
-        return $this;
-    }
-
-	/**
-     * @param field_type $_ordering
-     */
-    public function setOrdering ($_ordering)
-    {
-        $this->_ordering = $_ordering;
-        return $this;
-    }
-
-	/**
-     * @param field_type $_params
-     */
-    public function setParams ($_params)
-    {
-        $this->_params = $_params;
-        return $this;
-    }
-
-	/**
-     * @param Acl_Model_Resource $_resource
-     */
-    public function setResource ($_resource)
-    {
-        $this->_resource = $_resource;
-        return $this;
-    }
-
-	/**
-     * @param number $_wid
-     */
-    public function setWid ($_wid)
-    {
-        $this->_wid = $_wid;
-        return $this;
-    }
-
-	/**
-     * @param field_type $_showtitle
-     */
-    public function setShowtitle ($_showtitle)
-    {
-        $this->_showtitle = $_showtitle;
-        return $this;
-    }
-
-    
-    
-
+  }
+  
+  public function remove( $widget )
+  {
+    $row = $this->find($widget->id)->current();
+    $menuItemsWidget = $row->findDependentRowset('System_Model_DbTable_Widgetdetail', 'refWidget');
+    foreach ( $menuItemsWidget as $miw ) $miw->delete();
+    $row->delete();
+  }
 }
 

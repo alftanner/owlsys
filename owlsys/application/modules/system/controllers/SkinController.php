@@ -17,7 +17,7 @@ class System_SkinController extends Zend_Controller_Action
     {
     	$translate = Zend_Registry::get('Zend_Translate');
         try {
-        	$mdlSkin = System_Model_SkinMapper::getInstance();
+        	$mdlSkin = new System_Model_Skin();
         	$adapter = $mdlSkin->getList();
         	$paginator = Zend_Paginator::factory($adapter);
         	$paginator->setItemCountPerPage(10);
@@ -33,27 +33,27 @@ class System_SkinController extends Zend_Controller_Action
     public function selectAction()
     {
     	$translate = Zend_Registry::get('Zend_Translate');
+    	$mdlSkin = new System_Model_Skin();
+    	$adapter = $mdlSkin->getAdapter();
     	try {
-    		 $id = $this->getRequest()->getParam('id', 0);
-    		 
-    		 $mdlSkin = System_Model_SkinMapper::getInstance();
-    		 $skin = new System_Model_Skin();
-    		 $skinSelected = new System_Model_Skin();
-    		 $mdlSkin->find($id, $skin);
-    		 
-    		 $adapter = $mdlSkin->getAdapter();
-    		 $adapter->beginTransaction();
-    		 $mdlSkin->getSkinSelected($skinSelected);
-    		 $skinSelected->setIsSelected(0);
-    		 $mdlSkin->save($skinSelected);
-    		 
-    		 $skin->setIsSelected(0);
-    		 $mdlSkin->save($skin);
-    		 $adapter->commit();
-    		 $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("LBL_CHANGES_SAVED") ) );
-    		 $this->redirect('skins-list');
+          $id = $this->getRequest()->getParam('id', 0);
+
+          $skinSelected = $mdlSkin->createRow();
+          $skin = $mdlSkin->find($id)->current();
+          
+          $adapter->beginTransaction();
+          $skinSelected = $mdlSkin->getSkinSelected();
+          $skinSelected->isSelected = 0;
+          $skinSelected->save();
+          
+          $skin->isSelected = 1;
+          $skin->save();
+          $adapter->commit();
+          $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("LBL_CHANGES_SAVED") ) );
+          $this->redirect('skins-list');
     		 
     	} catch (Exception $e) {
+    	  $adapter->rollBack();
     		$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('skins');
     	}

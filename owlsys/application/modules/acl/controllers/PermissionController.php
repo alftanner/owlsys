@@ -27,7 +27,6 @@ class Acl_PermissionController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        // action body
     }
     
     /**
@@ -40,16 +39,15 @@ class Acl_PermissionController extends Zend_Controller_Action
         try {
             $translate = Zend_Registry::get('Zend_Translate');
             $roleId = $this->getRequest()->getParam('role', 0);
-            $mdlRole = new Acl_Model_RoleMapper();
-            $role = new Acl_Model_Role();
-            $mdlRole->find($roleId, $role);
+            $mdlRole = new Acl_Model_Role();
+            $role = $mdlRole->find($roleId)->current();
              
             $frmManageResource = new Acl_Form_ManageResources();
-            $action = $this->_request->getBaseUrl() . "/permissions-update/".$role->getId();
+            $action = $this->_request->getBaseUrl() . "/permissions-update/".$role->id;
             $frmManageResource->setAction($action);
-            $frmManageResource->getElement('id')->setValue($role->getId());
-             
-            $mdlPermission = Acl_Model_PermissionMapper::getInstance();
+            $frmManageResource->getElement('id')->setValue($role->id);
+            
+            $mdlPermission = new Acl_Model_Permission();
             $privileges = $mdlPermission->getResourcesByRole($role);
             
             $zfelements = array();
@@ -58,14 +56,14 @@ class Acl_PermissionController extends Zend_Controller_Action
             $order = 1;
             
             foreach ( $privileges as $permission ) {
-                $resourceIds[] = $permission->getResource()->getId();
-                if ( !in_array($permission->getResource()->getModule(), $modules) ) {
-                    $modules[] = strtolower($permission->getResource()->getModule());
+                $resourceIds[] = $permission->resource_id;
+                if ( !in_array($permission->module, $modules) ) {
+                    $modules[] = strtolower($permission->module);
                 }
                 
-                $cbResource = new Zend_Form_Element_Select( "cb_res_".$permission->getResource()->getId() );
-                $zfelements[strtolower($permission->getResource()->getModule())][] = "cb_res_".$permission->getResource()->getId();
-                $lblResource = $permission->getResource()->getController().' / '.$permission->getResource()->getActioncontroller();
+                $cbResource = new Zend_Form_Element_Select( "cb_res_".$permission->resource_id );
+                $zfelements[strtolower($permission->module)][] = "cb_res_".$permission->resource_id;
+                $lblResource = $permission->controller.' / '.$permission->actioncontroller;
                 $cbResource->setLabel( $lblResource );
                 
                 $cbResource->addMultiOption( 0, $translate->translate("Deny") );
@@ -73,7 +71,7 @@ class Acl_PermissionController extends Zend_Controller_Action
                 
                 $cbResource->setOrder($order);
                 $frmManageResource->addElement( $cbResource );
-                $cbResource->setValue($permission->getIsAllowed());
+                $cbResource->setValue($permission->isAllowed);
                 $order++;
             }
             
@@ -108,48 +106,46 @@ class Acl_PermissionController extends Zend_Controller_Action
     public function updateAction()
     {
         $translate = Zend_Registry::get('Zend_Translate');
-        $adapter = null;
+        $mdlPermission = new Acl_Model_Permission();
+        $mdlRole = new Acl_Model_Role();
+        $adapter = $mdlPermission->getAdapter();
         try {
         	
         	$roleId = $this->getRequest()->getParam('id', 0);
-	        $mdlRole = new Acl_Model_RoleMapper();
-	        $role = new Acl_Model_Role();
-	        $mdlRole->find( $roleId, $role );
+	        $role = $mdlRole->find( $roleId )->current();
 	        
-	        $mdlPermission = new Acl_Model_PermissionMapper();
+	        $mdlPermission = new Acl_Model_Permission();
 	        $hrs = new Zend_Session_Namespace('resourceDataIds');
 	        $resources = $hrs->hrs; // Hidden ReSources hrs
 	        zend_session::namespaceUnset('resourceDataIds');
 	        
 	        $arrResources = explode(',', $resources);
 	        
-	        $adapter = $mdlPermission->getAdapter();
 	        $adapter->beginTransaction();
-	        $mdlPermission->delete($role);
+	        $mdlPermission->deleteByRole($role);
 	        
 	        foreach ($arrResources as $resourceId) {
-	            $permission = new Acl_Model_Permission();
-	            $permission->setIsAllowed( $this->getRequest()->getParam('cb_res_'.$resourceId, 0) );
-	            $resource = new Acl_Model_Resource();
-	            $resource->setId($resourceId);
-	            $permission->setResource($resource);
-	            $permission->setRole($role);
-	            $mdlPermission->save($permission);
+	          $permission = $mdlPermission->createRow();
+	          $permission->isAllowed = $this->getRequest()->getParam('cb_res_'.$resourceId, 0) ;
+	          $permission->resource_id = $resourceId;
+	          $permission->role_id = $role->id;
+              $permission->save();
 	        }
 	        
 	        $adapter->commit();
-	        $adapter->closeConnection();
-	        
 	        /* @var $cache Zend_Cache_Backend_File */
 	        $cache = Zend_Registry::get('cacheACL');
-            if ( $cache->test('cacheACL_'.$role->getId()) ) {
-                $cache->remove('cacheACL_'.$role->getId());
+            if ( $cache->test('cacheACL_'.$role->id) ) {
+                $cache->remove('cacheACL_'.$role->id);
             }
 	        
 	        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("Changes saved") ) );
 	        $this->redirect('roles');
         } catch (Exception $e) {
-            if ( $adapter != null ) $adapter->rollBack();
+            $adapter->rollBack();
+            Zend_Debug::dump($e->getMessage());
+            Zend_Debug::dump($e->getTraceAsString());
+            die();
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'header'=>'', 'message' => $e->getMessage() ) );
         	$this->redirect('roles');
         }

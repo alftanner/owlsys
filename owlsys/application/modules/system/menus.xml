@@ -18,7 +18,7 @@
 		<author>Roger Castañeda</author>
 		<datecreated>-</datecreated>
 		<module>system</module>
-		<controller>widtget</controller>
+		<controller>widget</controller>
 		<action>choose</action>
 		<version>1.0</version>
 		<menu_type>widget-choose</menu_type>

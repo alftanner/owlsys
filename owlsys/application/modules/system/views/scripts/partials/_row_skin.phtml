@@ -6,24 +6,23 @@
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-/* @var $skin System_Model_Skin */
 $skin = $this->skin;
 ?>
 <tr>
 	<td class="field">
-		<p class="info"><?php echo $skin->getName() ?></p>
-		<span class="muted"><?php echo $skin->getDescription() ?></span>
+		<p class="info"><?php echo $skin->name ?></p>
+		<span class="muted"><?php echo $skin->description ?></span>
 	</td>
-	<td class="center"><?php echo $skin->getAuthor() ?></td>
-	<td class="center"><?php echo $skin->getLicense() ?></td>
+	<td class="center"><?php echo $skin->author ?></td>
+	<td class="center"><?php echo $skin->license ?></td>
 	
 	<td>
-		<?php if ( $skin->getIsSelected() == 1 ): ?>
+		<?php if ( $skin->isSelected == 1 ): ?>
 		  <a href="#" class="btn btn-mini btn-success">
 			<i class="icon-ok icon-white"></i>
 		  </a>
 		<?php else: ?>
-			<a href='<?=$this->baseUrl('skin-select/'.$skin->getId())?>' class="btn btn-mini">
+			<a href='<?=$this->baseUrl('skin-select/'.$skin->id)?>' class="btn btn-mini">
 				<i class="icon-screenshot icon-white"></i>
 			</a>
 		<?php endif; ?>

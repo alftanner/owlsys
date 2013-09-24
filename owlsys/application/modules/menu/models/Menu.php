@@ -10,93 +10,59 @@
  * @author roger castañeda <rogercastanedag@gmail.com>
  * @version 1
  */
-class menu_Model_Menu extends OS_Entity
+class menu_Model_Menu extends Zend_Db_Table_Abstract
 {
+  protected $_name = 'menu';
+  
+  protected $_dependentTables = array ( 'menu_Model_DbTable_Item' );
+  
+  function __construct() {
+    $this->_name = Zend_Registry::get('tablePrefix').$this->_name;
+    parent::__construct();
+  }
+  
+  public function getMenus()
+  {
+    $select = $this->select();
+    $select->order('id');
+    return $this->fetchAll($select);
+  }
+  
+  /**
+   * Return a list of menus filtered by status
+   * @param int $status
+   * @return Ambigous <multitype:, Zend_Db_Table_Rowset_Abstract, mixed, false, boolean, string>
+   */
+  public function getByStatus( $status )
+  {
+    $rows = array();
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'menu_getByStatus_'.$status;
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $select = $this->select();
+      $select->order('id');
+      $select->where('isPublished=?', $status, Zend_Db::INT_TYPE);
+      $rows = $this->fetchAll($select);
+      $cache->save($rows, $cacheId);
+    }
+    return $rows;
+  }
+  
+  /**
+   *
+   * @param menu_Model_Menu $menu
+   */
+  public function remove($menu)
+  {
+    $select = $this->select()
+     ->where('id=?',$menu->id, Zend_Db::INT_TYPE)
+    ;
+    $row = $this->fetchRow($select);
+    $row->delete();
+  }
 
-    protected $_name;
-    protected $_isPublished;
-    /**
-     * @var menu_Model_Item[]
-     */
-    protected $_menuItems;
-    
-	/**
-     * @return the $_name
-     */
-    public function getName ()
-    {
-        return $this->_name;
-    }
 
-	/**
-     * @return the $_isPublished
-     */
-    public function getIsPublished ()
-    {
-        return $this->_isPublished;
-    }
-
-	/**
-     * @param field_type $name
-     */
-    public function setName ($name)
-    {
-        $this->_name = $name;
-        return $this;
-    }
-
-	/**
-     * @param field_type $isPublished
-     */
-    public function setIsPublished ($isPublished)
-    {
-        $this->_isPublished = $isPublished;
-        return $this;
-    }
-
-    /**
-     * @return menu_Model_Item[] $_menuItems
-     */
-    public function getChildren ()
-    {
-        return $this->_menuItems;
-    }
-    
-    /**
-     * @param multitype:menu_Model_Item $children
-     */
-    public function setChildren ($children)
-    {
-        $this->_menuItems = $children;
-        return $this;
-    }
-
-    /**
-     * 
-     * @param menu_Model_Item $menuItem
-     * @return menu_Model_Menu
-     */
-    public function addChild(menu_Model_Item $menuItem)
-    {
-        if ( count($this->_menuItems) == 0 ) {
-            $this->_menuItems[] = $menuItem;
-            return $this;
-        }
-        $bolExists = false;
-        foreach ( $this->_menuItems as $child )
-        {
-            if ( $child->getId() == $menuItem->getId() ) {
-                $bolExists = true;
-                break;
-            }
-        }
-        if ( $bolExists == false ) {
-            $this->_menuItems[] = $menuItem;
-        }
-        return $this;
-    }
-    
-    
 }
-
-

@@ -10,11 +10,11 @@
 $resource = $this->resource;
 ?>
 <tr>
-	<td><?php echo $resource->getModule() ?></td>
-	<td><?php echo $resource->getController() ?></td>
-	<td><?php echo $resource->getActioncontroller() ?></td>
+	<td><?php echo $resource->module ?></td>
+	<td><?php echo $resource->controller ?></td>
+	<td><?php echo $resource->actioncontroller ?></td>
 	<td class="center">
-		<a href='<?=$this->baseUrl('resource-delete/'.$resource->getId())?>' class="btn btn-mini btn-danger xdialog">
+		<a href='<?=$this->baseUrl('resource-delete/'.$resource->id)?>' class="btn btn-mini btn-danger xdialog">
 			<i class="icon-trash icon-white"></i>
 			<?php echo $this->translate('Remove') ?>
 		</a>

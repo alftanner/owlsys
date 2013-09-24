@@ -73,9 +73,9 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
             ->addValidator(new Zend_Validate_StringLength(array('min' => '6')));
         $this->addElement($txtPassword2);
         
-        $mdlRole = Acl_Model_RoleMapper::getInstance();
+        $mdlRole = new Acl_Model_Role();
         $roles = $mdlRole->getList();
-        $cbRole = $this->createElement("select", "role")
+        $cbRole = $this->createElement("select", "role_id")
             ->setLabel("Role")
             ->setRequired(TRUE);
         // >addMultiOption ( 0, "LABEL_SELECT_ROLE" );
