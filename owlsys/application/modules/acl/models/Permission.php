@@ -18,12 +18,12 @@ class Acl_Model_Permission extends Zend_Db_Table_Abstract
   protected $_referenceMap = array (
       'Resource' => array(
           'columns'		=> array ( 'resource_id' ),
-          'refTableClass'	=> 'Acl_Model_DbTable_Resource',
+          'refTableClass'	=> 'Acl_Model_Resource',
           'refColumns'	=> array ( 'id' ),
       ),
       'Role' => array(
           'columns'		=> array ( 'role_id' ),
-          'refTableClass'	=> 'Acl_Model_DbTable_Role',
+          'refTableClass'	=> 'Acl_Model_Role',
           'refColumns'	=> array ( 'id' ),
       ),
   );

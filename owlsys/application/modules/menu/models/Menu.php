@@ -14,7 +14,7 @@ class menu_Model_Menu extends Zend_Db_Table_Abstract
 {
   protected $_name = 'menu';
   
-  protected $_dependentTables = array ( 'menu_Model_DbTable_Item' );
+  protected $_dependentTables = array ( 'menu_Model_Item' );
   
   function __construct() {
     $this->_name = Zend_Registry::get('tablePrefix').$this->_name;

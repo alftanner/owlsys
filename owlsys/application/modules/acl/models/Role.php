@@ -13,7 +13,7 @@
 class Acl_Model_Role extends Zend_Db_Table_Abstract
 {
   protected $_name = 'acl_role';
-  protected $_dependentTables = array ( 'Acl_Model_DbTable_Permission', 'Acl_Model_DbTable_Account' );
+  protected $_dependentTables = array ( 'Acl_Model_Permission', 'Acl_Model_Account' );
   
   function __construct ()
   {

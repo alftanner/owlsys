@@ -44,7 +44,7 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
 			->setDecorators(array('ViewHelper'));
 		$this->addElement($id);
 		
-		$menuId = $this->createElement('hidden', 'menu')
+		$menuId = $this->createElement('hidden', 'menu_id')
 			->setOrder(2)
 			->setRequired(TRUE)
 			->setDecorators(array('ViewHelper'));
@@ -78,7 +78,7 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
 			#->addValidator( new Zend_Validate_Alnum() );
 		$this->addElement($txtAlias);
 		
-		$cbParent = $this->createElement('select', 'parent')
+		$cbParent = $this->createElement('select', 'parent_id')
 			->setOrder(6)
 			->setLabel( "Parent" )
 			->setRequired(true);
@@ -131,7 +131,7 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
         ;
         $this->addElement( $mId );
         
-        $hResource = $this->createElement("hidden", "resource")
+        $hResource = $this->createElement("hidden", "resource_id")
         	->setOrder(99997)
         	->setRequired(true)
         	->setDecorators( array('ViewHelper') )

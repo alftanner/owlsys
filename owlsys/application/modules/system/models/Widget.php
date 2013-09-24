@@ -14,12 +14,12 @@ class System_Model_Widget extends Zend_Db_Table_Abstract
 {
 
   protected $_name = 'widget';
-  protected $_dependentTables = array ( 'System_Model_DbTable_Widgetdetail' );
+  protected $_dependentTables = array ( 'System_Model_Widgetdetail' );
   
   protected $_referenceMap = array (
       'refWidgetResource' => array(
           'columns'			=> array ( 'resource_id' ),
-          'refTableClass'	=> 'Acl_Model_DbTable_Resource',
+          'refTableClass'	=> 'Acl_Model_Resource',
           'refColumns'		=> array ( 'id' ),
       )
   );

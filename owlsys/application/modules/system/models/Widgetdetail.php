@@ -17,12 +17,12 @@ class System_Model_Widgetdetail extends Zend_Db_Table_Abstract
   protected $_referenceMap = array (
       'refWidget' => array(
           'columns'			=> array ( 'widget_id' ),
-          'refTableClass'	    => 'System_Model_DbTable_Widget',
+          'refTableClass'	    => 'System_Model_Widget',
           'refColumns'		=> array ( 'id' ),
       ),
       'refMenuItem' => array(
           'columns'			=> array ( 'menuitem_id' ),
-          'refTableClass'	    => 'menu_Model_DbTable_Item',
+          'refTableClass'	    => 'menu_Model_Item',
           'refColumns'		=> array ( 'id' ),
       )
   );

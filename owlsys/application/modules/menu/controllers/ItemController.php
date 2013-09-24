@@ -116,7 +116,7 @@ class Menu_ItemController extends Zend_Controller_Action
     		$frmMenuItem->getElement('resource')->setValue( $resource->id );
     		$frmMenuItem->getElement('route')->setValue( $element->menu_type );
     		
-    		$cbParentItem = $frmMenuItem->getElement('parent');
+    		$cbParentItem = $frmMenuItem->getElement('parent_id');
     		$mdlMenuItem = new menu_Model_Item();
     		$menuItemList = $mdlMenuItem->getListByMenu($menu);
     		$cbParentItem->addMultiOption( 0, $translate->translate("MENU_NOT_PARENT") );
@@ -158,6 +158,7 @@ class Menu_ItemController extends Zend_Controller_Action
 					$menuItem->route = $frmMenuItem->getValue('route');
 					$menuItem->title = $frmMenuItem->getValue('title');
 					$menuItem->wtype = $frmMenuItem->getValue('wtype');
+					$menuItem->parent_id = $frmMenuItem->getValue('parent_id');
 					
 					$params = array();
 					foreach ( $frmMIValues as $wvk => $wv )
@@ -236,12 +237,12 @@ class Menu_ItemController extends Zend_Controller_Action
         	
         	$mdlMenu = new menu_Model_Menu();
         	$mdlMenuItem = new menu_Model_Item();
+        	$mdlResource = new Acl_Model_Resource();
         	
         	$id = (int)$this->getRequest()->getParam('id', 0);
         	$direction = $this->_request->getParam('direction');
         	$menuItem = $mdlMenuItem->find($id)->current();
         	
-        	$mdlResource = new Acl_Model_Resource();
         	$resource = $mdlResource->find($menuItem->resource_id)->current();
         	
         	$menuFile = APPLICATION_PATH.'/modules/'.$resource->module.'/menus.xml';
@@ -263,11 +264,13 @@ class Menu_ItemController extends Zend_Controller_Action
         	$frmMenuItem = ( strtolower(strval($element->module)) == 'menu' ) ? 'menu_Form_Menuitems' : $frmMenuItem;
         	/* @var $frmMenuItem menu_Form_Item */
         	$frmMenuItem = new $frmMenuItem( array('menuType'=>strtolower(strval($element->menu_type))) );
+        	$frmMenuItem->removeElement('menu_id');
+        	$frmMenuItem->removeElement('resource_id');
         	
         	$menu = $mdlMenu->find($menuItem->menu_id)->current();
         	$this->view->menu = $menu;
         	
-        	$cbParentItem = $frmMenuItem->getElement('parent');
+        	$cbParentItem = $frmMenuItem->getElement('parent_id');
         	$menuItemList = $mdlMenuItem->getAllByMenu($menu);
         	$cbParentItem->addMultiOption( 0, $translate->translate("MENU_NOT_PARENT") );
         	if ( count($menuItemList) > 0 ) {
@@ -292,8 +295,8 @@ class Menu_ItemController extends Zend_Controller_Action
         	        $menuItem->route = $frmMenuItem->getValue('route');
         	        $menuItem->title = $frmMenuItem->getValue('title');
         	        $menuItem->wtype = $frmMenuItem->getValue('wtype');
+        	        $menuItem->parent_id = $frmMenuItem->getValue('parent_id');
         	        
-        	        $frmMIValues = $frmMenuItem->getValues();
         	        $params = array();
         	        foreach ( $frmMIValues as $wvk => $wv )
         	        {
@@ -307,16 +310,16 @@ class Menu_ItemController extends Zend_Controller_Action
         	        
         	        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Menu item updated") ) );
         	        $this->redirect('menu-items/'.$menu->id);
-        	    } 
+        	    } else {
+        	      Zend_Debug::dump( $frmMenuItem->getMessages() );
+        	    }
         	    
         	} else {
         	    $data = $menuItem->toArray();
         	    $values = array(
         	            'id' => $menuItem->id,
         	            'route' => $menuItem->route,
-                        'menu' => $menuItem->menu_id,
-                        'resource' => $menuItem->resource_id,
-                        'parent' => $menuItem->parent_id,
+                        'parent_id' => $menuItem->parent_id,
                         'wtype' => $menuItem->wtype,
                         'published' => $menuItem->isPublished,
                         'title' => $menuItem->title,

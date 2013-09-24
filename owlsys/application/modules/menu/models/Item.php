@@ -14,22 +14,22 @@ class menu_Model_Item extends Zend_Db_Table_Abstract
 {
   protected $_name = 'menu_item';
   
-  protected $_dependentTables = array( 'menu_Model_DbTable_Menu', 'System_Model_DbTable_Widgetdetail' );
+  protected $_dependentTables = array( 'menu_Model_menu', 'System_Model_Widgetdetail' );
   
   protected $_referenceMap = array(
       'refMenu' => array(
           'columns' 			=> array('menu_id'),
-          'refTableClass' 	=> 'menu_Model_DbTable_Menu',
+          'refTableClass' 	=> 'menu_Model_Menu',
           'refColumns'		=> array('id'),
       ),
       'refParent' => array(
           'columns' 			=> array('parent_id'),
-          'refTableClass' 	=> 'menu_Model_DbTable_Item',
+          'refTableClass' 	=> 'menu_Model_Item',
           'refColumns'		=> array('id'),
       ),
       'refResource' => array(
           'columns' 			=> array('resource_id'),
-          'refTableClass' 	=> 'Acl_Model_DbTable_Resource',
+          'refTableClass' 	=> 'Acl_Model_Resource',
           'refColumns'		=> array('id'),
       ),
   );
@@ -52,23 +52,23 @@ class menu_Model_Item extends Zend_Db_Table_Abstract
     $prefix = Zend_Registry::get('tablePrefix');
     $items = array();
     /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
-    //         $cache = Zend_Registry::get('cache');
-    //         $cacheId = 'menuItem_getListBymenu_'.$menu->getId();
-    //         if ( $cache->test($cacheId) ) {
-    //             $items = $cache->load($cacheId);
-    //         } else {
-    $select = $this->select()
-      ->setIntegrityCheck(false)
-      ->from( array('it'=> $this->_name), array('id', 'ordering', 'icon', 'wtype', 'title', 'route', 'isPublished', 'description') ) # item
-      ->joinLeft( array('itp' => $prefix.'menu_item'), 'it.parent_id = itp.id', array('title AS parent_title', 'id AS parent_id') ) # item parent
-      ->joinInner( array('rs' => $prefix.'acl_resource'), 'rs.id = it.resource_id', array('module', 'controller', 'actioncontroller') ) # resource
-      ->where("it.menu_id = ?", $menu->id, Zend_Db::INT_TYPE)
-      ->order('it.parent_id')
-      ->order('it.ordering ASC')
-    ;
-    $items = $this->fetchAll($select);
-    //             $cache->save($items, $cacheId);
-    //         }
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'menuItem_getListBymenu_'.$menu->getId();
+    if ( $cache->test($cacheId) ) {
+        $items = $cache->load($cacheId);
+    } else {
+      $select = $this->select()
+        ->setIntegrityCheck(false)
+        ->from( array('it'=> $this->_name), array('id', 'ordering', 'icon', 'wtype', 'title', 'route', 'isPublished', 'description') ) # item
+        ->joinLeft( array('itp' => $prefix.'menu_item'), 'it.parent_id = itp.id', array('title AS parent_title', 'id AS parent_id') ) # item parent
+        ->joinInner( array('rs' => $prefix.'acl_resource'), 'rs.id = it.resource_id', array('module', 'controller', 'actioncontroller') ) # resource
+        ->where("it.menu_id = ?", $menu->id, Zend_Db::INT_TYPE)
+        ->order('it.parent_id')
+        ->order('it.ordering ASC')
+      ;
+      $items = $this->fetchAll($select);
+        $cache->save($items, $cacheId);
+    }
     return $items;
   }
   

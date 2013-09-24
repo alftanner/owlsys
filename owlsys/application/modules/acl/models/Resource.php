@@ -14,7 +14,7 @@ class Acl_Model_Resource extends Zend_Db_Table_Abstract
 {
   protected $_name = 'acl_resource';
   
-  protected $_dependentTables = array ( 'Acl_Model_DbTable_Permission', 'menu_Model_DbTable_Item', 'System_Model_DbTable_Widget' );
+  protected $_dependentTables = array ( 'Acl_Model_Permission', 'menu_Model_Item', 'System_Model_Widget' );
   
   function __construct() {
     $this->_name = Zend_Registry::get('tablePrefix').$this->_name;
@@ -92,11 +92,7 @@ class Acl_Model_Resource extends Zend_Db_Table_Abstract
   
   public function remove( $resource )
   {
-    $select = $this->select()
-      ->where('id=?',$resource->id, Zend_Db::INT_TYPE)
-      ->limit(1)
-    ;
-    $row = $this->fetchRow($select);
-    $row->delete();
+    $where = $this->getAdapter()->quoteInto('id = ?', $resource->id);
+    $this->delete($where);
   }
 }
