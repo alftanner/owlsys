@@ -143,6 +143,7 @@ class Menu_MenuController extends Zend_Controller_Action
             $paginator->setItemCountPerPage(10);
             $pageNumber = $this->getRequest()->getParam('page',1);
             $paginator->setCurrentPageNumber($pageNumber);
+            $paginator->setCacheEnabled(true);
             $this->view->menus = $paginator;
         } catch (Exception $e) {
             echo $e->getMessage();

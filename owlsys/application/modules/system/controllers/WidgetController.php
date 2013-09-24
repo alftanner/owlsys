@@ -76,6 +76,7 @@ class System_WidgetController extends Zend_Controller_Action
         	$paginator->setItemCountPerPage(10);
         	$pageNumber = $this->getRequest()->getParam('page',1);
         	$paginator->setCurrentPageNumber($pageNumber);
+        	$paginator->setCacheEnabled(true);
         	$this->view->widgets = $paginator;
         } catch (Exception $e) {
         	echo $e->getMessage();
