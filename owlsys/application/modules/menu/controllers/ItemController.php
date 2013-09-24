@@ -115,8 +115,8 @@ class Menu_ItemController extends Zend_Controller_Action
     		
     		$frmMenuItem->getElement('mid')->setValue( (int) $mid );
     		$frmMenuItem->getElement('mod')->setValue( strval($module) );
-    		$frmMenuItem->getElement('menu')->setValue( $menuId );
-    		$frmMenuItem->getElement('resource')->setValue( $resource->id );
+    		$frmMenuItem->getElement('menu_id')->setValue( $menuId );
+    		$frmMenuItem->getElement('resource_id')->setValue( $resource->id );
     		$frmMenuItem->getElement('route')->setValue( $element->menu_type );
     		
     		$cbParentItem = $frmMenuItem->getElement('parent_id');
@@ -174,6 +174,11 @@ class Menu_ItemController extends Zend_Controller_Action
 					$menuItem->params = Zend_Json::encode($params);
 					$menuItem->save();
 					
+					/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+					$cache = Zend_Registry::get('cache');
+					$cacheId = 'menuItem_getListBymenu_'.$menuItem->menu_id;
+					if ( $cache->test($cacheId) ) $cache->remove($cacheId);
+					
 					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("MENU_ITEM_ADDED_SUCCESSFULLY") ) );
 					$this->redirect('menu-items/'.$menu->id);
     		    } 
@@ -216,6 +221,12 @@ class Menu_ItemController extends Zend_Controller_Action
         	} elseif ( $direction == "down" ) {
         		$mdlMenuItem->moveDown($menuItem);
         	}
+        	
+        	/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+        	$cache = Zend_Registry::get('cache');
+        	$cacheId = 'menuItem_getListBymenu_'.$menuItem->menu_id;
+        	if ( $cache->test($cacheId) ) $cache->remove($cacheId);
+        	
         	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The item was moved") ) );
         	$this->redirect('menu-items/'.$menuItem->menu_id);
         } catch (Exception $e) {
@@ -373,6 +384,11 @@ class Menu_ItemController extends Zend_Controller_Action
         	}
         	$menuItem->save();
         	
+        	/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+        	$cache = Zend_Registry::get('cache');
+        	$cacheId = 'menuItem_getListBymenu_'.$menuItem->menu_id;
+        	if ( $cache->test($cacheId) ) $cache->remove($cacheId);
+        	
         	$this->redirect('menu-items/'.$menuItem->menu_id);
         } catch (Exception $e) {
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
@@ -398,6 +414,11 @@ class Menu_ItemController extends Zend_Controller_Action
         	
         	$menuId = $menuItem->menu_id;
         	$menuItem->delete();
+        	
+        	/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+        	$cache = Zend_Registry::get('cache');
+        	$cacheId = 'menuItem_getListBymenu_'.$menuId;
+        	if ( $cache->test($cacheId) ) $cache->remove($cacheId);
         	
         	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Menu item deleted") ) );
         	$this->redirect('menu-items/'.$menuId);
