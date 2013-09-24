@@ -54,6 +54,9 @@ class Menu_ItemController extends Zend_Controller_Action
         	$this->view->menu = $menu;
         	$this->view->rows = $menuItems;
         } catch (Exception $e) {
+//           Zend_Debug::dump($e->getMessage());
+//     	    Zend_Debug::dump($e->getTraceAsString());
+//     	    die();
         	$this->_helper->flashMessenger->addMessage( array('type'=>'error', 'message' => $e->getMessage() ) );
         	$this->redirect('menus');
         }

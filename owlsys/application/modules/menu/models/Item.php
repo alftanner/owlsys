@@ -53,7 +53,7 @@ class menu_Model_Item extends Zend_Db_Table_Abstract
     $items = array();
     /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
     $cache = Zend_Registry::get('cache');
-    $cacheId = 'menuItem_getListBymenu_'.$menu->getId();
+    $cacheId = 'menuItem_getListBymenu_'.$menu->id;
     if ( $cache->test($cacheId) ) {
         $items = $cache->load($cacheId);
     } else {
