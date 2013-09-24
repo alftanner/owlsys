@@ -67,7 +67,7 @@ class menu_Model_Item extends Zend_Db_Table_Abstract
         ->order('it.ordering ASC')
       ;
       $items = $this->fetchAll($select);
-        $cache->save($items, $cacheId);
+      $cache->save($items, $cacheId, array('menuItems'));
     }
     return $items;
   }
@@ -159,7 +159,7 @@ class menu_Model_Item extends Zend_Db_Table_Abstract
         ->where('it.isVisible=1')
       ;
       $rows = $this->fetchAll($select);
-      $cache->save($rows, $cacheId);
+      $cache->save($rows, $cacheId, array('menuItems'));
     }
     return $rows;
   }
@@ -187,7 +187,7 @@ class menu_Model_Item extends Zend_Db_Table_Abstract
       ;
       //Zend_Debug::dump($select->__toString());
       $rows = $this->fetchAll($select);
-      $cache->save($rows, $cacheId);
+      $cache->save($rows, $cacheId, array('menuItems'));
     }
     return $rows;
   }
@@ -213,19 +213,21 @@ class menu_Model_Item extends Zend_Db_Table_Abstract
       ;
       //Zend_Debug::dump($select->__toString());
       $rows = $this->fetchAll($select);
-      $cache->save($rows, $cacheId);
+      $cache->save($rows, $cacheId, array('menuItems'));
     }
     return $rows;
   }
   
-  /**
-   * Remove a menu item
-   * @param Zend_Db_Table_Row_Abstract $menuItem
-   */
-  public function remove($menuItem)
+  function save( Zend_Db_Table_Row_Abstract $menuItem )
   {
-    $row = $this->find($menuItem->id)->current();
-    $row->delete();
-  }	
+    if ( $menuItem->id < 1 ) {
+      $menuItem->ordering = $this->getLastPosition($menuItem)+1;
+    }
+    $menuItem->save();
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cache->clean('all', array('menuItems'));
+  }
+  
 }
 

@@ -121,6 +121,11 @@ class Menu_MenuController extends Zend_Controller_Action
             $mdlMenu = new menu_Model_Menu();
             $menu = $mdlMenu->find($id)->current();
             $menu->delete();
+            
+            /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+            $cache = Zend_Registry::get('cache');
+            $cache->clean('all', array('menuItems'));
+            
             $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The menu was deleted") ) );
             $this->redirect('menus');
         } catch (Exception $e) {
@@ -171,6 +176,11 @@ class Menu_MenuController extends Zend_Controller_Action
             	$menu->isPublished = 1;
             }
             $menu->save();
+            
+            /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+            $cache = Zend_Registry::get('cache');
+            $cache->clean('all', array('menuItems'));
+            
             $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
             $this->redirect('menus');
         } catch (Exception $e) {

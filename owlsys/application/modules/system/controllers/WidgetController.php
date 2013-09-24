@@ -99,11 +99,6 @@ class System_WidgetController extends Zend_Controller_Action
       
       $adapter = $mdlMI->getAdapter();
       
-      /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
-//       $cache = Zend_Registry::get('cache');
-//       Zend_Debug::dump($cache->getTags());
-      
-      
         try {
             $translate = Zend_Registry::get('Zend_Translate');
             $module = $this->getRequest()->getParam('mod');
@@ -196,7 +191,7 @@ class System_WidgetController extends Zend_Controller_Action
 			        $widget->resource_id = $resource->id;
 			        $widget->params = Zend_Json::encode($params);
 			        
-			        $widget->save();
+			        $mdlWidget->save($widget);
 // 			        Zend_Debug::dump($resource->toArray());
 // 			        Zend_Debug::dump($widget->toArray());
 // 			        die();
@@ -217,6 +212,10 @@ class System_WidgetController extends Zend_Controller_Action
 				        }
 			        }
 			        $adapter->commit();
+			        
+			        /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+			        $cache = Zend_Registry::get('cache');
+			        $cache->clean('all', array('menuItems'));
 			        
 			        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("New widget added") ) );
 			        $this->redirect('widgets');
@@ -353,7 +352,7 @@ class System_WidgetController extends Zend_Controller_Action
 			        $widget->wid = $frmWidget->getValue('wid');
 			        $widget->params = Zend_Json::encode($params);
 			        
-			        $widget->save();
+			        $mdlWidget->save($widget);
 			        $mdlWidgetDetail->deleteByWidget($widget);
 			        if ( $frmWidget->getElement('renderfor')->getValue() == 0 )
 			        {
@@ -372,6 +371,11 @@ class System_WidgetController extends Zend_Controller_Action
 			        }
 			        
 			        $adapter->commit();
+			        
+			        /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+			        $cache = Zend_Registry::get('cache');
+			        $cache->clean('all', array('menuItems'));
+			        
 			        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
 			        $this->redirect('widgets');
 			    }
@@ -409,6 +413,11 @@ class System_WidgetController extends Zend_Controller_Action
         	    $widget->isPublished = 0;
         	}
         	$widget->save();
+        	
+        	/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+        	$cache = Zend_Registry::get('cache');
+        	$cache->clean('all', array('menuItems'));
+        	
         	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
         	$this->redirect('widgets');
         } catch (Exception $e) {
@@ -432,8 +441,13 @@ class System_WidgetController extends Zend_Controller_Action
             $adapter->beginTransaction();
             $widget = $mdlWidget->createRow();
             $widget->id = $id;
-            $widget->delete();
+            $mdlWidget->remove($widget);
         	$adapter->commit();
+        	
+        	/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+        	$cache = Zend_Registry::get('cache');
+        	$cache->clean('all', array('menuItems'));
+        	
         	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The item was removed.") ) );
         	$this->redirect('widgets');
         } catch (Exception $e) {
@@ -465,6 +479,11 @@ class System_WidgetController extends Zend_Controller_Action
         	} elseif ( $direction == "down" ) {
         		$mdlWidget->moveDown($widget);
         	}
+        	
+        	/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+        	$cache = Zend_Registry::get('cache');
+        	$cache->clean('all', array('menuItems'));
+        	
         	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The widget was moved") ) );
         	$this->redirect('widgets');
         } catch (Exception $e) {

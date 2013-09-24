@@ -52,16 +52,24 @@ class System_Model_Widget extends Zend_Db_Table_Abstract
   public function getList()
   {
     $rows = array();
-    $select = $this->select()
-      ->setIntegrityCheck(false)
-      ->from( array('wgt' => $this->_name), array('id', 'position', 'title', 'isPublished', 'ordering') )
-      ->joinInner( array('rs' => Zend_Registry::get('tablePrefix').'acl_resource'),
-        'rs.id = wgt.resource_id',
-        array('module', 'controller', 'actioncontroller', 'id AS resource_id') )
-      ->order('wgt.position')
-      ->order('wgt.ordering')
-    ;
-    $rows = $this->fetchAll($select);
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'system_widget_getList';
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $select = $this->select()
+        ->setIntegrityCheck(false)
+        ->from( array('wgt' => $this->_name), array('id', 'position', 'title', 'isPublished', 'ordering') )
+        ->joinInner( array('rs' => Zend_Registry::get('tablePrefix').'acl_resource'),
+          'rs.id = wgt.resource_id',
+          array('module', 'controller', 'actioncontroller', 'id AS resource_id') )
+        ->order('wgt.position')
+        ->order('wgt.ordering')
+      ;
+      $rows = $this->fetchAll($select);
+      $cache->save($rows, $cacheId, array('widgets'));
+    }
     return $rows;
   }
   
@@ -105,6 +113,10 @@ class System_Model_Widget extends Zend_Db_Table_Abstract
     }
   }
   
+  /**
+   * 
+   * @param Zend_Db_Table_Row_Abstract $widget
+   */
   public function remove( $widget )
   {
     $row = $this->find($widget->id)->current();
@@ -112,5 +124,18 @@ class System_Model_Widget extends Zend_Db_Table_Abstract
     foreach ( $menuItemsWidget as $miw ) $miw->delete();
     $row->delete();
   }
+
+  /**
+   * 
+   * @param Zend_Db_Table_Row_Abstract $widget
+   */
+  public function save($widget)
+  {
+    if ( $widget->id < 1 ) {
+      $widget->ordering = $this->getLastPosition($widget)+1;
+    }
+    $widget->save();
+  }
+  
 }
 

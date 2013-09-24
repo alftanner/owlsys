@@ -70,19 +70,19 @@ class System_Model_Widgetdetail extends Zend_Db_Table_Abstract
       if ( $cache->test($cacheId) ) {
         $rows = $cache->load($cacheId);
       } else {
-      $select = $this->select();
-      $select->setIntegrityCheck(false);
-      $select->from( array('wgt' => $prefix.'widget'), array('id AS widget_id', 'position', 'title', 'ordering', 'params', 'resource_id', 'wid', 'showtitle') );
-      $select->joinInner( array('wd'=> $this->_name), 'wgt.id = wd.widget_id', null );
-      $select->joinInner( array('rs' => $prefix.'acl_resource'), 'rs.id = wgt.resource_id', array('module', 'controller', 'actioncontroller') );
-      $select->where( 'IFNULL(wd.menuitem_id,0)=?',$itemId );
-      $select->where( 'wgt.position IN(?)', $hooks );
-      $select->where('wgt.isPublished=1');
-      $select->where( 'wgt.isPublished=1' );
-      $select->order( 'wgt.position ASC' );
-      $select->order( 'wgt.ordering ASC' );
-      $rows = $this->fetchAll($select);
-      $cache->save($rows, $cacheId, array('getWidgetsByHooksAndItemId'));
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from( array('wgt' => $prefix.'widget'), array('id AS widget_id', 'position', 'title', 'ordering', 'params', 'resource_id', 'wid', 'showtitle') );
+        $select->joinInner( array('wd'=> $this->_name), 'wgt.id = wd.widget_id', null );
+        $select->joinInner( array('rs' => $prefix.'acl_resource'), 'rs.id = wgt.resource_id', array('module', 'controller', 'actioncontroller') );
+        $select->where( 'IFNULL(wd.menuitem_id,0)=?',$itemId );
+        $select->where( 'wgt.position IN(?)', $hooks );
+        $select->where('wgt.isPublished=1');
+        $select->where( 'wgt.isPublished=1' );
+        $select->order( 'wgt.position ASC' );
+        $select->order( 'wgt.ordering ASC' );
+        $rows = $this->fetchAll($select);
+        $cache->save($rows, $cacheId, array('widgets'));
     }
     return $rows;
   }

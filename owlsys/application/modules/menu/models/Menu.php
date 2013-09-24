@@ -23,9 +23,18 @@ class menu_Model_Menu extends Zend_Db_Table_Abstract
   
   public function getMenus()
   {
-    $select = $this->select();
-    $select->order('id');
-    return $this->fetchAll($select);
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'menu_getMenus';
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $select = $this->select();
+      $select->order('id');
+      $rows = $this->fetchAll($select);
+      $cache->save($rows, $cacheId, array('menus','menuItems'));
+    }
+    return $rows;
   }
   
   /**
@@ -46,23 +55,9 @@ class menu_Model_Menu extends Zend_Db_Table_Abstract
       $select->order('id');
       $select->where('isPublished=?', $status, Zend_Db::INT_TYPE);
       $rows = $this->fetchAll($select);
-      $cache->save($rows, $cacheId);
+      $cache->save($rows, $cacheId, array('menus','menuItems'));
     }
     return $rows;
   }
   
-  /**
-   *
-   * @param menu_Model_Menu $menu
-   */
-  public function remove($menu)
-  {
-    $select = $this->select()
-     ->where('id=?',$menu->id, Zend_Db::INT_TYPE)
-    ;
-    $row = $this->fetchRow($select);
-    $row->delete();
-  }
-
-
 }
