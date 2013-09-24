@@ -9,5 +9,5 @@
 @import url('bootstrap/bootstrap-wysihtml5.css');
 @import url('bootstrap/bootstrap.css');
 @import url('bootstrap/bootstrap-responsive.css');
-@import url('bootstrap/less/bootstrap.less');
+@import url('chosen.min.css');
 @import url('modules.css');

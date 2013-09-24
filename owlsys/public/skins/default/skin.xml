@@ -6,6 +6,7 @@
 		<js>mod_content.js</js>
 		<js>modernizr.custom.99420.js</js>
 		<js>system.js</js>
+		<js>chosen.jquery.min.js</js>
 		<js>bootstrap-wysihtml5.js</js>
 		<js>wysihtml5-0.3.0.min.js</js>
 		<js>bootbox.min.js</js>

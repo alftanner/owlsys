@@ -67,6 +67,7 @@ class System_Form_Widget extends Twitter_Bootstrap_Form_Horizontal
         
         $cbPosition = $this->createElement("select", "position")
 	        ->setOrder($this->order++)
+	        ->setAttrib('class', 'chosen')
 	        ->setLabel("Position")
 	        ->setRequired(true)
         ;

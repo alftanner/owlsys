@@ -81,6 +81,7 @@ class menu_Form_Item extends Twitter_Bootstrap_Form_Horizontal
 		$cbParent = $this->createElement('select', 'parent_id')
 			->setOrder(6)
 			->setLabel( "Parent" )
+			->setAttrib('class', 'chosen')
 			->setRequired(true);
 		$this->addElement($cbParent);
 		
