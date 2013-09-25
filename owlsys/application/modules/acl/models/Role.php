@@ -40,19 +40,11 @@ class Acl_Model_Role extends Zend_Db_Table_Abstract
         ->joinInner( array('l'=>$prefix.'layout'), 'l.id=r.layout_id', 'name AS layout_name')
       ;
       //Zend_Debug::dump($select->__toString());
+      $select->order('id ASC');
       $rows = $this->fetchAll($select);
       $cache->save($rows, $cacheId);
     }
     return $rows;
   }
   
-  public function remove(Acl_Model_Role $role)
-  {
-    $select = $this->select()
-      ->where('id=?',$role->getId(), Zend_Db::INT_TYPE)
-      ->limit(1)
-    ;
-    $row = $this->fetchRow($select);
-    $row->delete();
-  }
 }

@@ -59,6 +59,11 @@ class Menu_MenuController extends Zend_Controller_Action
             	{
             		$menu = $mdlMenu->createRow($frmMenu->getValues());
             		$menu->save();
+            		
+            		/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+            		$cache = Zend_Registry::get('cache');
+            		$cache->clean('all', array('menuItems'));
+            		
             		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("New menu added") ) );
             		$this->redirect('menus');
             	}
@@ -93,6 +98,11 @@ class Menu_MenuController extends Zend_Controller_Action
             	{
             	  $menu->setFromArray($frmMenu->getValues());
             	  $menu->save();
+            	  
+            	  /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+            	  $cache = Zend_Registry::get('cache');
+            	  $cache->clean('all', array('menuItems'));
+            	  
             	  $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
             	  $this->redirect('menus');
             	}
