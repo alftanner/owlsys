@@ -53,7 +53,7 @@ class OS_Plugins_Acl extends Zend_Controller_Plugin_Abstract
     			
     			$acl->addRole(new Zend_Acl_Role($roleId));
     			
-    			$role = $mdlRole->find($roleId)->current();
+    			$role = $mdlRole->findRow($roleId)->current();
     	        // getting resources
     	        $resources = $mdlResource->getAll();
     	        // getting permissions

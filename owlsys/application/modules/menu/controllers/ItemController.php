@@ -218,7 +218,7 @@ class Menu_ItemController extends Zend_Controller_Action
         	
         	/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
         	$cache = Zend_Registry::get('cache');
-        	$cache->clean('all', array('menuItems'));
+        	$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('menuItems'));
         	
         	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The item was moved") ) );
         	$this->redirect('menu-items/'.$menuItem->menu_id);
@@ -278,7 +278,7 @@ class Menu_ItemController extends Zend_Controller_Action
         	$this->view->menu = $menu;
         	
         	$cbParentItem = $frmMenuItem->getElement('parent_id');
-        	$menuItemList = $mdlMenuItem->getAllByMenu($menu);
+        	$menuItemList = $mdlMenuItem->getListByMenu($menu);
         	$cbParentItem->addMultiOption( 0, $translate->translate("MENU_NOT_PARENT") );
         	if ( count($menuItemList) > 0 ) {
             	foreach ( $menuItemList as $menuItemRow ) {
@@ -379,7 +379,7 @@ class Menu_ItemController extends Zend_Controller_Action
         	
         	/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
             $cache = Zend_Registry::get('cache');
-            $cache->clean('all', array('menuItems'));
+            $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('menuItems'));
         	
         	$this->redirect('menu-items/'.$menuItem->menu_id);
         } catch (Exception $e) {
@@ -409,7 +409,7 @@ class Menu_ItemController extends Zend_Controller_Action
         	
         	/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
             $cache = Zend_Registry::get('cache');
-            $cache->clean('all', array('menuItems'));
+            $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('menuItems'));
         	
         	$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Menu item deleted") ) );
         	$this->redirect('menu-items/'.$menuId);

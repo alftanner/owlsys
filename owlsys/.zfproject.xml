@@ -7,12 +7,7 @@
       <configsDirectory>
         <applicationConfigFile type="ini"/>
       </configsDirectory>
-      <controllersDirectory>
-        <controllerFile controllerName="Index">
-          <actionMethod actionName="index"/>
-        </controllerFile>
-        <controllerFile controllerName="Error"/>
-      </controllersDirectory>
+      <controllersDirectory/>
       <formsDirectory enabled="false"/>
       <layoutsDirectory enabled="false"/>
       <modelsDirectory/>
@@ -77,7 +72,7 @@
               <actionMethod actionName="update"/>
             </controllerFile>
             <controllerFile controllerName="Widget">
-           	  <actionMethod actionName="index"/>
+              <actionMethod actionName="index"/>
               <actionMethod actionName="status"/>
             </controllerFile>
           </controllersDirectory>
@@ -207,6 +202,11 @@
               <actionMethod actionName="delete"/>
               <actionMethod actionName="move"/>
             </controllerFile>
+            <controllerFile controllerName="Cache">
+              <actionMethod actionName="index"/>
+              <actionMethod actionName="cleantag"/>
+              <actionMethod actionName="cleanall"/>
+            </controllerFile>
           </controllersDirectory>
           <formsDirectory>
             <formFile formName="Widget"/>
@@ -259,6 +259,15 @@
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Index">
                 <viewScriptFile forActionName="extension"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Cache">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Cache">
+                <viewScriptFile forActionName="cleantag"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Cache">
+                <viewScriptFile forActionName="cleanall"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
             <viewHelpersDirectory/>
@@ -379,14 +388,7 @@
         </moduleDirectory>
       </modulesDirectory>
       <viewsDirectory>
-        <viewScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Index">
-            <viewScriptFile forActionName="index"/>
-          </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Error">
-            <viewScriptFile forActionName="error"/>
-          </viewControllerScriptsDirectory>
-        </viewScriptsDirectory>
+        <viewScriptsDirectory/>
         <viewHelpersDirectory/>
         <viewFiltersDirectory enabled="false"/>
       </viewsDirectory>

@@ -32,9 +32,9 @@ class OS_Plugins_Widget extends Zend_Controller_Plugin_Abstract
             $role = null;
             if ($auth->hasIdentity()) {
                 $identity = $auth->getIdentity();
-                $role = $mdlRole->find( intval($identity->role_id) )->current();
+                $role = $mdlRole->findRow( intval($identity->role_id) )->current();
             } else {
-                $role = $mdlRole->find( 3 )->current();
+                $role = $mdlRole->findRow( 3 )->current();
             }
 			
             $hookXml = APPLICATION_PATH . '/configs/hooks.xml';

@@ -50,6 +50,11 @@ class System_SkinController extends Zend_Controller_Action
           $skin->isSelected = 1;
           $skin->save();
           $adapter->commit();
+          
+          /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+          $cache = Zend_Registry::get('cache');
+          $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('skin'));
+          
           $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("LBL_CHANGES_SAVED") ) );
           $this->redirect('skins-list');
     		 

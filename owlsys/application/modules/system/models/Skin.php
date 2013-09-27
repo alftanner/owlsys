@@ -20,7 +20,7 @@ class System_Model_Skin extends Zend_Db_Table_Abstract
     } else {
       $select = $this->select()->where('isselected=1')->limit(1);
       $row = $this->fetchRow($select);
-      $cache->save($row, $cacheId);
+      $cache->save($row, $cacheId, array('skin'));
     }
     return $row;
   }
@@ -36,7 +36,7 @@ class System_Model_Skin extends Zend_Db_Table_Abstract
     } else {
       $select = $this->select();
       $rows = $this->fetchAll($select);
-      $cache->save($rows, $cacheId);
+      $cache->save($rows, $cacheId, array('skin'));
     }
     return $rows;
   }	

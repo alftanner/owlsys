@@ -49,12 +49,11 @@ class Acl_RoleController extends Zend_Controller_Action
 					$mdlRole = new Acl_Model_Role();
 					$role = $mdlRole->createRow( $frmRole->getValues() );
 					$role->save();
+					
 					/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
 					$cache = Zend_Registry::get('cache');
-					$cacheId = 'role_getList';
-					if ( $cache->test($cacheId) ) {
-					  $cache->remove($cacheId);
-					}
+					$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('role'));
+					
 					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("LBL_CHANGES_SAVED") ) );
 					$this->redirect('roles');
 				}
@@ -88,12 +87,11 @@ class Acl_RoleController extends Zend_Controller_Action
 				{
 					$role->setFromArray( $frmRole->getValues() );
 					$role->save();
+					
 					/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
 					$cache = Zend_Registry::get('cache');
-					$cacheId = 'role_getList';
-					if ( $cache->test($cacheId) ) {
-					  $cache->remove($cacheId);
-					}
+					$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('role'));
+					
 					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The role was updated") ) );
 					$this->redirect('roles');
 				}
@@ -140,12 +138,11 @@ class Acl_RoleController extends Zend_Controller_Action
 	        $id = $this->getRequest()->getParam( "id", 0 );
 	        $role = $mdlRole->find($id)->current();
 	        $role->delete();
+	        
 	        /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
 	        $cache = Zend_Registry::get('cache');
-	        $cacheId = 'role_getList';
-	        if ( $cache->test($cacheId) ) {
-	          $cache->remove($cacheId);
-	        }
+	        $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('role'));
+	        
 	        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The role was deleted") ) );
 	        $this->redirect('roles');
         } catch (Exception $e) {

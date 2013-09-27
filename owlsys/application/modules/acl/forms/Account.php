@@ -48,7 +48,7 @@ class Acl_Form_Account extends Twitter_Bootstrap_Form_Horizontal
             ->addValidator(new Zend_Validate_EmailAddress());
         $this->addElement($txtEmail);
         
-        $txtEmailAlternative = $this->createElement('text', 'emailAlternative')
+        $txtEmailAlternative = $this->createElement('text', 'email_alternative')
             ->setLabel("Email alternative")
             ->setRequired(TRUE)
             ->setAttrib('size', 40)

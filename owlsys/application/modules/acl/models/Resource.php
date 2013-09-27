@@ -27,8 +27,17 @@ class Acl_Model_Resource extends Zend_Db_Table_Abstract
    */
   public function getAll( )
   {
-    $select = $this->select();
-    $rows = $this->fetchAll( $select, array('module'=>'asc', 'controller'=>'asc') );
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'acl_resource_getAll';
+    $rows = array();
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $select = $this->select();
+      $rows = $this->fetchAll( $select, array('module'=>'asc', 'controller'=>'asc') );
+      $cache->save($rows, $cacheId, array('resource'));
+    }
     return $rows;
   }
   
@@ -47,7 +56,7 @@ class Acl_Model_Resource extends Zend_Db_Table_Abstract
     } else {
       $select = $this->select()->where('module=?', $resource->module);
       $rows = $this->fetchAll( $select );
-      $cache->save($rows, $cacheId);
+      $cache->save($rows, $cacheId, array('resource'));
     }
     return $rows;
   }
@@ -69,7 +78,7 @@ class Acl_Model_Resource extends Zend_Db_Table_Abstract
         ->distinct()
         ->from( array('sr'=> $this->_name), 'module' );
       $rows = $this->fetchAll($select);
-      $cache->save($rows, $cacheId);
+      $cache->save($rows, $cacheId, array('resource'));
     }
     return $rows;
   }
@@ -81,13 +90,22 @@ class Acl_Model_Resource extends Zend_Db_Table_Abstract
    */
   public function getIdByDetail( $resource )
   {
-    $select = $this->select()
-      ->where( 'module=?', $resource->module)
-      ->where( 'controller=?', $resource->controller)
-      ->where( 'actioncontroller=?', $resource->actioncontroller)
-      ->limit(1);
-    $row = $this->fetchRow($select);
-    return $row;
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'acl_resource_getIdByDetail_'.$resource->module.'_'.$resource->controller.'_'.$resource->actioncontroller;
+    $rows = array();
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $select = $this->select()
+        ->where( 'module=?', $resource->module)
+        ->where( 'controller=?', $resource->controller)
+        ->where( 'actioncontroller=?', $resource->actioncontroller)
+        ->limit(1);
+      $row = $this->fetchRow($select);
+      $cache->save($row, $cacheId, array('resource'));
+    }
+    return $rows;
   }
   
   public function remove( $resource )

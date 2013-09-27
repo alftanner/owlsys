@@ -164,13 +164,8 @@ class OS_Plugins_Navigation extends Zend_Controller_Plugin_Abstract {
    */
   private function _getParamByKey($menuItem, $key) {
     $params = Zend_Json::decode ( $menuItem->params );
-    foreach ( $params as $param ) {
-      if (isset ( $param [$key] )) {
-        return $param [$key];
-      } else
-        return '';
-    }
-    return '';
+    if ( isset($params [$key]) ) return $params [$key];
+    else return "";
   }
   
   /**

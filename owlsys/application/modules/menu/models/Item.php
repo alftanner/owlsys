@@ -226,7 +226,7 @@ class menu_Model_Item extends Zend_Db_Table_Abstract
     $menuItem->save();
     /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
     $cache = Zend_Registry::get('cache');
-    $cache->clean('all', array('menuItems'));
+    $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('menuItems'));
   }
   
 }

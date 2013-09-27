@@ -60,13 +60,23 @@ class Acl_Model_Account extends Zend_Db_Table_Abstract
    * Return a list of accounts
    * @return Zend_Db_Table_Rowset_Abstract
    */
-  public function getList() {
-    $prefix = Zend_Registry::get('tablePrefix');
-    $select = $this->select()
-      ->setIntegrityCheck(false)
-      ->from( array('aa' => $this->_name), array('id', 'email', 'registerdate', 'lastvisitdate', 'isBlocked', ) )
-      ->joinInner( array('ro' => $prefix.'acl_role'), 'aa.role_id = ro.id', array('name AS role', 'id AS roleId') );
-    $rows = $this->fetchAll($select);
+  public function getList() 
+  {
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = "geo_account_getList";
+    $rows = array();
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $prefix = Zend_Registry::get('tablePrefix');
+      $select = $this->select()
+        ->setIntegrityCheck(false)
+        ->from( array('aa' => $this->_name), array('id', 'email', 'registerdate', 'lastvisitdate', 'isBlocked', 'fullname') )
+        ->joinInner( array('ro' => $prefix.'acl_role'), 'aa.role_id = ro.id', array('name AS role', 'id AS roleId') );
+      $rows = $this->fetchAll($select);
+      $cache->save($rows, $cacheId, array('account'));
+    }
     return $rows;
   }
   
@@ -86,9 +96,10 @@ class Acl_Model_Account extends Zend_Db_Table_Abstract
     } else {
       $select = $this->select();
       $select->where('email=?', $email);
+      $select->where('isBlocked=0');
       $select->limit(1);
       $row = $this->fetchRow($select);
-      $cache->save($row, $cacheId);
+      $cache->save($row, $cacheId, array('account'));
     }
     return $row;
   }  

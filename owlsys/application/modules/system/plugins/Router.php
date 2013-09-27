@@ -77,6 +77,22 @@ class System_Plugin_Router extends Zend_Controller_Plugin_Abstract
 		$route = new Zend_Controller_Router_Route( 'extensions', $options );
 		$router->addRoute('extensions', $route);
 		
+		/* cache manager */
+		$options['controller'] = 'cache';
+		$options['action'] = 'index';
+		$route = new Zend_Controller_Router_Route( 'cache-manager', $options );
+		$router->addRoute('cache-manager', $route);
+		
+		$options['action'] = 'cleantag';
+		$options['tag'] = '';
+		$route = new Zend_Controller_Router_Route( 'cache/cleantag/:tag', $options );
+		$router->addRoute('cache/cleantag/:tag', $route);
+		
+		$options['action'] = 'cleanall';
+		$route = new Zend_Controller_Router_Route( 'cache/cleanall', $options );
+		$router->addRoute('cache/cleanall', $route);
+		
+		
 	}
 	
 }

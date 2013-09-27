@@ -56,4 +56,15 @@
 		<version>1.0</version>
 		<menu_type>list-skins</menu_type>
 	</menu>
+	<menu id="6">
+		<label>Cache Manager</label>
+		<description>Display all registered tags in cache</description>
+		<author>Roger Castañeda</author>
+		<datecreated>-</datecreated>
+		<module>system</module>
+		<controller>cache</controller>
+		<action>index</action>
+		<version>1.0</version>
+		<menu_type>cache-manager</menu_type>
+	</menu>
 </menus>

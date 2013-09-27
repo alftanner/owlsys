@@ -33,14 +33,14 @@ class OS_Plugins_Layout extends Zend_Controller_Plugin_Abstract
 			$role = null;
 			if ( $auth->hasIdentity() ) {
 				$identity = $auth->getIdentity();
-				$role = $mdlRole->find( intval($identity->role_id) )->current();
-			} else $role = $mdlRole->find( 3 )->current();
+				$role = $mdlRole->findRow( intval($identity->role_id) )->current();
+			} else $role = $mdlRole->findRow( 3 )->current();
 			
 			$layout = $mdlLayout->find($role->layout_id)->current();
 			
 			$skin = $mdlSkin->getSkinSelected();
 			$skinName = strtolower($skin->name);
-			
+// 			var_dump($layout->toArray(), $skin->toArray(), $role->toArray());
 			$layoutPath = Zend_Layout::getMvcInstance()->getLayoutPath();
 			
 			Zend_Layout::getMvcInstance()->setLayoutPath( APPLICATION_PATH.'/layouts/scripts/'.$skinName );
@@ -48,7 +48,7 @@ class OS_Plugins_Layout extends Zend_Controller_Plugin_Abstract
 			
 		} catch (Exception $e) {
 		    
-		    //Zend_Debug::dump($e->getTraceAsString());
+// 		    Zend_Debug::dump($e->getTraceAsString());
 			$layout = "frontend";
 			
 			Zend_Layout::getMvcInstance()->setLayoutPath( APPLICATION_PATH.'/layouts/scripts/default' );

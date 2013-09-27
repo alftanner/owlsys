@@ -42,9 +42,24 @@ class Acl_Model_Role extends Zend_Db_Table_Abstract
       //Zend_Debug::dump($select->__toString());
       $select->order('id ASC');
       $rows = $this->fetchAll($select);
-      $cache->save($rows, $cacheId);
+      $cache->save($rows, $cacheId, array('role'));
     }
     return $rows;
   }
   
+  public function findRow($id)
+  {
+    $prefix = Zend_Registry::get('tablePrefix');
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'role_findRow_'.$id;
+    $rows = array();
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $rows = $this->find($id);
+      $cache->save($rows, $cacheId, array('role'));
+    }
+    return $rows;
+  }
 }

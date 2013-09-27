@@ -74,6 +74,11 @@ class Acl_AccountController extends Zend_Controller_Action
 					$account->password = crypt($account->password, '$6$5000$'.$salt.'$') ;
 					$account->registerdate = Zend_Date::now()->toString('Y-M-d H-m-s') ;
 					$account->save();
+					
+					/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+					$cache = Zend_Registry::get('cache');
+					$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('account'));
+					
 					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("New account added") ) );
 					$this->redirect('accounts');
 				} 
@@ -145,6 +150,11 @@ class Acl_AccountController extends Zend_Controller_Action
 					}
 					else $account->password = $oldPassword;
 					$account->save();
+					
+					/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+					$cache = Zend_Registry::get('cache');
+					$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('account'));
+					
 					$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Account updated") ) );
 					$this->redirect('accounts'); 
 				}
@@ -201,6 +211,11 @@ class Acl_AccountController extends Zend_Controller_Action
 		$mdlAccount = new Acl_Model_Account();
 		$account = $mdlAccount->find($id)->current();
 		$account->delete();
+		
+		/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+		$cache = Zend_Registry::get('cache');
+		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('account'));
+		
 		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("LBL_MENU_DELETED_SUCCESSFULLY") ) );
 		$this->redirect('accounts');
       } catch (Exception $e) {
@@ -235,6 +250,11 @@ class Acl_AccountController extends Zend_Controller_Action
 			$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("ACL_ACCOUNT_UNBLOCKED_SUCCESSFULLY") ) );
 		}
 		$account->save();
+		
+		/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+		$cache = Zend_Registry::get('cache');
+		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('account'));
+		
       	$this->redirect('accounts');
       } catch (Exception $e) {
         $response->appendBody("<div class='span12'>");
@@ -255,7 +275,7 @@ class Acl_AccountController extends Zend_Controller_Action
             
             $frmAccount->removeElement('fullname');
             $frmAccount->removeElement('email_alternative');
-            $frmAccount->removeElement('role');
+            $frmAccount->removeElement('role_id');
             $frmAccount->getElement('email')->removeValidator('Db_NoRecordExists');
             $frmAccount->getElement('submit')->setLabel('Send');
             $change = intval($this->getRequest()->getParam('change', 0));

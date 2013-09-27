@@ -62,7 +62,7 @@ class Menu_MenuController extends Zend_Controller_Action
             		
             		/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
             		$cache = Zend_Registry::get('cache');
-            		$cache->clean('all', array('menuItems'));
+            		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('menuItems'));
             		
             		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("New menu added") ) );
             		$this->redirect('menus');
@@ -101,7 +101,7 @@ class Menu_MenuController extends Zend_Controller_Action
             	  
             	  /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
             	  $cache = Zend_Registry::get('cache');
-            	  $cache->clean('all', array('menuItems'));
+            	  $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('menuItems'));
             	  
             	  $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
             	  $this->redirect('menus');
@@ -134,7 +134,7 @@ class Menu_MenuController extends Zend_Controller_Action
             
             /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
             $cache = Zend_Registry::get('cache');
-            $cache->clean('all', array('menuItems'));
+            $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('menuItems'));
             
             $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The menu was deleted") ) );
             $this->redirect('menus');
@@ -189,7 +189,7 @@ class Menu_MenuController extends Zend_Controller_Action
             
             /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
             $cache = Zend_Registry::get('cache');
-            $cache->clean('all', array('menuItems'));
+            $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('menuItems'));
             
             $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Changes saved") ) );
             $this->redirect('menus');
