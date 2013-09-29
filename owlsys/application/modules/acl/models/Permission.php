@@ -41,15 +41,22 @@ class Acl_Model_Permission extends Zend_Db_Table_Abstract
    */
   public function getAllowedByRole( $role )
   {
-    $select = $this->select()
-      ->setIntegrityCheck(false)
-      ->from( array('p'=>$this->_name), array('resource_id') )
-      ->where("role_id = ?", $role->id, Zend_Db::INT_TYPE)
-      ->where("isAllowed = 1")
-    ;
-    $rows = $this->fetchAll($select);
-//     var_dump($select->__toString());
-//     die();
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'acl_permission_getAllowedByRole_'.$role->id;
+    $rows = array();
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $select = $this->select()
+        ->setIntegrityCheck(false)
+        ->from( array('p'=>$this->_name), array('resource_id') )
+        ->where("role_id = ?", $role->id, Zend_Db::INT_TYPE)
+        ->where("isAllowed = 1")
+      ;
+      $rows = $this->fetchAll($select);
+      $cache->save($rows, $cacheId, array('resource','permissions'));
+    }
     return $rows;
   }
   
@@ -60,14 +67,22 @@ class Acl_Model_Permission extends Zend_Db_Table_Abstract
    */
   public function getResourcesByRole($role)
   {
+    /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
+    $cache = Zend_Registry::get('cache');
+    $cacheId = 'acl_permission_getResourcesByRole_'.$role->id;
     $rows = array();
-    $prefix = Zend_Registry::get('tablePrefix');
-    $select = $this->select()
-      ->setIntegrityCheck(false)
-      ->from( array('r'=>$prefix.'acl_resource'), array('id AS resource_id','module','controller','actioncontroller') )
-      ->joinLeft(array('p'=>$this->_name), 'r.id=p.resource_id AND p.role_id='.$role->id, array('id','isAllowed'))
-    ;
-    $rows = $this->fetchAll($select);
+    if ( $cache->test($cacheId) ) {
+      $rows = $cache->load($cacheId);
+    } else {
+      $prefix = Zend_Registry::get('tablePrefix');
+      $select = $this->select()
+        ->setIntegrityCheck(false)
+        ->from( array('r'=>$prefix.'acl_resource'), array('id AS resource_id','module','controller','actioncontroller') )
+        ->joinLeft(array('p'=>$this->_name), 'r.id=p.resource_id AND p.role_id='.$role->id, array('id','isAllowed'))
+      ;
+      $rows = $this->fetchAll($select);
+      $cache->save($rows, $cacheId, array('resource','permissions'));
+    }
     return $rows;
   }
   

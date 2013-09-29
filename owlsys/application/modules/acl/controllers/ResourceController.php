@@ -75,15 +75,19 @@ class Acl_ResourceController extends Zend_Controller_Action
     		
     		/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
     		$cache = Zend_Registry::get('cache');
-    		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('resource'));
     		
     		$roleList = $mdlRole->getList();
     		foreach ( $roleList as $role ) {
+                $cacheId = 'role_find_'.$role->id;
+                if ( $cache->test($cacheId) ) {
+                    $cache->remove($cacheId);
+                }
                 $cacheId = 'cacheACL_'.$role->id;
                 if ( $cache->test($cacheId) ) {
                     $cache->remove($cacheId);
                 }
     		}
+    		$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('resource','permissions'));
     		
     		$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("Resources are synchronized") ) );
     		$this->redirect('resources');
@@ -131,15 +135,7 @@ class Acl_ResourceController extends Zend_Controller_Action
 			
 			/* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
 			$cache = Zend_Registry::get('cache');
-			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('resource'));
-			$mdlRole = new Acl_Model_Role();
-			$roleList = $mdlRole->getList();
-			foreach ( $roleList as $role ) {
-			  $cacheId = 'cacheACL_'.$role->id;
-			  if ( $cache->test($cacheId) ) {
-			    $cache->remove($cacheId);
-			  }
-			}
+			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('resource','permissions'));
 			
 			$this->_helper->flashMessenger->addMessage( array('type'=>'info', 'message' => $translate->translate("The resource was deleted") ) );
 			$this->redirect('resources');
