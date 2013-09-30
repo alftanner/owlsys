@@ -80,7 +80,7 @@ class OS_Plugins_Acl extends Zend_Controller_Plugin_Abstract
 	        		}
 	        	}
 	        	
-    	        $cache->save($acl, 'cacheACL_'.$role->id);
+    	        $cache->save($acl, 'cacheACL_'.$role->id, array('permissions','resource'));
     	        Zend_Registry::set('ZendACL', $acl);
 		    } else {
 		        Zend_Registry::set('ZendACL', $cacheACL);

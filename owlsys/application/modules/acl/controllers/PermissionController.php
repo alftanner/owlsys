@@ -138,6 +138,7 @@ class Acl_PermissionController extends Zend_Controller_Action
             if ( $cache->test('cacheACL_'.$role->id) ) {
                 $cache->remove('cacheACL_'.$role->id);
             }
+            $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('resource','permissions'));
 	        
 	        $this->_helper->flashMessenger->addMessage( array('type'=>'info', 'header'=>'', 'message' => $translate->translate("Changes saved") ) );
 	        $this->redirect('roles');
