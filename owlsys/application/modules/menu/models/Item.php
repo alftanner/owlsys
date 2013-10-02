@@ -223,6 +223,7 @@ class menu_Model_Item extends Zend_Db_Table_Abstract
     if ( $menuItem->id < 1 ) {
       $menuItem->ordering = $this->getLastPosition($menuItem)+1;
     }
+    $menuItem->parent_id = ($menuItem->parent_id==0)?null:$menuItem->parent_id;
     $menuItem->save();
     /* @var $cache Zend_Cache_Core|Zend_Cache_Frontend */
     $cache = Zend_Registry::get('cache');
